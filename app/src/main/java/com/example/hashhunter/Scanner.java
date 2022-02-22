@@ -14,21 +14,30 @@ import java.lang.Math;
  */
 public class Scanner {
     /**
-     *
-     * @param code string representaiton of QR or bar code
+     * calculate points from string representation of QR or bar code
+     * @param code string representation of QR or bar code
+     * @return res calculated points
      */
-    public static void getCodePoints(String code) {
+    public static int getCodePoints(String code) {
         int res;
         try {
             String hashedCode = toHexString(getHashedCode(code)); // get hashed code in hexadecimal
-            Log.d("SCANNER_DEBUG", hashedCode);
+            Log.d("SCANNER_DEBUG", hashedCode); // DEBUG
             res = calculatePoints(hashedCode); // convert hashed code to points
             Log.d("SCANNER_DEBUG", Integer.toString(res)); // DEBUG print output
+            return res;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Log.e("SCANNER_ERROR", "Hashing algorithm invalid");
+            return -1; // indicates error
         }
     }
+
+    /**
+     * separate repeating numbers, then calculate points as specified by requirement
+     * @param code
+     * @return total points of the code
+     */
     public static int calculatePoints(String code) {
         Vector<String> repeatedNums = new Vector<>();
         int points = 0;
