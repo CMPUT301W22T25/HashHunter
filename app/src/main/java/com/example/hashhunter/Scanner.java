@@ -6,9 +6,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
+import java.lang.Math;
 
 /**
  * @References SHA-256 hashing from GeeksforGeeks; Aug 7th, 2019; https://www.geeksforgeeks.org/sha-256-hash-in-java/
+ * @References hex to decimal from javatpoint; accessed Feb 22th, 2022; https://www.javatpoint.com/java-hex-to-decimal
  */
 public class Scanner {
     /**
@@ -29,6 +31,7 @@ public class Scanner {
     }
     public static int calculatePoints(String code) {
         Vector<String> repeatedNums = new Vector<>();
+        int points = 0;
         // locate repeating numbers
         String cache = code.substring(0, 1); // cache the first number
         for (int i=1; i<code.length(); i++) {
@@ -42,12 +45,12 @@ public class Scanner {
                 cache = code.substring(i, i+1); // reset cache to the current number
             }
         }
-        // DEBUG
-        Log.d("SCANNER_DEBUG", "Repeated numbers:");
+        // accumulate points based on the repeated numbers
         for (String nums : repeatedNums) {
-            Log.d("SCANNER_DEBUG", nums);
+            int decimal = Integer.parseInt(nums.substring(0, 1), 16); // convert hex to decimal
+            points += Math.pow(decimal, nums.length()-1); // raise decimal by how many time number is repeated
         }
-        return 0;
+        return points;
     }
     /**
      *
