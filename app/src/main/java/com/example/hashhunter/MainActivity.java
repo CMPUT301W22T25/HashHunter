@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * DEBUG: only for testing Scanner class
      */
-    public void calculatePoints(View V) {
-        Scanner.calculatePoints("BFG5DGW54\n");
+    public void getCodePoints(View V) {
+        Scanner.getCodePoints("BFG5DGW54\n");
     }
 }

@@ -1,25 +1,53 @@
 package com.example.hashhunter;
 
-import android.os.Message;
 import android.util.Log;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Vector;
 
 /**
  * @References SHA-256 hashing from GeeksforGeeks; Aug 7th, 2019; https://www.geeksforgeeks.org/sha-256-hash-in-java/
  */
 public class Scanner {
-    public static void calculatePoints(String code) {
-        String result;
+    /**
+     *
+     * @param code string representaiton of QR or bar code
+     */
+    public static void getCodePoints(String code) {
+        int res;
         try {
-            result = toHexString(getHashedCode(code));
-            Log.d("SCANNER_DEBUG", result); // print output
+            String hashedCode = toHexString(getHashedCode(code)); // get hashed code in hexadecimal
+            Log.d("SCANNER_DEBUG", hashedCode);
+            res = calculatePoints(hashedCode); // convert hashed code to points
+            Log.d("SCANNER_DEBUG", Integer.toString(res)); // DEBUG print output
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Log.e("SCANNER_ERROR", "Hashing algorithm invalid");
         }
+    }
+    public static int calculatePoints(String code) {
+        Vector<String> repeatedNums = new Vector<>();
+        // locate repeating numbers
+        String cache = code.substring(0, 1); // cache the first number
+        for (int i=1; i<code.length(); i++) {
+            if (code.charAt(i) == cache.charAt(0)) {
+                // number matches with number in the cache
+                cache += cache.charAt(0); // append the same number
+            } else { // numbers are different
+                if (cache.length() > 1) {
+                    repeatedNums.add(cache); // cache is repeated numbers, store it
+                }
+                cache = code.substring(i, i+1); // reset cache to the current number
+            }
+        }
+        // DEBUG
+        Log.d("SCANNER_DEBUG", "Repeated numbers:");
+        for (String nums : repeatedNums) {
+            Log.d("SCANNER_DEBUG", nums);
+        }
+        return 0;
     }
     /**
      *
