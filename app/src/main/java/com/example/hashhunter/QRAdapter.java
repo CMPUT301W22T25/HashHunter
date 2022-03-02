@@ -45,12 +45,18 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     }
     @Override
     public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
+        QRItem myItem =  qrList.get(position);
 
+        holder.treeView.setImageResource(myItem.getImageRsrc());
+
+        holder.pointsView.setText(myItem.getQrPointText());
+
+        holder.titleView.setText(myItem.getQrName());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return qrList.size();
     }
 
 

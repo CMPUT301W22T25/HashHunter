@@ -2,12 +2,12 @@ package com.example.hashhunter;
 
 public class QRItem {
     private int treePic;
-    private int qrPoints;
+    private String qrPointText;
     private String qrName;
 
-    public QRItem(int tree, int points, String name) {
+    public QRItem(int tree, String points, String name) {
         treePic = tree;
-        qrPoints = points;
+        qrPointText = points;
         qrName = name;
 
     }
@@ -16,8 +16,8 @@ public class QRItem {
         return treePic;
     }
 
-    public int getQrPoints(){
-        return qrPoints;
+    public String getQrPointText(){
+        return qrPointText;
     }
     public String getQrName() {
         return qrName;
