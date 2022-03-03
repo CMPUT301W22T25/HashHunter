@@ -36,9 +36,12 @@
         android:id="@+id/loginCodeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="152dp"
+        android:backgroundTint="#F0E3B4"
         android:text="Login Code"
+        android:textColor="#5CB8A7"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,9 +51,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="152dp"
         android:layout_marginEnd="4dp"
+        android:backgroundTint="#F0E3B4"
         android:text="Profile Code"
+        android:textColor="#5CB8A7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintHorizontal_bias="0.29"
         app:layout_constraintStart_toEndOf="@+id/loginCodeButton"
         app:layout_constraintTop_toTopOf="parent" />
 
