@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="20dp">
+    app:cardCornerRadius="20dp"
+    android:layout_margin="20dp"
+    app:cardBackgroundColor= "#F0E3B4">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="169dp"
         android:layout_height="162dp"
@@ -13,7 +15,7 @@
         <ImageView
             android:id="@+id/treeImage"
             android:layout_width="74dp"
-
+            android:foregroundGravity="center"
             android:layout_height="66dp"
             android:layout_marginTop="48dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,12 +26,14 @@
         </ImageView>
 
         <TextView
+            android:background="@drawable/roundbackground"
+            android:gravity = "center"
             android:id="@+id/points"
             android:layout_width="96dp"
             android:layout_height="24dp"
             android:layout_marginTop="16dp"
             android:text="100 points"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
+            app:layout_constraintBottom_toTopOf="@+id/treeImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/treeImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
