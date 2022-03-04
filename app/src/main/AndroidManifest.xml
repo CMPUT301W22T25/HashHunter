@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HashHunter">
         <activity
+            android:name=".ExploreActivity"
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity"
+            />
+        <activity
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
