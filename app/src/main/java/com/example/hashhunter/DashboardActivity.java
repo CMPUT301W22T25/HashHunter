@@ -29,19 +29,19 @@ public class DashboardActivity extends AppCompatActivity {
         });
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, ExploreActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, ScanActivity.class);
                 DashboardActivity.this.startActivity(intent);
             }
         });
-        exploreButton.setOnClickListener(new View.OnClickListener() {
+        mapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, ExploreActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, MapActivity.class);
                 DashboardActivity.this.startActivity(intent);
             }
         });
-        exploreButton.setOnClickListener(new View.OnClickListener() {
+        profileButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this, ExploreActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
                 DashboardActivity.this.startActivity(intent);
             }
         });

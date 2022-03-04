@@ -10,10 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HashHunter">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity" />
+        <activity
+            android:name=".MapActivity"
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity" />
+        <activity
+            android:name=".ScanActivity"
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity" />
+        <activity
             android:name=".ExploreActivity"
             android:exported="false"
-            android:parentActivityName=".DashboardActivity"
-            />
+            android:parentActivityName=".DashboardActivity" />
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
