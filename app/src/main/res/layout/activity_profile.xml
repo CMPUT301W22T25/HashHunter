@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#5CB8A7"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileActivity"
+    android:theme="@style/Theme.AppCompat"
+    >
 
     <androidx.cardview.widget.CardView
         android:layout_width="71dp"
@@ -102,6 +104,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.692" />
 
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/treeList"
         android:layout_width="409dp"
@@ -114,5 +119,8 @@
         app:layout_constraintStart_toStartOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
