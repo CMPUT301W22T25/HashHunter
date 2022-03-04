@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
@@ -19,7 +21,7 @@ import com.google.zxing.Result;
  * License: MIT License
  * Copyright (c) 2017 Yuriy Budiyev [yuriy.budiyev@yandex.ru]
  */
-public class ScannerActivity extends AppCompatActivity {
+public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
     private final int CAMERA_REQUEST_CODE = 101;
 
@@ -41,7 +43,7 @@ public class ScannerActivity extends AppCompatActivity {
                     public void run() {
                         //Show result of scanned text
                         scannedText.setText(result.getText());
-                        //Toast.makeText(ScannerActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScanActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
