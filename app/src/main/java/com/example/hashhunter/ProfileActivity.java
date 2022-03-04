@@ -28,10 +28,12 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView.Adapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         //Set the layout manager
 
         //Do profile pic
