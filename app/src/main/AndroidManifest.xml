@@ -10,8 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HashHunter">
-        <activity android:name=".ScanActivity"
-            android:parentActivityName=".MainActivity">
+        <activity android:name=".ScanActivity">
 
         </activity>
         <activity

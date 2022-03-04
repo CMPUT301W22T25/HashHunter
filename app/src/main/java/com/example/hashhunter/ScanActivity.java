@@ -32,7 +32,6 @@ public class ScanActivity extends AppCompatActivity {
 
         setupPermissions();
 
-        TextView scannedText = findViewById(R.id.scannedText);
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
@@ -42,7 +41,6 @@ public class ScanActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //Show result of scanned text
-                        scannedText.setText(result.getText());
                         Toast.makeText(ScanActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
                     }
                 });
