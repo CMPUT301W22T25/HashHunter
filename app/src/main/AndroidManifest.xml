@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HashHunter">
 
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
