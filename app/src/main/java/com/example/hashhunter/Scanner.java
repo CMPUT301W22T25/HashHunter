@@ -57,7 +57,11 @@ public class Scanner {
         // accumulate points based on the repeated numbers
         for (String nums : repeatedNums) {
             int decimal = Integer.parseInt(nums.substring(0, 1), 16); // convert hex to decimal
-            points += Math.pow(decimal, nums.length()-1); // raise decimal by how many time number is repeated
+            if (decimal == 0) {
+                points += Math.pow(20, nums.length()-1); // special case for
+            } else {
+                points += Math.pow(decimal, nums.length()-1); // raise decimal by how many time number is repeated
+            }
         }
         return points;
     }
