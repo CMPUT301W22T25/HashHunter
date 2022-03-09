@@ -42,16 +42,17 @@ public class ProfileActivity extends AppCompatActivity {
         profilePic.setImageResource(R.drawable.ic_android);
         ArrayList<QRItem> qrList =  new ArrayList<>();
         profileCodeButton = findViewById(R.id.profileCodeButton);
-//        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
+        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
+        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
 //        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
-//
+
 //        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
 //        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
 //        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR" ));
-//
-//        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
+
+        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
+        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
+
 //        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
 //
 //        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
@@ -104,23 +105,25 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
-//    public void openCodeDialog(Integer image, String buttonCode) {
+
+    public void openCodeDialog(Integer image, String buttonCode) {
 //        Inflater inflater = LayoutInflater(R.layout.activity_profile, null);
-//
-//        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-//
-//
-//        ImageView dialogCode;
-//        dialogCode = findViewById(R.id.imageCode);
-//        dialogCode.setImageResource(image);
-//        dialogBuilder.setTitle("buttonCode");
-//
-//        AlertDialog dialog = dialogBuilder.create();
-//
-//        dialog.setCancelable(true);
-//        dialog.setContentView(dialogCode);
-//
-//        dialog.show();
-//
-//    }
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+
+        ImageView dialogCode;
+        dialogCode = findViewById(R.id.imageCode);
+        dialogCode.setImageResource(image);
+        dialogBuilder.setTitle("buttonCode");
+
+        AlertDialog dialog = dialogBuilder.create();
+
+        dialog.setCancelable(true);
+        dialog.setContentView(dialogCode);
+
+        dialog.show();
+
+    }
+
 }
