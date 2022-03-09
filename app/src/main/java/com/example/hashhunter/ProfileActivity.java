@@ -44,19 +44,19 @@ public class ProfileActivity extends AppCompatActivity {
         profileCodeButton = findViewById(R.id.profileCodeButton);
         qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
         qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
 
-        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR" ));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR" ));
 
         qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
         qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
-
-        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR"));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
+//
+//        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
+//        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR"));
         QRRecycler = findViewById(R.id.treeList);
 
         QRRecycler.setLayoutManager(QRGridManager);
@@ -105,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
     public void openCodeDialog(Integer image, String buttonCode) {
-        Inflater inflater = LayoutInflater(R.layout.activity_profile, null);
+//        Inflater inflater = LayoutInflater(R.layout.activity_profile, null);
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
