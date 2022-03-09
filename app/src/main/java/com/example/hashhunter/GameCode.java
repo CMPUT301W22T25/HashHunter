@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class GameCode {
     private String qrCode;
-//    private Photo photo;
-//    private Location location;
+    private Photo photo;
+    private Location location;
     private Integer numPlayers;
     private Integer points;
-//    private ArrayList<Comment> commentList;
+    private ArrayList<Comment> commentList;
 
     public void GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
             Integer points, ArrayList<Comment> commentList) {

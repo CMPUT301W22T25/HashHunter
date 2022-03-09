@@ -22,9 +22,7 @@ public class Scanner {
         int res;
         try {
             String hashedCode = toHexString(getHashedCode(code)); // get hashed code in hexadecimal
-            Log.d("SCANNER_DEBUG", hashedCode); // DEBUG
             res = calculatePoints(hashedCode); // convert hashed code to points
-            Log.d("SCANNER_DEBUG", Integer.toString(res)); // DEBUG print output
             return res;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
