@@ -52,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
         qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
+
 //        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
 //
 //        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
