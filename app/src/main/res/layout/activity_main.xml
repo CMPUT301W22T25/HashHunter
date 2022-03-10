@@ -40,6 +40,7 @@
         android:id="@+id/scannerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="scanner activity"/>
+        android:onClick="launchTempActivity"
+        android:text="scanner activity" />
 
 </LinearLayout>
