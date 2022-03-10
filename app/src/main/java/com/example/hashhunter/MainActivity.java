@@ -17,6 +17,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button loginButton = findViewById(R.id.login_button);
+        Button mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
