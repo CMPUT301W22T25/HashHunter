@@ -52,8 +52,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
         qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
 
+//        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
+//
 //        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
 //        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
 //        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR"));
@@ -83,12 +84,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Player code is optional(Eg if I'm checking someone elses profile), so we will set it to null by default.
 
-        profileCodeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openCodeDialog(R.drawable.ic_android, "Profile Button");
-            }
-        });
+//        profileCodeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openCodeDialog(R.drawable.ic_android, "Profile Button");
+//            }
+//        });
 
         //Put it into the profile data model
 
@@ -104,6 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
+
     public void openCodeDialog(Integer image, String buttonCode) {
 //        Inflater inflater = LayoutInflater(R.layout.activity_profile, null);
 
@@ -123,4 +125,5 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
 }
