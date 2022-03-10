@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 import android.util.Log;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * List of cases:
@@ -34,7 +36,7 @@ public class ScannerTest {
     public void checkCodeToPoints() {
         assertEquals(111, Scanner.getCodePoints("BFG5DGW54\n"));
         assertEquals(94, Scanner.getCodePoints("reddit.com"));
-        assertEquals(14, Scanner.getCodePoints("reddit.com"));
+        assertEquals(14, Scanner.getCodePoints("7801141456"));
     }
 
     @Test
@@ -42,6 +44,21 @@ public class ScannerTest {
         assertEquals(111, Scanner.calculatePoints("696ce4dbd7bb57cbfe58b64f530f428b74999cb37e2ee60980490cd9552de3a6"));
         assertEquals(94, Scanner.calculatePoints("90ce957778d13b453b7416c943e1720b3379d7c77814c6b70028cbbf7aecb644"));
         assertEquals(14, Scanner.calculatePoints("c6438656c4aeec951c2a012964623054d3e2f45d5e3c5e7c01faf347c9a5f51a"));
+    }
+
+    @Test
+    public void checkCodeToRepeatedDigits() {
+        ArrayList<String> repeatedDigits;
+        // CASE 1
+        repeatedDigits = new ArrayList<String>(Arrays.asList("bb", "999", "ee", "55"));
+        assertEquals(repeatedDigits, Scanner.getRepeatedDigits("696ce4dbd7bb57cbfe58b64f530f428b74999cb37e2ee60980490cd9552de3a6"));
+        // CASE 2
+        repeatedDigits = new ArrayList<String>(Arrays.asList("777", "33", "77", "00", "bb", "44"));
+        assertEquals(repeatedDigits, Scanner.getRepeatedDigits("90ce957778d13b453b7416c943e1720b3379d7c77814c6b70028cbbf7aecb644"));
+        // CASE 3
+        repeatedDigits = new ArrayList<String>(Arrays.asList("ee"));
+        assertEquals(repeatedDigits, Scanner.getRepeatedDigits("c6438656c4aeec951c2a012964623054d3e2f45d5e3c5e7c01faf347c9a5f51a"));
+
     }
 
     @Test
