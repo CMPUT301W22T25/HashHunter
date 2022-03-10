@@ -5,11 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * test activity to build camera functionality for ScanSubmitActivity
+ * Storing in cloud: https://www.youtube.com/watch?v=7puuTDSf3pk
+ */
 public class CameraActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -35,8 +45,12 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView imageView = findViewById(R.id.photo_preview);
+            ImageView imageView = findViewById(R.id.cam_photo_preview);
             imageView.setImageBitmap(imageBitmap);
+            // test image view from url
+            Photo testPhoto = new Photo("https://media.istockphoto.com/photos/male-lion-resting-on-a-rock-picture-id1333977253?b=1&k=20&m=1333977253&s=170667a&w=0&h=q_EqYl_GqFCR1XmF_AK91YRFDapwAClOoc2fZbsnmr4=");
+            ImageView imageViewUrl = findViewById(R.id.cam_photo_url);
+            imageViewUrl.setImageBitmap(testPhoto.getImageBitmap());
         }
     }
 }
