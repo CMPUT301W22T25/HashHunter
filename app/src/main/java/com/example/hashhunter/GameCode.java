@@ -10,6 +10,16 @@ public class GameCode {
     private Integer points;
     private ArrayList<Comment> commentList;
 
+    public void GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
+            Integer points, ArrayList<Comment> commentList) {
+        this.qrCode = qrCode;
+        this.photo = photo;
+        this.location = location;
+        this.numPlayers = numPlayers;
+        this.points = points;
+        this.commentList = commentList;
+    }
+
     /**
      * Getter for stored photo
      * @return
