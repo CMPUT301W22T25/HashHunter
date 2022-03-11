@@ -2,9 +2,14 @@ package com.example.hashhunter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Include method to display image from url:
@@ -18,6 +23,9 @@ public class Photo {
 
     public Photo(String urlString) {
         this.urlString = urlString; // cache url
+    }
+
+    private void URLToBitmap() {
         // convert url to bitmap
         try {
             URL url = new URL(urlString);
@@ -30,7 +38,16 @@ public class Photo {
         }
     }
 
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
+    public void displayImage(ImageView imageView) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            //Background work here
+            URLToBitmap();
+            handler.post(() -> {
+                //UI Thread work here
+                imageView.setImageBitmap(imageBitmap);
+            });
+        });
     }
 }
