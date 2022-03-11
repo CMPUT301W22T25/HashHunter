@@ -26,9 +26,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    public void launchDashboardActivity(View v) {
-        Intent intent = new Intent(this, DashboardActivity.class);
+    // DEBUG while login is under construction
+    public void launchTempActivity(View v) {
+        Intent intent = new Intent(this, ScanActivity.class);
+        startActivity(intent);
+    }
+    // DEBUG while login is under construction
+    public void launchCamActivity(View v) {
+        Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 }
