@@ -13,7 +13,8 @@ public class GameCode {
     private ArrayList<Comment> commentList;
 
     // DEBUG: I think constructor doesn't need void keyword, this might cause problem later
-    public void GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
+    // I removed the void keyword while resolving a merge conflict
+    public GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
             Integer points, ArrayList<Comment> commentList) {
         this.qrCode = qrCode;
         this.photo = photo;
