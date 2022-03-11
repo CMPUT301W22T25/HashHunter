@@ -2,21 +2,20 @@ package com.example.hashhunter;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.Image;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -28,6 +27,12 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView.Adapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
+    private Button loginCodeButton;
+    private AlertDialog.Builder codeDialogBuilder;
+    private TextView username;
+    private TextView TreeAmount;
+    private TextView PointAmount;
+    private TextView Email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,24 @@ public class ProfileActivity extends AppCompatActivity {
         profilePic.setImageResource(R.drawable.ic_android);
         ArrayList<QRItem> qrList =  new ArrayList<>();
         profileCodeButton = findViewById(R.id.profileCodeButton);
+        loginCodeButton = findViewById(R.id.loginCodeButton);
+
+
+
+        //If the user is in a nother profile then we will not be able to fetch the login code
+
+        //In this case it will be null
+
+        //So if login code is null
+
+          //Then set the left button as the profile code
+
+        //Otherwise
+
+        //Show both buttons
+
+
+
         qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
         qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
         qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
@@ -66,7 +89,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
 
-
         //Figure out which button was sent to this activity
 
             //If someone searched for someone elses profile then this is going to be sent with a different code
@@ -84,10 +106,18 @@ public class ProfileActivity extends AppCompatActivity {
         profileCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCodeDialog(R.drawable.ic_android, "Profile Button");
+                openCodeDialog(R.drawable.ic_baseline_face_24, "Profile Code");
             }
         });
 
+        loginCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCodeDialog(R.drawable.ic_baseline_child_care_24, "Login Code");
+
+
+            }
+        });
         //Put it into the profile data model
 
         //Update the appropiate views (Within the model)
@@ -103,22 +133,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
     public void openCodeDialog(Integer image, String buttonCode) {
-        Inflater inflater = LayoutInflater(R.layout.activity_profile, null);
+        LayoutInflater inflater = getLayoutInflater();
+        View codeDialogLayout = inflater.inflate(R.layout.profilecodedialog, null);
+        codeDialogBuilder = new AlertDialog.Builder(this);
+        codeDialogBuilder.setCancelable(true);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        ImageView codeImage = codeDialogLayout.findViewById(R.id.imageCode);
 
+        codeImage.setImageResource(image);
+        codeDialogBuilder.setView(codeDialogLayout);
+        codeDialogBuilder.setTitle(buttonCode);
 
-        ImageView dialogCode;
-        dialogCode = findViewById(R.id.imageCode);
-        dialogCode.setImageResource(image);
-        dialogBuilder.setTitle("buttonCode");
-
-        AlertDialog dialog = dialogBuilder.create();
-
-        dialog.setCancelable(true);
-        dialog.setContentView(dialogCode);
-
-        dialog.show();
-
+        codeDialogBuilder.setCancelable(true);
+        codeDialogBuilder.show();
     }
 }
