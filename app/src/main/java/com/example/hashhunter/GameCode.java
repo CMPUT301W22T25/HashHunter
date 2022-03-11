@@ -1,5 +1,7 @@
 package com.example.hashhunter;
 
+import org.w3c.dom.Comment;
+
 import java.util.ArrayList;
 
 public class GameCode {
@@ -10,7 +12,9 @@ public class GameCode {
     private Integer points;
     private ArrayList<Comment> commentList;
 
-    public void GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
+    // DEBUG: I think constructor doesn't need void keyword, this might cause problem later
+    // I removed the void keyword while resolving a merge conflict
+    public GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
             Integer points, ArrayList<Comment> commentList) {
         this.qrCode = qrCode;
         this.photo = photo;
@@ -25,36 +29,36 @@ public class GameCode {
      * @return
      * The stored photo
      */
-    public Photo getPhoto() {
-        return this.photo;
-    }
+//    public Photo getPhoto() {
+//        return this.photo;
+//    }
 
     /**
      * Setter for the photo
      * @param p
      * The photo that is to be set as the stored photo
      */
-    public void setPhoto(Photo p) {
-        this.photo = p;
-    }
+//    public void setPhoto(Photo p) {
+//        this.photo = p;
+//    }
 
     /**
      * Getter for the stored location
      * @return
      * The location stored
      */
-    public Location getLocation() {
-        return this.location;
-    }
+//    public Location getLocation() {
+//        return this.location;
+//    }
 
     /**
      * Setter for the location
      * @param l
      * The location that is to be set as the stored location
      */
-    public void setLocation(Location l) {
-        this.location = l;
-    }
+//    public void setLocation(Location l) {
+//        this.location = l;
+//    }
 
     /**
      * Getter for the number of players
@@ -97,7 +101,7 @@ public class GameCode {
      * @param c
      * The comment to be stored
      */
-    public void storeComment(Comment c) {
-        this.commentList.add(c);
-    }
+//    public void storeComment(Comment c) {
+//        this.commentList.add(c);
+//    }
 }
