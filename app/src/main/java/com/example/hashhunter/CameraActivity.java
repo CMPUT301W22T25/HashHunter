@@ -11,12 +11,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,12 +34,28 @@ import java.util.concurrent.Executors;
  * Storing in cloud: https://www.youtube.com/watch?v=7puuTDSf3pk
  */
 public class CameraActivity extends AppCompatActivity {
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Bitmap uploadBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        Button camButton = findViewById(R.id.cam_submit_button);
+        camButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                uploadBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] data = baos.toByteArray();
+                // save file
+                String path = "test/" + UUID.randomUUID() + ".png";
+                StorageReference pathRef = storage.getReference(path);
+                UploadTask uploadTask = pathRef.putBytes(data); // return progress update
+            }
+        });
         dispatchTakePictureIntent();
     }
 
@@ -49,6 +74,7 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            uploadBitmap = imageBitmap;
             ImageView imageView = findViewById(R.id.cam_photo_preview);
             imageView.setImageBitmap(imageBitmap);
             // test image view from url
