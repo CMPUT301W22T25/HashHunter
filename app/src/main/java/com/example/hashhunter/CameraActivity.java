@@ -1,11 +1,13 @@
 package com.example.hashhunter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,8 +16,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -43,6 +50,11 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        // test image view from url
+        ImageView imageViewTest = findViewById(R.id.cam_photo_url);
+        Photo testPhoto = new Photo("https://www.petmd.com/sites/default/files/2020-11/picture-of-golden-retriever-dog_0.jpg");
+        testPhoto.displayImage(imageViewTest);
+        // test submit button
         Button camButton = findViewById(R.id.cam_submit_button);
         camButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,8 +64,34 @@ public class CameraActivity extends AppCompatActivity {
                 byte[] data = baos.toByteArray();
                 // save file
                 String path = "test/" + UUID.randomUUID() + ".png";
-                StorageReference pathRef = storage.getReference(path);
+                StorageReference storageRef = storage.getReference();
+                StorageReference pathRef = storageRef.child(path);
                 UploadTask uploadTask = pathRef.putBytes(data); // return progress update
+                // get the download url
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        // Continue with the task to get the download URL
+                        return pathRef.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            TextView urlText = findViewById(R.id.photo_url_text);
+                            urlText.setText(downloadUri.toString());
+                            Log.d("CAMERA_DEBUG", downloadUri.toString());
+                            Photo newPhoto = new Photo(downloadUri.toString());
+                            newPhoto.displayImage(imageViewTest);
+                        } else {
+                            // Handle failures
+                        }
+                    }
+                });
             }
         });
         dispatchTakePictureIntent();
@@ -77,10 +115,6 @@ public class CameraActivity extends AppCompatActivity {
             uploadBitmap = imageBitmap;
             ImageView imageView = findViewById(R.id.cam_photo_preview);
             imageView.setImageBitmap(imageBitmap);
-            // test image view from url
-            ImageView imageViewTest = findViewById(R.id.cam_photo_url);
-            Photo testPhoto = new Photo("https://www.petmd.com/sites/default/files/2020-11/picture-of-golden-retriever-dog_0.jpg");
-            testPhoto.displayImage(imageViewTest);
         }
     }
 }
