@@ -33,6 +33,10 @@
             android:exported="false"
             android:parentActivityName=".DashboardActivity" />
         <activity
+            android:name=".ScanSubmitActivity"
+            android:exported="false"
+            android:parentActivityName=".ScanActivity" />
+        <activity
             android:name=".ExploreActivity"
             android:exported="false"
             android:parentActivityName=".DashboardActivity" />

@@ -19,16 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    private ActivityResultLauncher<String> requestCameraLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    Intent intent = new Intent(DashboardActivity.this, ScanActivity.class);
-                    DashboardActivity.this.startActivity(intent);
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the user has denied.
-                }
-            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

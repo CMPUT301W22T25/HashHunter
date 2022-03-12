@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,10 @@ import com.google.zxing.Result;
  */
 public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
-    private boolean cameraPerms = false;
+    //private boolean cameraPerms = false;
+    final Button continueButton = findViewById(R.id.continue_button);
+    Integer points;
+    String qrCodeString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +46,11 @@ public class ScanActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //Show result of scanned text
-                        Integer points = Scanner.getCodePoints(result.getText());
-                        String pointMessage = "This QR is worth " + points.toString() + " Points";
+                        qrCodeString = result.getText();
+                        points = Scanner.getCodePoints(qrCodeString);
+                        String pointMessage = "This QR is worth " + points + " Points";
                         Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
+                        continueButton.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -52,6 +59,17 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCodeScanner.startPreview();
+            }
+        });
+
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ScanActivity.this, ScanSubmitActivity.class);
+                intent.putExtra("points", points);
+                intent.putExtra("qr string", qrCodeString);
+                startActivity(intent);
             }
         });
     }
