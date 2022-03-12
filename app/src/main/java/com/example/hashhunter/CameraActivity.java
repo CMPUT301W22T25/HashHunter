@@ -23,6 +23,9 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,9 +46,11 @@ import java.util.concurrent.Executors;
  */
 public class CameraActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Bitmap uploadBitmap;
+    ArrayList<String> photos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +87,35 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
+                            // get url
                             Uri downloadUri = task.getResult();
-                            TextView urlText = findViewById(R.id.photo_url_text);
-                            urlText.setText(downloadUri.toString());
                             Log.d("CAMERA_DEBUG", downloadUri.toString());
-                            Photo newPhoto = new Photo(downloadUri.toString());
-                            newPhoto.displayImage(imageViewTest);
+                            // upload url to firestore
+                            DocumentReference codeRef = db.collection("GameCode").document("FtHjTlwFHYmVk7fvMKx8");
+//                            // get the initial photos array first
+//                            codeRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                    if (task.isSuccessful()) {
+//                                        DocumentSnapshot document = task.getResult();
+//                                        photos = (ArrayList<String>) document.get("photos");
+//                                    }
+//                                }
+//                            });
+                            // update photos array
+//                            photos.add(downloadUri.toString());
+                            codeRef.update("photos", downloadUri.toString());
+                            // test display url
+                            codeRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        Photo newPhoto = new Photo(document.getString("photos"));
+                                        newPhoto.displayImage(imageViewTest);
+                                    }
+                                }
+                            });
                         } else {
                             // Handle failures
                         }
