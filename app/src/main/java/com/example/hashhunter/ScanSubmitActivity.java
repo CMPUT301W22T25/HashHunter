@@ -35,6 +35,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  * If not, construct a new GameCode object and add to player GameCodeList, and to
                  * database if it has a location
                  */
+                Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
+                startActivity(intent);
             }
         });
     }
