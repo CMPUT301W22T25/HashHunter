@@ -49,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
 
-        //If the user is in a nother profile then we will not be able to fetch the login code
+        //If the user is in another profile then we will not be able to fetch the login code
 
         //In this case it will be null
 

@@ -9,8 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
@@ -47,11 +45,11 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
         QRItem myItem =  qrList.get(position);
 
-        holder.treeView.setImageResource(myItem.getImageRsrc());
+        holder.treeView.setImageResource(myItem.getTreeImage());
 
-        holder.pointsView.setText(myItem.getQrPointText());
+        holder.pointsView.setText(myItem.getQRPoints());
 
-        holder.titleView.setText(myItem.getQrName());
+        holder.titleView.setText(myItem.getQRTitle());
     }
 
     @Override

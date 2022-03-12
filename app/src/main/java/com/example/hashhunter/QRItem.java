@@ -2,25 +2,34 @@ package com.example.hashhunter;
 
 public class QRItem {
     private int treePic;
-    private String qrPointText;
-    private String qrName;
+    private int locationPic;
 
-    public QRItem(int tree, String points, String name) {
+    private String strQRCode;
+    private String QRLocationText;
+    private String QRPoints;
+    private String QRTitle;
+
+    public QRItem(int tree, int locPic, String code, String locText, String points, String title) {
         treePic = tree;
-        qrPointText = points;
-        qrName = name;
+        QRPoints = points;
+        QRTitle = title;
 
     }
-
-    public int getImageRsrc() {
+    public String getQRLocation(){
+        return QRLocationText;
+    }
+    public int getTreeImage() {
         return treePic;
     }
 
-    public String getQrPointText(){
-        return qrPointText;
+    public int getLocationPic() {
+        return locationPic;
     }
-    public String getQrName() {
-        return qrName;
+    public String getQRPoints(){
+        return QRPoints;
+    }
+    public String getQRTitle() {
+        return QRTitle;
     }
 
 

@@ -11,9 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HashHunter">
       
-        <activity android:name=".ScanActivity">
 
-        </activity>
         <activity
             android:name=".QRVisualizerActivity"
             android:exported="false" />
