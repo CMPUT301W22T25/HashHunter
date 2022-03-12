@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> requestCameraLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    Intent intent = new Intent(this, ScanActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
                     startActivity(intent);
                 } else {
                     // Explain to the user that the feature is unavailable because the
@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button scanButton = findViewById(R.id.scannerButton);
-        scanButton.setOnClickListener(new View.OnClickListener() {
+        Button scannerButton = findViewById(R.id.scannerButton);
+        scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 requestCameraLauncher.launch(Manifest.permission.CAMERA);
