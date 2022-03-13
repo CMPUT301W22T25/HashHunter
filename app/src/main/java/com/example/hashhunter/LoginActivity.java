@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -83,6 +84,17 @@ public class LoginActivity extends AppCompatActivity {
             });
 
 
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                    mStartForResult.launch(intent);
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied.
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                 // I used all the above links to learn about intents and starting activities
                 // The code is not from any single source
 
-                mStartForResult.launch(intent);
+
             }
         });
     }
