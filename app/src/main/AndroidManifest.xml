@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hashhunter">
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!--  Google play configuration to notify user of camera usage  -->
     <uses-feature android:name="android.hardware.camera" />
@@ -19,6 +20,11 @@
 
         <activity
             android:name=".QRVisualizerActivity"
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAMXsgIeVDP9PVSE9w5ZI2OaBa38C5NotU"
+
+            ></meta-data>
         <activity
             android:name=".CameraActivity"
             android:exported="false" />

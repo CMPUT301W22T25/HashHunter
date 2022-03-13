@@ -30,9 +30,10 @@
         android:text="Launch Login" />
 
     <Button
-        android:id="@+id/scannerButton"
+        android:id="@+id/mapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:onClick="launchTempActivity"
         android:text="scanner activity" />
 
