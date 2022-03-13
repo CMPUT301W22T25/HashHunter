@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">HashHunter</string>
+    
+    <string-array name="sorting_options">
+        <item>Highest QR Score</item>
+        <item>Highest Total Score</item>
+        <item>Most QR</item>
+    </string-array>
+    
 </resources>

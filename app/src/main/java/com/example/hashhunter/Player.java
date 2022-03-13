@@ -14,6 +14,16 @@ public class Player {
     private int totalPoints;
     private int totalGameCode;
     private int maxGameCodePoints;
+    private int displayTotal;
+
+    //public Player(String username, int totalPoints, int totalGameCode, int maxGameCodePoints) {
+       //this.username = username;
+        //this.totalPoints = totalPoints;
+        //this.totalGameCode = totalGameCode;
+        //this.maxGameCodePoints = maxGameCodePoints;
+        //this.displayTotal = maxGameCodePoints;
+
+    //}
 
 
     /**
@@ -122,6 +132,24 @@ public class Player {
      */
     public void setMaxGameCodePoints(int points) {
         this.maxGameCodePoints = points;
+    }
+
+    /**
+     * gets the points that are to be displayed
+     * @return
+     *      returns the int points
+     */
+    public int getDisplayTotal() {
+        return this.displayTotal;
+    }
+
+    /**
+     * sets the points that are to be displayed
+     * @param points
+     *      the points that are set
+     */
+    public void setDisplayTotal(int points) {
+        this.displayTotal = points;
     }
 
 
