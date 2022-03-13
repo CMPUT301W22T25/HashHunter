@@ -2,23 +2,23 @@ package com.example.hashhunter;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.content.Intent;
-import android.media.Image;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener{
 
 
     int columns = 2;
@@ -28,45 +28,83 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView.Adapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
-
+    private Button loginCodeButton;
+    private AlertDialog.Builder codeDialogBuilder;
+    private TextView username;
+    private TextView TreeAmount;
+    private TextView PointAmount;
+    private TextView Email;
+    private ArrayList<QRItem> qrList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
         //Set the layout manager
 
         //Do profile pic
         profilePic = findViewById(R.id.profilePicture);
 
         profilePic.setImageResource(R.drawable.ic_android);
-        ArrayList<QRItem> qrList =  new ArrayList<>();
+        qrList =  new ArrayList<>();
         profileCodeButton = findViewById(R.id.profileCodeButton);
-        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
-        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
+        loginCodeButton = findViewById(R.id.loginCodeButton);
 
-//        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR" ));
 
-        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" ));
-        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" ));
 
-//        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" ));
-//
-//        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" ));
-//        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR"));
+        //If the user is in another profile then we will not be able to fetch the login code
+
+        //In this case it will be null
+
+        //So if login code is null
+
+          //Then set the left button as the profile code
+
+        //Otherwise
+        ArrayList<QRComment> testComments = new ArrayList<>();
+        ArrayList<Integer> LocPicResources = new ArrayList<>();
+
+        LocPicResources.add(R.drawable.ic_android);
+        LocPicResources.add(R.drawable.ic_baseline_4g_plus_mobiledata_24);
+        LocPicResources.add(R.drawable.ic_baseline_child_care_24);
+        LocPicResources.add(R.drawable.ic_launcher_background);
+
+        //Show both buttons
+        testComments.add(new QRComment("Potato123", "I hate potatoes"));
+        testComments.add(new QRComment("lil Tay", "Strongest Flexer In da game"));
+        testComments.add(new QRComment("MasterCoder", "Crappy QR code bro step up ur game I am a master coder and I'll let u know that i graduated from master coder academy"));
+
+        testComments.add(new QRComment("MasterChief", "This ain't halo"));
+
+        testComments.add(new QRComment("Lil Peep", "What a sad qr code"));
+
+
+
+
+        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR", LocPicResources, testComments ));
+        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR", LocPicResources, testComments  ));
+        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR", LocPicResources, testComments  ));
+
+        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" , LocPicResources, testComments ));
+        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" , LocPicResources, testComments ));
+        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR" , LocPicResources, testComments ));
+
+        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" , LocPicResources, testComments ));
+        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" , LocPicResources, testComments ));
+        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" , LocPicResources, testComments ));
+
+        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR", LocPicResources, testComments  ));
+        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" , LocPicResources, testComments ));
+        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR", LocPicResources, testComments ));
+
+
         QRRecycler = findViewById(R.id.treeList);
 
         QRRecycler.setLayoutManager(QRGridManager);
 
-        QRRecycleAdapter = new QRAdapter(qrList);
+        QRRecycleAdapter = new QRAdapter(qrList, this);
 
         QRRecycler.setAdapter(QRRecycleAdapter);
         QRRecycler.setHasFixedSize(true);
-
 
 
 
@@ -84,13 +122,25 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Player code is optional(Eg if I'm checking someone elses profile), so we will set it to null by default.
 
-//        profileCodeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openCodeDialog(R.drawable.ic_android, "Profile Button");
-//            }
-//        });
 
+        //Create the profile stuff click listener
+       // https://www.youtube.com/watch?v=69C1ljfDvl0
+
+        profileCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCodeDialog(R.drawable.ic_baseline_face_24, "Profile Code");
+            }
+        });
+
+        loginCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCodeDialog(R.drawable.ic_baseline_child_care_24, "Login Code");
+
+
+            }
+        });
         //Put it into the profile data model
 
         //Update the appropiate views (Within the model)
@@ -107,22 +157,32 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void openCodeDialog(Integer image, String buttonCode) {
-//        Inflater inflater = LayoutInflater(R.layout.activity_profile, null);
+        LayoutInflater inflater = getLayoutInflater();
+        View codeDialogLayout = inflater.inflate(R.layout.profilecodedialog, null);
+        codeDialogBuilder = new AlertDialog.Builder(this);
+        codeDialogBuilder.setCancelable(true);
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        ImageView codeImage = codeDialogLayout.findViewById(R.id.imageCode);
+
+        codeImage.setImageResource(image);
+        codeDialogBuilder.setView(codeDialogLayout);
+        codeDialogBuilder.setTitle(buttonCode);
+
+        codeDialogBuilder.setCancelable(true);
+        codeDialogBuilder.show();
+    }
+
+    @Override
+    public void onQRClick(int position) {
+
+        Intent intent = new Intent(this, QRVisualizerActivity.class);
+        QRItem myCurrentItem = qrList.get(position);
+        intent.putExtra("QR ITEM", myCurrentItem);
+        startActivity(intent);
 
 
-        ImageView dialogCode;
-        dialogCode = findViewById(R.id.imageCode);
-        dialogCode.setImageResource(image);
-        dialogBuilder.setTitle("buttonCode");
 
-        AlertDialog dialog = dialogBuilder.create();
-
-        dialog.setCancelable(true);
-        dialog.setContentView(dialogCode);
-
-        dialog.show();
 
     }
 

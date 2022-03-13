@@ -3,6 +3,7 @@ package com.example.hashhunter;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -124,12 +125,24 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.d(TAG, e.toString());
                                 }
                             });
-                    finish();
+                    Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
+                    startActivity(intent);
+                    // Should this be called?
+                    //finish();
                 }
             }
         });
     }
 
+    /**
+     * Check if the information entered by the user is valid or not
+     * @param username
+     * username that was entered by the user
+     * @param email
+     * email that was entered by the user
+     * @return
+     * true if the input is valid (non-empty username and valid email address), false otherwise
+     */
     public Boolean validateInput(String username, String email) {
         //https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
 

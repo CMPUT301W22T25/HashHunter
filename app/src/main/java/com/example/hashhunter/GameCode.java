@@ -4,7 +4,6 @@ import android.location.Location;
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
-
 public class GameCode {
     private String qrCode;
     private Photo photo;
