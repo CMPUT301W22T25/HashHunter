@@ -1,14 +1,21 @@
 package com.example.hashhunter;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ScanSubmitActivity extends AppCompatActivity {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private Bitmap photoBitmap; // bitmap received from camera app
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
         Button addLocation = findViewById(R.id.add_location_button);
         Button saveButton = findViewById(R.id.save_button);
 
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,5 +53,27 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    // launch camera app
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+        }
+    }
+    // get bitmap result from camera app
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            photoBitmap = imageBitmap;
+            // display preview
+            ImageView imageView = findViewById(R.id.scan_submit_photo_preview);
+            imageView.setImageBitmap(imageBitmap);
+        }
     }
 }
