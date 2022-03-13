@@ -25,15 +25,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.UUID;
+import java.util.function.LongFunction;
 
+/**
+ * Activity that lets the user log in by scanning a code, or register if they are a first time user
+ */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
-    private static final String KEY_UNAME = "com.example.hashhunter.username";
-    private static final String KEY_EMAIL = "com.example.hashhunter.email";
     private static SharedPreferences sharedPreferences;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -59,7 +62,11 @@ public class LoginActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
                                         editor.commit();
-                                        finish();
+
+                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                                        startActivity(intent);
+                                        // Should this be called?
+                                        //finish();
                                     } else {
                                         Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
                                     }
@@ -85,7 +92,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-                finish();
+                // Should this be called?
+                //finish();
             }
         });
 
