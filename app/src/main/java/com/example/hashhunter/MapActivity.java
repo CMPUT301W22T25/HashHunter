@@ -24,6 +24,8 @@ import com.google.android.libraries.maps.model.MarkerOptions;
 public class MapActivity extends AppCompatActivity {
     //https://www.youtube.com/watch?v=l-J6gDYtgFU
     //Get GPS location
+    //https://www.youtube.com/watch?v=p0PoKEPI65o
+    // Output google maps fragment
     private LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private SupportMapFragment supportMapFragment;
@@ -49,7 +51,6 @@ public class MapActivity extends AppCompatActivity {
                         MarkerOptions options = new MarkerOptions().position(latlng).title("Player");
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng,10));
                         googleMap.addMarker(options);
-
                     }
                 });
             }
