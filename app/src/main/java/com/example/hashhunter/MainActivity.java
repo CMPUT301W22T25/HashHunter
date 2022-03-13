@@ -15,41 +15,42 @@ import java.util.UUID;
   * The Main activity for the app
   */
  public class MainActivity extends AppCompatActivity {
-    // https://www.youtube.com/watch?v=4WxKQTUweVg
-    public static final String SHARED_PREF_NAME = "com.example.hashhunter.shared_prefs";
-    public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
-    private SharedPreferences sharedPreferences;
-    private Boolean firstLogin = false;
+     // https://www.youtube.com/watch?v=4WxKQTUweVg
+     public static final String SHARED_PREF_NAME = "com.example.hashhunter.shared_prefs";
+     public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
+     private SharedPreferences sharedPreferences;
+     private Boolean firstLogin = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Button scannerButton = findViewById(R.id.scannerButton);
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_main);
+         Button scannerButton = findViewById(R.id.scannerButton);
 
-        // https://www.youtube.com/watch?v=4WxKQTUweVg
-        // https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
-        sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        String unique_id = sharedPreferences.getString(PREF_UNIQUE_ID, null);
+         // https://www.youtube.com/watch?v=4WxKQTUweVg
+         // https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
+         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+         String unique_id = sharedPreferences.getString(PREF_UNIQUE_ID, null);
 
-        // if unique_id is null, that means the user is logging in to the activity for the first
-        // time
-        if (unique_id == null) {
-            unique_id = UUID.randomUUID().toString();
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(PREF_UNIQUE_ID, unique_id);
-            editor.commit();
-            firstLogin = true;
-        }
+         // if unique_id is null, that means the user is logging in to the activity for the first
+         // time
+         if (unique_id == null) {
+             unique_id = UUID.randomUUID().toString();
+             SharedPreferences.Editor editor = sharedPreferences.edit();
+             editor.putString(PREF_UNIQUE_ID, unique_id);
+             editor.commit();
+             firstLogin = true;
+         }
 
-        // if it is the first time logging in, start the log in activity, else
-        // go straight to the dashboard
-        if (firstLogin) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-            startActivity(intent);
-        }
+         // if it is the first time logging in, start the log in activity, else
+         // go straight to the dashboard
+         if (firstLogin) {
+             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+             startActivity(intent);
+         } else {
+             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+             startActivity(intent);
+         }
 
-    }
+     }
+ }
