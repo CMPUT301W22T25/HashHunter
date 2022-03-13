@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.UUID;
+
+ public class MainActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<String> requestCameraLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -60,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
-                startActivity(intent);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
             }
         });
 
@@ -71,13 +72,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
-            }
-        });
-        Button scannerButton = findViewById(R.id.scannerButton);
-        scannerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestCameraLauncher.launch(Manifest.permission.CAMERA);
             }
         });
 
