@@ -17,12 +17,16 @@ import java.util.concurrent.Executors;
  * - https://stackoverflow.com/questions/11831188/how-to-get-bitmap-from-a-url-in-android
  */
 public class Photo {
-    private String username; // owner of the photo
+    private String owner; // owner of the photo
     private String urlString;
     private Bitmap imageBitmap;
 
     public Photo(String urlString) {
         this.urlString = urlString; // cache url
+    }
+    public Photo (String urlString, String owner) {
+        this.urlString = urlString;
+        this.owner = owner;
     }
 
     private void URLToBitmap() {

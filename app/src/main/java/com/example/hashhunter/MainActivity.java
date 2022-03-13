@@ -32,11 +32,22 @@ import java.util.UUID;
     private SharedPreferences sharedPreferences;
     private Boolean firstLogin = false;
 
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                    startActivity(intent);
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied.
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button scannerButton = findViewById(R.id.scannerButton);
+
 
         // https://www.youtube.com/watch?v=4WxKQTUweVg
         // https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
@@ -63,25 +74,31 @@ import java.util.UUID;
             @Override
             public void onClick(View view) {
                 requestCameraLauncher.launch(Manifest.permission.CAMERA);
+
             }
         });
 
-        Button loginButton = findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        Button scannerButton = findViewById(R.id.scannerButton);
+        scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
+            }
+        });
+
+        Button camButton = findViewById(R.id.cam_button);
+        camButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
                 startActivity(intent);
             }
         });
 
     }
-
-    public void launchDashboardActivity(View v) {
-        Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
-    }
 }
+
+
 // Commented this out, was not sure what is needed
 // package com.example.hashhunter;
 
@@ -122,3 +139,4 @@ import java.util.UUID;
 //         startActivity(intent);
 //     }
 // }
+

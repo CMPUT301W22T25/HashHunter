@@ -32,6 +32,7 @@ public class ScanActivity extends AppCompatActivity {
     String qrCodeString;
 
 
+
     public static final String EXTRA_SCANNED_UNAME = "com.example.hashhunter.scanned_uname";
 
     @Override
@@ -52,7 +53,7 @@ public class ScanActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
+                       // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
                         if(getCallingActivity() != null) {
                             if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
                                 String uname = result.getText().toString();
@@ -67,6 +68,7 @@ public class ScanActivity extends AppCompatActivity {
                             Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                             continueButton.setVisibility(View.VISIBLE);
                         }
+
                     }
                 });
             }
@@ -84,6 +86,7 @@ public class ScanActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ScanActivity.this, ScanSubmitActivity.class);
                 intent.putExtra("points", points);
+
                 intent.putExtra("qrcode string", qrCodeString);
                 startActivity(intent);
             }

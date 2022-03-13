@@ -8,34 +8,40 @@
     android:theme="@style/Theme.AppCompat"
     tools:context=".ProfileActivity">
 
-    <TextView
-        android:id="@+id/qr_code_points"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:text="QR code points"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_code_name" />
 
     <EditText
         android:id="@+id/qr_code_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="QR Code Name"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.868"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/add_photo_button"
+    <TextView
+        android:id="@+id/qr_code_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="69dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:text="QR code points"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.868"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qr_code_name" />
+
+    <Button
+        android:id="@+id/add_photo_button"
+        android:layout_width="235dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="24dp"
+
         android:backgroundTint="#F0E3B4"
         android:text="Add Photo"
         android:textColor="#5CB8A7"
@@ -44,8 +50,10 @@
 
     <Button
         android:id="@+id/add_location_button"
-        android:layout_width="wrap_content"
+        android:layout_width="235dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+
         android:backgroundTint="#F0E3B4"
         android:text="Add Location"
         android:textColor="#5CB8A7"
@@ -64,6 +72,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/scan_submit_photo_preview"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="68dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qr_code_points"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/scan_submit_code_preview"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
