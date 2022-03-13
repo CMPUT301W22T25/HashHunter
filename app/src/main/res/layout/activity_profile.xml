@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="#5CB8A7"
     tools:context=".ProfileActivity"
-    android:theme="@style/Theme.AppCompat"
-    >
+    android:theme="@style/Theme.AppCompat">
 
     <androidx.cardview.widget.CardView
         android:layout_width="71dp"
