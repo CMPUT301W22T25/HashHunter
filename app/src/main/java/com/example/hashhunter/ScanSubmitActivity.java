@@ -85,33 +85,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                     // only if user take photos
                     uploadPhotoToStorage();
                 }
-                ArrayList qrStrings = new ArrayList<String>();
-                // https://stackoverflow.com/questions/50035752/how-to-get-list-of-documents-from-a-collection-in-firestore-android
-                db.collection("GameCode")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList qrStrings = new ArrayList<String>();
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        qrStrings.add(document.getId());
-                                    }
 
-                                } else {
-
-                                }
-
-                            }
-                        });
-                for (Object qrCode: qrStrings) {
-                    if (qrCode == qrCodeString){
-                        // Edit GameCode in firestore
-                        Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
-                        startActivity(intent);
-                    }
-                }
-                // No match so create new GameCode and store in firestore
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
                 startActivity(intent);
             }
