@@ -1,7 +1,6 @@
 package com.example.hashhunter;
 
 import android.location.Location;
-
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
@@ -15,14 +14,26 @@ public class GameCode {
 
     // DEBUG: I think constructor doesn't need void keyword, this might cause problem later
     // I removed the void keyword while resolving a merge conflict
-    public GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
-            Integer points, ArrayList<Comment> commentList) {
+    public GameCode(String qrCode, Integer points) {
         this.qrCode = qrCode;
+        this.photo = null;
+        this.location = null;
+        this.numPlayers = 0;
+        this.points = points;
+        this.commentList = new ArrayList<Comment>();
+    }
+    public GameCode(String qrCode, Location location, Integer points) {
+        this(qrCode, points);
+        this.location = location;
+    }
+    public GameCode(String qrCode, Photo photo, Integer points) {
+        this(qrCode, points);
+        this.photo = photo;
+    }
+    public GameCode(String qrCode, Photo photo, Location location, Integer points) {
+        this(qrCode, points);
         this.photo = photo;
         this.location = location;
-        this.numPlayers = numPlayers;
-        this.points = points;
-        this.commentList = commentList;
     }
 
     /**
@@ -30,37 +41,36 @@ public class GameCode {
      * @return
      * The stored photo
      */
+    public Photo getPhoto() {
+        return this.photo;
+    }
 
-//    public Photo getPhoto() {
-//        return this.photo;
-//    }
     /**
      * Setter for the photo
      * @param p
      * The photo that is to be set as the stored photo
      */
-
-//    public void setPhoto(Photo p) {
-//        this.photo = p;
-//    }
+    public void setPhoto(Photo p) {
+        this.photo = p;
+    }
 
     /**
      * Getter for the stored location
      * @return
      * The location stored
      */
-//    public Location getLocation() {
-//        return this.location;
-//    }
+    public Location getLocation() {
+        return this.location;
+    }
 
     /**
      * Setter for the location
      * @param l
      * The location that is to be set as the stored location
      */
-//    public void setLocation(Location l) {
-//        this.location = l;
-//    }
+    public void setLocation(Location l) {
+        this.location = l;
+    }
 
     /**
      * Getter for the number of players
@@ -103,7 +113,7 @@ public class GameCode {
      * @param c
      * The comment to be stored
      */
-//    public void storeComment(Comment c) {
-//        this.commentList.add(c);
-//    }
+    public void storeComment(Comment c) {
+        this.commentList.add(c);
+    }
 }
