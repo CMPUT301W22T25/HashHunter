@@ -141,11 +141,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
      * @param photoUrl url of photo to be stored
      */
     private void storePhotoDataInDB(String photoUrl) {
-        Map<String, Object> photo = new HashMap<>();
-        photo.put("owner", "username"); // replace value with logged in user
-        photo.put("url", photoUrl);
+        Photo newPhoto = new Photo(photoUrl, "username"); // replace value with logged in user
         photoId = UUID.randomUUID().toString();
-        db.collection("Photo").document(photoId).set(photo)
+        db.collection("Photo").document(photoId).set(newPhoto)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
