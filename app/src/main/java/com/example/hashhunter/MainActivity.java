@@ -32,17 +32,6 @@ import java.util.UUID;
     private SharedPreferences sharedPreferences;
     private Boolean firstLogin = false;
 
-    private ActivityResultLauncher<String> requestCameraLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
-                    startActivity(intent);
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the user has denied.
-                }
-            });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,13 +59,6 @@ import java.util.UUID;
             startActivity(intent);
         }
 
-        scannerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestCameraLauncher.launch(Manifest.permission.CAMERA);
-
-            }
-        });
 
         Button scannerButton = findViewById(R.id.scannerButton);
         scannerButton.setOnClickListener(new View.OnClickListener() {
