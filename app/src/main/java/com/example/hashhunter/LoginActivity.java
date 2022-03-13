@@ -7,9 +7,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -21,42 +25,65 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.UUID;
+
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
     private static final String KEY_UNAME = "com.example.hashhunter.username";
     private static final String KEY_EMAIL = "com.example.hashhunter.email";
+    private static SharedPreferences sharedPreferences;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-//    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<ActivityResult>() {
-//                @Override
-//                public void onActivityResult(ActivityResult result) {
-//                    if (result.getResultCode() == Activity.RESULT_OK) {
-//                        Intent intent = result.getData();
-//                        assert intent != null;
-//
-//                        String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
-//
-//                        // https://stackoverflow.com/questions/46880323/how-to-check-if-a-cloud-firestore-document-exists-when-using-realtime-updates
-//
-//                        DocumentReference userDocRef = db.collection("UserInfo").document(scannedUsername);
-//                        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                if (task.isSuccessful()) {
-//                                    DocumentSnapshot document = task.getResult();
-//                                    // log them in and start another activity
-//                                    Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
-//
-//                                }
-//                            }
-//                        });
-//
-//                    }
-//                }
-//            });
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        assert intent != null;
+
+                        String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
+
+                       //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
+                        DocumentReference userDocRef = db.collection("UserInfo").document(scannedUsername);
+                        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    // log them in and start another activity
+                                    if (document.exists()) {
+                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
+                                        editor.commit();
+                                        finish();
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with", task.getException());
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                    mStartForResult.launch(intent);
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied.
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -77,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
 
                 // https://developer.android.com/training/basics/firstapp/starting-activity#java
                 // https://www.youtube.com/watch?v=AD5qt7xoUU8

@@ -1,5 +1,6 @@
 package com.example.hashhunter;
 
+import android.location.Location;
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
@@ -14,14 +15,26 @@ public class GameCode {
 
     // DEBUG: I think constructor doesn't need void keyword, this might cause problem later
     // I removed the void keyword while resolving a merge conflict
-    public GameCode(String qrCode, Photo photo, Location location, Integer numPlayers,
-            Integer points, ArrayList<Comment> commentList) {
+    public GameCode(String qrCode, Integer points) {
         this.qrCode = qrCode;
+        this.photo = null;
+        this.location = null;
+        this.numPlayers = 0;
+        this.points = points;
+        this.commentList = new ArrayList<Comment>();
+    }
+    public GameCode(String qrCode, Location location, Integer points) {
+        this(qrCode, points);
+        this.location = location;
+    }
+    public GameCode(String qrCode, Photo photo, Integer points) {
+        this(qrCode, points);
+        this.photo = photo;
+    }
+    public GameCode(String qrCode, Photo photo, Location location, Integer points) {
+        this(qrCode, points);
         this.photo = photo;
         this.location = location;
-        this.numPlayers = numPlayers;
-        this.points = points;
-        this.commentList = commentList;
     }
 
     /**

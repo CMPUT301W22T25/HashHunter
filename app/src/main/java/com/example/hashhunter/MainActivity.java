@@ -1,4 +1,4 @@
-package com.example.hashhunter;
+ package com.example.hashhunter;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -7,11 +7,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.UUID;
+
+ public class MainActivity extends AppCompatActivity {
+
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                    startActivity(intent);
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied.
+                }
+            });
+    // https://www.youtube.com/watch?v=4WxKQTUweVg
+    public static final String SHARED_PREF_NAME = "com.example.hashhunter.shared_prefs";
+    public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
+    private SharedPreferences sharedPreferences;
+    private Boolean firstLogin = false;
 
     private ActivityResultLauncher<String> requestCameraLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -29,12 +48,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button loginButton = findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
+
+        // https://www.youtube.com/watch?v=4WxKQTUweVg
+        // https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb
+        sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        String unique_id = sharedPreferences.getString(PREF_UNIQUE_ID, null);
+
+        if (unique_id == null) {
+            unique_id = UUID.randomUUID().toString();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(PREF_UNIQUE_ID, unique_id);
+            editor.commit();
+            firstLogin = true;
+        }
+
+        if (firstLogin) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+            startActivity(intent);
+        }
+
+        scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
+
             }
         });
 
@@ -57,3 +97,46 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
+
+
+// Commented this out, was not sure what is needed
+// package com.example.hashhunter;
+
+
+// import androidx.appcompat.app.AppCompatActivity;
+
+// import android.content.Intent;
+// import android.os.Bundle;
+// import android.view.View;
+// import android.widget.Button;
+
+// public class MainActivity extends AppCompatActivity {
+
+
+//     @Override
+//     protected void onCreate(Bundle savedInstanceState) {
+//         super.onCreate(savedInstanceState);
+//         setContentView(R.layout.activity_main);
+
+//         Button loginButton = findViewById(R.id.login_button);
+//         loginButton.setOnClickListener(new View.OnClickListener() {
+//             @Override
+//             public void onClick(View view) {
+//                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                 startActivity(intent);
+//             }
+//         });
+
+//     }
+//     // DEBUG while login is under construction
+//     public void launchTempActivity(View v) {
+//         Intent intent = new Intent(this, ScanActivity.class);
+//         startActivity(intent);
+//     }
+//     // DEBUG while login is under construction
+//     public void launchCamActivity(View v) {
+//         Intent intent = new Intent(this, CameraActivity.class);
+//         startActivity(intent);
+//     }
+// }
+

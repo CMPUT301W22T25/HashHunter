@@ -8,6 +8,7 @@
     android:theme="@style/Theme.AppCompat"
     tools:context=".ProfileActivity">
 
+
     <EditText
         android:id="@+id/qr_code_name"
         android:layout_width="wrap_content"
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
         android:layout_marginEnd="24dp"
+
         android:backgroundTint="#F0E3B4"
         android:text="Add Photo"
         android:textColor="#5CB8A7"
@@ -51,6 +53,7 @@
         android:layout_width="235dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+
         android:backgroundTint="#F0E3B4"
         android:text="Add Location"
         android:textColor="#5CB8A7"
@@ -69,6 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
 
     <ImageView
         android:id="@+id/scan_submit_photo_preview"
@@ -89,6 +93,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

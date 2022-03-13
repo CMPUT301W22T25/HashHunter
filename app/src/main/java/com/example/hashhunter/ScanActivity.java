@@ -29,6 +29,8 @@ public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
     //private boolean cameraPerms = false;
     Integer points;
+    String qrCodeString;
+
 
 
     public static final String EXTRA_SCANNED_UNAME = "com.example.hashhunter.scanned_uname";
@@ -50,11 +52,23 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //Show result of scanned text
-                        points = Scanner.getCodePoints(result.getText());
-                        String pointMessage = "This QR is worth " + points + " Points";
-                        Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
-                        continueButton.setVisibility(View.VISIBLE);
+
+                       // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
+                        if(getCallingActivity() != null) {
+                            if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
+                                String uname = result.getText().toString();
+                                intent.putExtra(EXTRA_SCANNED_UNAME, uname);
+                                finish();
+                            }
+                        }
+                        else {
+                            qrCodeString = result.getText();
+                            points = Scanner.getCodePoints(qrCodeString);
+                            String pointMessage = "This QR is worth " + points + " Points";
+                            Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
+                            continueButton.setVisibility(View.VISIBLE);
+                        }
+
                     }
                 });
             }
@@ -72,6 +86,8 @@ public class ScanActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ScanActivity.this, ScanSubmitActivity.class);
                 intent.putExtra("points", points);
+
+                intent.putExtra("qrcode string", qrCodeString);
                 startActivity(intent);
             }
         });
