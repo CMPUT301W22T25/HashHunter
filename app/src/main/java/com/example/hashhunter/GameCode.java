@@ -6,7 +6,7 @@ import org.w3c.dom.Comment;
 import java.util.ArrayList;
 public class GameCode {
     private String qrCode;
-    private Photo photo;
+    private PhotoController photo;
     private Location location;
     private Integer numPlayers;
     private Integer points;
@@ -26,11 +26,11 @@ public class GameCode {
         this(qrCode, points);
         this.location = location;
     }
-    public GameCode(String qrCode, Photo photo, Integer points) {
+    public GameCode(String qrCode, PhotoController photo, Integer points) {
         this(qrCode, points);
         this.photo = photo;
     }
-    public GameCode(String qrCode, Photo photo, Location location, Integer points) {
+    public GameCode(String qrCode, PhotoController photo, Location location, Integer points) {
         this(qrCode, points);
         this.photo = photo;
         this.location = location;
@@ -41,7 +41,7 @@ public class GameCode {
      * @return
      * The stored photo
      */
-    public Photo getPhoto() {
+    public PhotoController getPhoto() {
         return this.photo;
     }
 
@@ -50,7 +50,7 @@ public class GameCode {
      * @param p
      * The photo that is to be set as the stored photo
      */
-    public void setPhoto(Photo p) {
+    public void setPhoto(PhotoController p) {
         this.photo = p;
     }
 

@@ -43,6 +43,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
     private Bitmap photoBitmap; // bitmap received from camera app
     private String photoId; // id of photo in firestore
+    int points; // value of points
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 /**
-                 * Upload photo to firebase storage
-                 * Add photo object containing url to firestore
+                 * Upload photo to firebase storage ✅
+                 * Add photo object containing url to firestore ✅
                  * Get database of GameCodes
                  * Check if a code with the same string and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
@@ -82,14 +83,21 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  * database if it has a location
                  */
                 if (photoBitmap != null) {
-                    // only if user take photos
+                    // need to wait for photos to be uploaded, then upload code data
                     uploadPhotoToStorage();
+                } else {
+                    // directly upload code data
+                    storeCodeInDB();
                 }
 
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
                 startActivity(intent);
             }
         });
+    }
+    //
+    private void storeCodeInDB() {
+
     }
     // upload photo to firebase storage
     private void uploadPhotoToStorage() {
