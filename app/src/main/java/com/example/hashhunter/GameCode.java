@@ -1,5 +1,7 @@
 package com.example.hashhunter;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 
 public class GameCode {

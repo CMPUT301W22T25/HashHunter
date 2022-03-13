@@ -3,9 +3,11 @@ package com.example.hashhunter;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -32,11 +34,13 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
     private static final String KEY_UNAME = "com.example.hashhunter.username";
     private static final String KEY_EMAIL = "com.example.hashhunter.email";
+    private SharedPreferences sharedPreferences;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private EditText usernameEdit;
     private EditText emailEdit;
+    private String unique_id;
     private Button submitButton;
     private ImageView qrCodeIV;
     Bitmap bitmap;
@@ -57,6 +61,8 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = usernameEdit.getText().toString();
                 String email = emailEdit.getText().toString();
+                sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+                unique_id = sharedPreferences.getString(MainActivity.PREF_UNIQUE_ID, "IDNOTFOUND");
 
                 // generate a qr Code
                 //https://www.geeksforgeeks.org/how-to-generate-qr-code-in-android/
@@ -83,10 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
                     // generating dimension from width and height
                     int dimen = Math.min(width, height);
                     dimen = (dimen * 3) / 4;
-
                     // setting these dimensions inside our qrcode generator to generate the qr code
-                    String qrCodeString = username;
-                    qrgEncoder = new QRGEncoder(qrCodeString, null, QRGContents.Type.TEXT, dimen);
+                    qrgEncoder = new QRGEncoder(unique_id, null, QRGContents.Type.TEXT, dimen);
                     try {
                         // getting our qrCode in the form of a bitmap
                         bitmap = qrgEncoder.encodeAsBitmap();
@@ -105,7 +109,8 @@ public class RegisterActivity extends AppCompatActivity {
                     Map<String, Object> info = new HashMap<>();
                     info.put(KEY_UNAME, username);
                     info.put(KEY_EMAIL, email);
-                    db.collection("UserInfo").document(username).set(info)
+                    info.put(MainActivity.PREF_UNIQUE_ID, unique_id);
+                    db.collection("UserInfo").document(unique_id).set(info)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
@@ -119,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.d(TAG, e.toString());
                                 }
                             });
-
+                    finish();
                 }
             }
         });
