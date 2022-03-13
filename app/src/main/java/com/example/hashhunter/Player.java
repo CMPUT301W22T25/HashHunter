@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  * This is a class that keeps track of a player
  */
+
 public class Player {
 
     private String username;

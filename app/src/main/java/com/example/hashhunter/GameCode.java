@@ -1,13 +1,14 @@
 package com.example.hashhunter;
 
 import android.location.Location;
+
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 
 public class GameCode {
     private String qrCode;
-    private Photo photo;
+    private ContactsContract.Contacts.Photo photo;
     private Location location;
     private Integer numPlayers;
     private Integer points;
@@ -30,15 +31,16 @@ public class GameCode {
      * @return
      * The stored photo
      */
+
 //    public Photo getPhoto() {
 //        return this.photo;
 //    }
-
     /**
      * Setter for the photo
      * @param p
      * The photo that is to be set as the stored photo
      */
+
 //    public void setPhoto(Photo p) {
 //        this.photo = p;
 //    }
