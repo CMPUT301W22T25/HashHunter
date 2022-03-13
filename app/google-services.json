@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "915474595597",
+    "project_id": "hashhunterdb",
+    "storage_bucket": "hashhunterdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915474595597:android:77ca3b49dc4f2a66f7fa44",
+        "android_client_info": {
+          "package_name": "com.example.hashhunter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915474595597-0s3u1p3qopafpdvcsb8sk2e44fjof7bm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA7kJe8QBvRM7qqwwId7VNldbMIdu7UPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915474595597-0s3u1p3qopafpdvcsb8sk2e44fjof7bm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
