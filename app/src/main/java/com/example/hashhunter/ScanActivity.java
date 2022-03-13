@@ -31,12 +31,16 @@ public class ScanActivity extends AppCompatActivity {
     Integer points;
 
 
+    public static final String EXTRA_SCANNED_UNAME = "com.example.hashhunter.scanned_uname";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scanner_layout);
         Button continueButton = findViewById(R.id.continue_button);
 
+
+        Intent intent = getIntent();
 
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);

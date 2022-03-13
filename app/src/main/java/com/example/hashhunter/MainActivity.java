@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         Button scannerButton = findViewById(R.id.scannerButton);
         scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,10 +46,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+        Button camButton = findViewById(R.id.cam_button);
+        camButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                startActivity(intent);
+            }
+        });
 
-    public void launchDashboardActivity(View v) {
-        Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
     }
 }
