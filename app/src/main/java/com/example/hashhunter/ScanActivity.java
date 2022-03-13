@@ -1,5 +1,7 @@
 package com.example.hashhunter;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +27,11 @@ import com.google.zxing.Result;
  */
 public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
-    private final int CAMERA_REQUEST_CODE = 101;
+    //private boolean cameraPerms = false;
+    Integer points;
+    String qrCodeString;
+
+
 
     public static final String EXTRA_SCANNED_UNAME = "com.example.hashhunter.scanned_uname";
 
@@ -32,8 +39,8 @@ public class ScanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scanner_layout);
+        Button continueButton = findViewById(R.id.continue_button);
 
-        setupPermissions();
 
         Intent intent = getIntent();
 
@@ -45,16 +52,23 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //Show result of scanned text
 
-                        Toast.makeText(ScanActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
-
-                        // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
-                        if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
-                            String uname = result.getText().toString();
-                            intent.putExtra(EXTRA_SCANNED_UNAME, uname);
-                            finish();
+                       // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
+                        if(getCallingActivity() != null) {
+                            if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
+                                String uname = result.getText().toString();
+                                intent.putExtra(EXTRA_SCANNED_UNAME, uname);
+                                finish();
+                            }
                         }
+                        else {
+                            qrCodeString = result.getText();
+                            points = Scanner.getCodePoints(qrCodeString);
+                            String pointMessage = "This QR is worth " + points + " Points";
+                            Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
+                            continueButton.setVisibility(View.VISIBLE);
+                        }
+
                     }
                 });
             }
@@ -63,6 +77,18 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCodeScanner.startPreview();
+            }
+        });
+
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ScanActivity.this, ScanSubmitActivity.class);
+                intent.putExtra("points", points);
+
+                intent.putExtra("qrcode string", qrCodeString);
+                startActivity(intent);
             }
         });
     }
@@ -79,16 +105,4 @@ public class ScanActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private void setupPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-        }
-    }
-
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != CAMERA_REQUEST_CODE)
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-    }*/
 }
