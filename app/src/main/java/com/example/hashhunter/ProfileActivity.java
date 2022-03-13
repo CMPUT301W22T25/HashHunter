@@ -155,11 +155,13 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
     }
+
     public void openCodeDialog(Integer image, String buttonCode) {
         LayoutInflater inflater = getLayoutInflater();
         View codeDialogLayout = inflater.inflate(R.layout.profilecodedialog, null);
         codeDialogBuilder = new AlertDialog.Builder(this);
         codeDialogBuilder.setCancelable(true);
+
 
         ImageView codeImage = codeDialogLayout.findViewById(R.id.imageCode);
 
@@ -183,4 +185,5 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
     }
+
 }

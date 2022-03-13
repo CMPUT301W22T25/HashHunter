@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hashhunter">
-    <uses-permission android:name="android.permission.CAMERA"
-        />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--  Google play configuration to notify user of camera usage  -->
+    <uses-feature android:name="android.hardware.camera" />
+    <!-- Allow to open image from URL   -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +19,14 @@
 
         <activity
             android:name=".QRVisualizerActivity"
+        <activity
+            android:name=".CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"
