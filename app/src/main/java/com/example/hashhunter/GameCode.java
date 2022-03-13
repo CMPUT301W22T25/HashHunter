@@ -1,5 +1,6 @@
 package com.example.hashhunter;
 
+import android.location.Location;
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
