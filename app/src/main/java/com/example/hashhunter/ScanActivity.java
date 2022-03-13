@@ -31,12 +31,16 @@ public class ScanActivity extends AppCompatActivity {
     Integer points;
 
 
+    public static final String EXTRA_SCANNED_UNAME = "com.example.hashhunter.scanned_uname";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scanner_layout);
         Button continueButton = findViewById(R.id.continue_button);
 
+
+        Intent intent = getIntent();
 
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
@@ -47,6 +51,15 @@ public class ScanActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //Show result of scanned text
+
+                        Toast.makeText(ScanActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+
+                        // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
+                        if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
+                            String uname = result.getText().toString();
+                            intent.putExtra(EXTRA_SCANNED_UNAME, uname);
+                            finish();
+                        }
                         points = Scanner.getCodePoints(result.getText());
                         String pointMessage = "This QR is worth " + points + " Points";
                         Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
