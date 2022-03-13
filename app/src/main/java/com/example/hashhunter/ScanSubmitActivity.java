@@ -17,22 +17,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ScanSubmitActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
-    private String photUrl; // url of photo stored in firebase storage
+    private String photoId; // id of photo in firestore
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
             public void onClick(View view) {
                 /**
                  * Upload photo to firebase storage
+                 * Add photo object containing url to firestore
                  * Get database of GameCodes
                  * Check if a code with the same string and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
@@ -69,7 +76,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  */
                 if (photoBitmap != null) {
                     // only if user take photos
-                    uploadPhoto();
+                    uploadPhotoToStorage();
                 }
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
                 startActivity(intent);
@@ -77,7 +84,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
         });
     }
     // upload photo to firebase storage
-    private void uploadPhoto() {
+    private void uploadPhotoToStorage() {
         // construct byte array to be uploaded
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -103,12 +110,38 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // get url
                     Uri downloadUri = task.getResult();
-                    photUrl =  downloadUri.toString();
+                    // store url in db
+                    storePhotoDataInDB(downloadUri.toString());
                 } else {
                     // Handle failures
                 }
             }
         });
+    }
+
+    /**
+     * Store photo data like owner username and url into firestore "Photo" collection
+     * GameCode object will store the id of Photo object to refer to the url
+     * @param photoUrl url of photo to be stored
+     */
+    private void storePhotoDataInDB(String photoUrl) {
+        Map<String, Object> photo = new HashMap<>();
+        photo.put("owner", "username"); // replace value with logged in user
+        photo.put("url", photoUrl);
+        photoId = UUID.randomUUID().toString();
+        db.collection("Photo").document(photoId).set(photo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("DB_OPERATION", "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DB_OPERATION", "Error writing document", e);
+                    }
+                });
     }
     // launch camera app
     private void dispatchTakePictureIntent() {
