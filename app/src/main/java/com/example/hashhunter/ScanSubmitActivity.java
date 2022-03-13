@@ -3,19 +3,36 @@ package com.example.hashhunter;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.util.UUID;
 
 public class ScanSubmitActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
+    private String photUrl; // url of photo stored in firebase storage
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +60,50 @@ public class ScanSubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 /**
+                 * Upload photo to firebase storage
                  * Get database of GameCodes
-                 * Check if this has same string and location as them
+                 * Check if a code with the same string and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
                  * If not, construct a new GameCode object and add to player GameCodeList, and to
                  * database if it has a location
                  */
+                uploadPhoto();
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+    // upload photo to firebase storage
+    private void uploadPhoto() {
+        // construct byte array to be uploaded
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        photoBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        // send packet to firebase storage
+        String path = "photos/" + UUID.randomUUID() + ".png";
+        StorageReference storageRef = storage.getReference();
+        StorageReference pathRef = storageRef.child(path);
+        UploadTask uploadTask = pathRef.putBytes(data); // return progress update
+        // get the download url
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return pathRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    // get url
+                    Uri downloadUri = task.getResult();
+                    photUrl =  downloadUri.toString();
+                } else {
+                    // Handle failures
+                }
             }
         });
     }
@@ -61,6 +114,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         } catch (ActivityNotFoundException e) {
             // display error state to the user
+            e.printStackTrace();
         }
     }
     // get bitmap result from camera app
