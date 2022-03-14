@@ -50,6 +50,9 @@ public class DashboardActivity extends AppCompatActivity {
                             break;
                         case R.id.scan:
                             selectedFragment = new ScanFragment();
+                            // DEBUG: redirect to scanner activity when fragment is chosen
+                            Intent intent = new Intent(DashboardActivity.this, ScanActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.profile:
                             selectedFragment = new ProfileFragment();
