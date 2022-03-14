@@ -1,19 +1,11 @@
 package com.example.hashhunter;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -36,26 +28,31 @@ public class DashboardActivity extends AppCompatActivity {
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
+                    Intent intent;
 
                     switch (item.getItemId()) {
                         case R.id.home:
-                            selectedFragment = new MainFragment();
+                            intent = new Intent(DashboardActivity.this, MainActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.map:
-                            selectedFragment = new MapFragment();
+                            intent = new Intent(DashboardActivity.this, MapActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.explore:
-                            selectedFragment = new ExploreFragment();
+                            intent = new Intent(DashboardActivity.this, ExploreActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.scan:
-                            selectedFragment = new ScanFragment();
+                            intent = new Intent(DashboardActivity.this, ScanActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.profile:
-                            selectedFragment = new ProfileFragment();
+                            intent = new Intent(DashboardActivity.this, ProfileActivity.class);
+                            startActivity(intent);
                             break;
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
                     return true;
                 }
     };
