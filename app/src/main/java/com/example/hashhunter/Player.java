@@ -20,10 +20,13 @@ public class Player {
     /**
      * constructors
      */
-    public Player() {}
+    public Player() {
+        this.gameCodeList = new ArrayList<>();
+    }
 
     public Player(String username) {
         this.username = username;
+        this.gameCodeList = new ArrayList<>();
     }
 
 
