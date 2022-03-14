@@ -1,15 +1,20 @@
  package com.example.hashhunter;
 
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.UUID;
+
 
  /**
   * The Main activity for the app
@@ -20,6 +25,7 @@ import java.util.UUID;
      public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
      private SharedPreferences sharedPreferences;
      private Boolean firstLogin = false;
+
 
      @Override
      protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,6 @@ import java.util.UUID;
              Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
              startActivity(intent);
          }
-
 
      }
  }

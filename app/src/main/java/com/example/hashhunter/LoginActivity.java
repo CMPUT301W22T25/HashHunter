@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,9 +33,11 @@ import java.util.function.LongFunction;
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
+
     private static SharedPreferences sharedPreferences;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -62,6 +65,8 @@ public class LoginActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
                                         editor.commit();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Logged In");
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                         startActivity(intent);
@@ -69,14 +74,33 @@ public class LoginActivity extends AppCompatActivity {
                                         //finish();
                                     } else {
                                         Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Log In Failed");
                                     }
                                 } else {
                                     Log.d(TAG, "get failed with", task.getException());
+                                    Button loginButton = findViewById(R.id.login_button);
+                                    loginButton.setText("Log In Failed");
                                 }
                             }
                         });
 
+                    } else {
+                        Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
+
+
                     }
+                }
+            });
+
+
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                    mStartForResult.launch(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -102,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
 
                 // https://developer.android.com/training/basics/firstapp/starting-activity#java
                 // https://www.youtube.com/watch?v=AD5qt7xoUU8
@@ -110,7 +134,6 @@ public class LoginActivity extends AppCompatActivity {
                 // I used all the above links to learn about intents and starting activities
                 // The code is not from any single source
 
-                mStartForResult.launch(intent);
             }
         });
     }

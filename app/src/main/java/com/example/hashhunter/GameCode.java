@@ -1,72 +1,73 @@
 package com.example.hashhunter;
 
 import android.location.Location;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
-public class GameCode implements Parcelable {
-    private String qrCode;
-    private String title;
-    private Photo photo;
-    private Integer treePic;
-    private Location location;
-    private Integer numPlayers;
-    private Integer points;
-    private ArrayList<Comment> commentList;
+import java.util.Arrays;
 
-    // DEBUG: I think constructor doesn't need void keyword, this might cause problem later
-    // I removed the void keyword while resolving a merge conflict
-    public GameCode(String qrCode, String title, Integer treePic, Photo photo, Location location, Integer numPlayers,
-            Integer points, ArrayList<Comment> commentList) {
-        this.qrCode = qrCode;
-        this.photo = photo;
-        this.location = location;
-        this.numPlayers = numPlayers;
-        this.points = points;
-        this.commentList = commentList;
+public class GameCode implements Parcelable {
+    private String title; // title of the code
+    private String code; // string representation of the code
+    private Integer points; // points of code
+    private ArrayList<String> photos; // id of photos objects
+    private ArrayList<String> owners; // username
+    private ArrayList<String> comments; // id of comment object
+    private Double latitude;
+    private Double longitude;
+
+    /**
+     * Constructors
+     */
+    // without location and photos
+    public GameCode(String title, String code, Integer points, String owner) {
         this.title = title;
-        this.treePic = treePic;
+        this.code = code;
+        this.points = points;
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.photos = new ArrayList<>();
+        this.comments = new ArrayList<>();
+    }
+
+    // with photos, without location
+    public GameCode(String title, String code, Integer points, String photo, String owner) {
+        this.title = title;
+        this.code = code;
+        this.points = points;
+        this.photos = new ArrayList<>(Arrays.asList(photo));
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
+    }
+
+    // with location, without photos
+    public GameCode(String title, String code, Integer points, String owner, Double latitude, Double longitude) {
+        this.title = title;
+        this.code = code;
+        this.points = points;
+        this.photos = new ArrayList<>();
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    // with location and photos
+    public GameCode(String title, String code, Integer points, String photo, String owner, Double latitude, Double longitude) {
+        this.title = title;
+        this.code = code;
+        this.points = points;
+        this.photos = new ArrayList<>(Arrays.asList(photo));
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
-     * Getter for stored photo
-     * @return
-     * The stored photo
+     * Getters and setters
      */
-
-//    public Photo getPhoto() {
-//        return this.photo;
-//    }
-    /**
-     * Setter for the photo
-     * @param p
-     * The photo that is to be set as the stored photo
-     */
-
-//    public void setPhoto(Photo p) {
-//        this.photo = p;
-//    }
-
-    /**
-     * Getter for the stored location
-     * @return
-     * The location stored
-     */
-//    public Location getLocation() {
-//        return this.location;
-//    }
-
-    /**
-     * Setter for the location
-     * @param l
-     * The location that is to be set as the stored location
-     */
-//    public void setLocation(Location l) {
-//        this.location = l;
-//    }
+    public String getTitle() {
+        return title;
+    }
 
     protected GameCode(Parcel in) {
         qrCode = in.readString();
@@ -106,33 +107,25 @@ public class GameCode implements Parcelable {
      */
     public Integer getPlayers() {
         return this.numPlayers;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    /**
-     * Setter for the number of players
-     * @param n
-     * The integer that is to be set as the number of players that have scanned the QR code
-     */
-    public void setPlayers(Integer n) {
-        this.numPlayers = n;
+
+    public String getCode() {
+        return code;
     }
 
-    /**
-     * Getter for the points
-     * @return
-     * The number of points that the QR code is worth
-     */
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public Integer getPoints() {
-        return this.points;
+        return points;
     }
 
-    /**
-     * Setter for the points
-     * @param p
-     * The number of points that the qr code is worth
-     */
-    public void setPoints(Integer p) {
-        this.points = p;
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
     @Override
@@ -187,4 +180,43 @@ public class GameCode implements Parcelable {
 //    public void storeComment(Comment c) {
 //        this.commentList.add(c);
 //    }
+    public ArrayList<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
+    }
+
+    public ArrayList<String> getOwners() {
+        return owners;
+    }
+
+    public void setOwners(ArrayList<String> owners) {
+        this.owners = owners;
+    }
+
+    public ArrayList<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<String> comments) {
+        this.comments = comments;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 }
