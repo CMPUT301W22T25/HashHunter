@@ -27,6 +27,17 @@ public class GameCode {
         this.comments = new ArrayList<>();
     }
 
+    // with photos, without location
+    public GameCode(String title, String code, Integer points, String photo, String owner) {
+        this.title = title;
+        this.code = code;
+        this.location = null;
+        this.points = points;
+        this.photos = new ArrayList<>(Arrays.asList(photo));
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
+    }
+
     // with location, without photos
     public GameCode(String title, String code, Location location, Integer points, String owner) {
         this.title = title;
@@ -38,24 +49,13 @@ public class GameCode {
         this.comments = new ArrayList<>();
     }
 
-    // with photos, without location
-    public GameCode(String title, String code, Integer points, ArrayList<String> photos, String owner) {
-        this.title = title;
-        this.code = code;
-        this.location = null;
-        this.points = points;
-        this.photos = photos;
-        this.owners = new ArrayList<>(Arrays.asList(owner));
-        this.comments = new ArrayList<>();
-    }
-
     // with location and photos
-    public GameCode(String title, String code, Location location, Integer points, ArrayList<String> photos, String owner) {
+    public GameCode(String title, String code, Location location, Integer points, String photo, String owner) {
         this.title = title;
         this.code = code;
         this.location = location;
         this.points = points;
-        this.photos = photos;
+        this.photos = new ArrayList<>(Arrays.asList(photo));
         this.owners = new ArrayList<>(Arrays.asList(owner));
         this.comments = new ArrayList<>();
     }

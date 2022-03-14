@@ -99,11 +99,22 @@ public class ScanSubmitActivity extends AppCompatActivity {
             }
         });
     }
-    //
     private void storeGameCodeInDB() {
+        // retrieve title name
         EditText titleBox = findViewById(R.id.qr_code_name);
         String title = titleBox.getText().toString();
-        GameCode newGameCode = new GameCode(title, code, points, "username_placeholder");
+        // build game code
+        GameCode newGameCode;
+        if (photoBitmap == null && location == null) {
+            newGameCode = new GameCode(title, code, points, "username_placeholder");
+        } else if (photoBitmap != null && location == null) {
+            newGameCode = new GameCode(title, code, points, photoId, "username_placeholder");
+        } else if (photoBitmap == null && location != null) {
+            newGameCode = new GameCode(title, code, location, points, "username_placeholder");
+        } else {
+            newGameCode = new GameCode(title, code, location, points, photoId, "username_placeholder");
+        }
+
         db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -166,6 +177,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        // after photo is uploaded to storage and data is created in Photo collection
+                        storeGameCodeInDB();
                         Log.d("DB_OPERATION", "DocumentSnapshot successfully written!");
                     }
                 })
