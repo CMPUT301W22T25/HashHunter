@@ -71,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!isValid) {
                     // if the edittext inputs are empty then execute
                     // this method showing a toast message.
-                    Toast.makeText(RegisterActivity.this, "Enter some text to generate QR Code", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Enter valid input", Toast.LENGTH_SHORT).show();
                 } else {
                     // below is the line for getting the window manager service
 //                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -148,13 +148,19 @@ public class RegisterActivity extends AppCompatActivity {
 
         Boolean result  = true;
 
-        // https://www.javatpoint.com/java-email-validation
-//        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(email);
+         //https://www.javatpoint.com/java-email-validation
+        if (email != "") {
+            String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(email);
+            if (!matcher.matches()) {
+                Toast.makeText(RegisterActivity.this, "Invalid email!", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         if (username.equals("") ) {
             // check that none of the fields are empty
+            Toast.makeText(RegisterActivity.this, "Invalid username!", Toast.LENGTH_SHORT).show();
             result = false;
         }
 

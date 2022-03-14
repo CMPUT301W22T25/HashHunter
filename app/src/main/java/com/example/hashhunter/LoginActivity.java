@@ -29,7 +29,9 @@ import java.util.UUID;
 import java.util.function.LongFunction;
 
 /**
- * Activity that lets the user log in by scanning a code, or register if they are a first time user
+ * This is the activity for user login for the first time
+ * If they scan a QR code, it logs them in if they are an existing user in the database
+ * If they register, it generates a unique ID for them and adds their information to the database
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
@@ -87,8 +89,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
-
-
                     }
                 }
             });
