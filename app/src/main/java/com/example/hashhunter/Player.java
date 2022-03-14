@@ -17,14 +17,15 @@ public class Player {
     private int maxGameCodePoints;
     private int displayTotal;
 
-    //public Player(String username, int totalPoints, int totalGameCode, int maxGameCodePoints) {
-       //this.username = username;
-        //this.totalPoints = totalPoints;
-        //this.totalGameCode = totalGameCode;
-        //this.maxGameCodePoints = maxGameCodePoints;
-        //this.displayTotal = maxGameCodePoints;
 
-    //}
+    /*public Player(String username, int totalPoints, int totalGameCode, int maxGameCodePoints) {
+        this.username = username;
+        this.totalPoints = totalPoints;
+        this.totalGameCode = totalGameCode;
+        this.maxGameCodePoints = maxGameCodePoints;
+        this.displayTotal = maxGameCodePoints;
+
+    }*/
 
 
     /**
@@ -32,7 +33,7 @@ public class Player {
      * @return
      *      Returns the string representing the players username
      */
-    public String getUsername() {
+    public String getUsername(){
         return this.username;
     }
 
@@ -41,7 +42,7 @@ public class Player {
      * @return
      *      Returns the string representing the players player code
      */
-    public String getPlayerCode() {
+    public String getPlayerCode(){
         return this.playerCode;
     }
 
@@ -152,6 +153,8 @@ public class Player {
     public void setDisplayTotal(int points) {
         this.displayTotal = points;
     }
+
+
 
 
 
