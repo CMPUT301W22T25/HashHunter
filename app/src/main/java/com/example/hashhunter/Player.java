@@ -18,14 +18,11 @@ public class Player {
     private int displayTotal;
 
 
-    /*public Player(String username, int totalPoints, int totalGameCode, int maxGameCodePoints) {
-        this.username = username;
-        this.totalPoints = totalPoints;
-        this.totalGameCode = totalGameCode;
-        this.maxGameCodePoints = maxGameCodePoints;
-        this.displayTotal = maxGameCodePoints;
+    public Player() {}
 
-    }*/
+    public Player(String username) {
+        this.username = username;
+    }
 
 
     /**

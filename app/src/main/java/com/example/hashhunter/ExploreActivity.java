@@ -32,7 +32,7 @@ import java.util.List;
 public class ExploreActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private ArrayList<Player> playerList;
+    private PlayerList playerList;
     private RecyclerView leaderboardRecycler;
     private LeaderboardAdapter adapter;
     private String unique_id;
@@ -53,7 +53,7 @@ public class ExploreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_explore);
 
         leaderboardRecycler = findViewById(R.id.leaderboard);
-        playerList = new ArrayList<>();
+        playerList = new PlayerList();
 
         //https://stackoverflow.com/questions/51361951/retrieve-all-documents-from-firestore-as-custom-objects
         db.collection("Players")
@@ -65,7 +65,7 @@ public class ExploreActivity extends AppCompatActivity {
 
                             for (DocumentSnapshot document : task.getResult()) {
                                 Player player = document.toObject(Player.class);
-                                playerList.add(player);
+                                playerList.addPlayerList(player);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -77,8 +77,7 @@ public class ExploreActivity extends AppCompatActivity {
 
 
 
-        //adds data for testing
-        //setPlayerInfo();
+
 
         adapter = setAdapter();
 
@@ -104,7 +103,7 @@ public class ExploreActivity extends AppCompatActivity {
 
     }
 
-    private void setupSort(LeaderboardAdapter listAdapter, ArrayList<Player> playerList) {
+    private void setupSort(LeaderboardAdapter listAdapter, PlayerList playerList) {
         Spinner spinner = (Spinner) findViewById(R.id.dropdown_menu);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sorting_options, android.R.layout.simple_spinner_item);
@@ -116,9 +115,9 @@ public class ExploreActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 int i;
                 if (position ==0) {
-                    sortByQRScore();
-                    for (i=0; i < playerList.size(); i++) {
-                        Player player = playerList.get(i);
+                    playerList.sortByQRScore();
+                    for (i=0; i < playerList.getSize(); i++) {
+                        Player player = playerList.getPlayer(i);
                         player.setDisplayTotal(player.getMaxGameCodePoints());
                         displayMyRank(name, playerList);
                     }
@@ -127,18 +126,18 @@ public class ExploreActivity extends AppCompatActivity {
 
                 }
                 else if (position == 1) {
-                    sortByTotalPoints();
-                    for (i=0; i < playerList.size(); i++) {
-                        Player player = playerList.get(i);
+                    playerList.sortByTotalPoints();
+                    for (i=0; i < playerList.getSize(); i++) {
+                        Player player = playerList.getPlayer(i);
                         player.setDisplayTotal(player.getTotalPoints());
                         displayMyRank(name, playerList);
                     }
                 }
 
                 else {
-                    sortByMostQR();
-                    for (i=0; i < playerList.size(); i++) {
-                        Player player = playerList.get(i);
+                    playerList.sortByMostQR();
+                    for (i=0; i < playerList.getSize(); i++) {
+                        Player player = playerList.getPlayer(i);
                         player.setDisplayTotal(player.getTotalGameCode());
                         displayMyRank(name, playerList);
                     }
@@ -154,51 +153,11 @@ public class ExploreActivity extends AppCompatActivity {
         });
     }
 
-    private void sortByQRScore() {
-        Collections.sort(playerList, (a, b) -> {
-            if (a.getMaxGameCodePoints() > b.getMaxGameCodePoints()) {
-                return -1;
-            }
-            else if (a.getMaxGameCodePoints() < b.getMaxGameCodePoints()) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        });
-    }
 
-    private void sortByMostQR() {
-        Collections.sort(playerList, (a, b) -> {
-            if (a.getTotalGameCode() > b.getTotalGameCode()) {
-                return -1;
-            }
-            else if (a.getTotalGameCode() < b.getTotalGameCode()) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        });
-    }
-
-    private void sortByTotalPoints() {
-        Collections.sort(playerList, (a, b) -> {
-            if (a.getTotalPoints() > b.getTotalPoints()) {
-                return -1;
-            }
-            else if (a.getTotalPoints() < b.getTotalPoints()) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        });
-    }
 
 
     private LeaderboardAdapter setAdapter() {
-        LeaderboardAdapter adapter = new LeaderboardAdapter(playerList);
+        LeaderboardAdapter adapter = new LeaderboardAdapter(playerList.getPlayerList());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         leaderboardRecycler.setLayoutManager(layoutManager);
         leaderboardRecycler.setAdapter(adapter);
@@ -208,42 +167,25 @@ public class ExploreActivity extends AppCompatActivity {
 
 
 
-    private int findPlayerPos(String username, ArrayList<Player> playerList) {
-
-        for (int i =0; i < playerList.size(); i++) {
-
-            if (playerList.get(i).getUsername().equals(username)) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
 
-    private void displayMyRank(String name, ArrayList<Player> playerList) {
 
-        int pos = findPlayerPos(name, playerList);
-        myPlayer = playerList.get(pos);
+    private void displayMyRank(String name, PlayerList playerList) {
+
+        int pos = playerList.findPlayerPos(name);
+        myPlayer = playerList.getPlayer(pos);
 
         //display users position on leaderboard
         myRank = (TextView) findViewById(R.id.my_rank);
         myUsername = (TextView) findViewById(R.id.my_username);
         myScore = (TextView) findViewById(R.id.my_points);
 
-        myRank.setText(Integer.toString(playerList.indexOf(myPlayer)+1));
+        myRank.setText(Integer.toString(playerList.indexOfPlayer(myPlayer)+1));
         myUsername.setText(myPlayer.getUsername());
         myScore.setText(Integer.toString(myPlayer.getDisplayTotal()));
 
 
     }
-
-
-    //fake testing data
-    //private void setPlayerInfo() {
-        //playerList.add(new Player("Test1", 25, 235, 1));
-        //playerList.add(new Player("Test2", 32, 214, 12345));
-        //playerList.add(new Player("Test3", 56, 10, 4));
-    //}
 
 
 
