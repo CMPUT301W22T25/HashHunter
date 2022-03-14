@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ import java.util.UUID;
      public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
      private SharedPreferences sharedPreferences;
      private Boolean firstLogin = false;
+
 
      @Override
      protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,6 @@ import java.util.UUID;
              Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
              startActivity(intent);
          }
-
 
      }
  }

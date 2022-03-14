@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,14 +15,24 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.maps.CameraUpdateFactory;
 import com.google.android.libraries.maps.GoogleMap;
 import com.google.android.libraries.maps.OnMapReadyCallback;
 import com.google.android.libraries.maps.SupportMapFragment;
 import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.MarkerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapActivity extends AppCompatActivity {
+    /**
+     * Map activity showcasing geolocation of player and QR codes
+     * @References GPS location app: https://www.youtube.com/watch?v=l-J6gDYtgFU Google Maps fragment: https://www.youtube.com/watch?v=p0PoKEPI65o
+     *
+     */
     //https://www.youtube.com/watch?v=l-J6gDYtgFU
     //Get GPS location
     //https://www.youtube.com/watch?v=p0PoKEPI65o
@@ -29,6 +40,7 @@ public class MapActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private SupportMapFragment supportMapFragment;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +63,24 @@ public class MapActivity extends AppCompatActivity {
                         MarkerOptions options = new MarkerOptions().position(latlng).title("Player");
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng,10));
                         googleMap.addMarker(options);
+                        db.collection("GameCode")
+                                .whereNotEqualTo("latitude",null)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                                LatLng codeLatLng = new LatLng((Double)document.get("latitude"),(Double)document.get("longitude"));
+                                                MarkerOptions options = new MarkerOptions().position(codeLatLng).title(document.get("title").toString());
+                                                googleMap.addMarker(options);
+                                            }
+                                        } else {
+                                            Log.d("Error occurred", String.valueOf(task.getException()));
+                                        }
+                                    }
+                                });
+
                     }
                 });
             }

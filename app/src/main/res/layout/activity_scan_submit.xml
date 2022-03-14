@@ -9,6 +9,27 @@
     tools:context=".ProfileActivity">
 
 
+    <TextView
+        android:id="@+id/show_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:ems="10"
+        android:text="Current Location:"
+        app:layout_constraintStart_toStartOf="@+id/scan_submit_photo_preview"
+        app:layout_constraintTop_toBottomOf="@+id/scan_submit_photo_preview" />
+
+    <TextView
+        android:id="@+id/current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="72dp"
+        android:ems="10"
+        android:text="N/A"
+        app:layout_constraintStart_toEndOf="@+id/show_location"
+        app:layout_constraintTop_toBottomOf="@+id/add_location_button" />
+
     <EditText
         android:id="@+id/qr_code_name"
         android:layout_width="wrap_content"
@@ -93,7 +114,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

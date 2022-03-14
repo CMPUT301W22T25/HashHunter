@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -64,6 +65,8 @@ public class LoginActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
                                         editor.commit();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Logged In");
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                         startActivity(intent);
@@ -71,17 +74,35 @@ public class LoginActivity extends AppCompatActivity {
                                         //finish();
                                     } else {
                                         Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Log In Failed");
                                     }
                                 } else {
                                     Log.d(TAG, "get failed with", task.getException());
+                                    Button loginButton = findViewById(R.id.login_button);
+                                    loginButton.setText("Log In Failed");
                                 }
                             }
                         });
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
+
 
                     }
                 }
             });
 
+
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                    mStartForResult.launch(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +134,6 @@ public class LoginActivity extends AppCompatActivity {
                 // I used all the above links to learn about intents and starting activities
                 // The code is not from any single source
 
-                mStartForResult.launch(intent);
             }
         });
     }
