@@ -63,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
                                         editor.commit();
 
-                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        startActivity(intent);
+//                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+//                                        startActivity(intent);
                                         // Should this be called?
                                         //finish();
                                     } else {
