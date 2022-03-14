@@ -59,19 +59,22 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
+    private Location qrcodeLocation;
 
     private String photoId; // id of photo in firestore
     private Integer points; // value of points
     private String code; // string representation of qrcode
-    private Location location;
-
-    private Location qrcodeLocation;
+    // keep track of code location
+    private Double latitude;
+    private Double longitude;
 
     private LocationManager locationManager;
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             qrcodeLocation = location;
+            latitude = qrcodeLocation.getLatitude();
+            longitude = qrcodeLocation.getLongitude();
             Geocoder geocoder = new Geocoder(ScanSubmitActivity.this, Locale.getDefault());
             List<Address> addresses = null;
             try {
@@ -178,14 +181,14 @@ public class ScanSubmitActivity extends AppCompatActivity {
         String title = titleBox.getText().toString();
         // build game code
         GameCode newGameCode;
-        if (photoBitmap == null && location == null) {
+        if (photoBitmap == null && qrcodeLocation == null) {
             newGameCode = new GameCode(title, code, points, "username_placeholder");
-        } else if (photoBitmap != null && location == null) {
+        } else if (photoBitmap != null && qrcodeLocation == null) {
             newGameCode = new GameCode(title, code, points, photoId, "username_placeholder");
-        } else if (photoBitmap == null && location != null) {
-            newGameCode = new GameCode(title, code, location, points, "username_placeholder");
+        } else if (photoBitmap == null && qrcodeLocation != null) {
+            newGameCode = new GameCode(title, code, points, "username_placeholder", latitude, longitude);
         } else {
-            newGameCode = new GameCode(title, code, location, points, photoId, "username_placeholder");
+            newGameCode = new GameCode(title, code, points, photoId, "username_placeholder", latitude, longitude);
         }
 
         db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)

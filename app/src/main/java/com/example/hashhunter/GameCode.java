@@ -7,11 +7,12 @@ import java.util.Arrays;
 public class GameCode {
     private String title; // title of the code
     private String code; // string representation of the code
-    private Location location; // location of code
     private Integer points; // points of code
     private ArrayList<String> photos; // id of photos objects
     private ArrayList<String> owners; // username
     private ArrayList<String> comments; // id of comment object
+    private Double latitude;
+    private Double longitude;
 
     /**
      * Constructors
@@ -20,7 +21,6 @@ public class GameCode {
     public GameCode(String title, String code, Integer points, String owner) {
         this.title = title;
         this.code = code;
-        this.location = null;
         this.points = points;
         this.owners = new ArrayList<>(Arrays.asList(owner));
         this.photos = new ArrayList<>();
@@ -31,7 +31,6 @@ public class GameCode {
     public GameCode(String title, String code, Integer points, String photo, String owner) {
         this.title = title;
         this.code = code;
-        this.location = null;
         this.points = points;
         this.photos = new ArrayList<>(Arrays.asList(photo));
         this.owners = new ArrayList<>(Arrays.asList(owner));
@@ -39,25 +38,27 @@ public class GameCode {
     }
 
     // with location, without photos
-    public GameCode(String title, String code, Location location, Integer points, String owner) {
+    public GameCode(String title, String code, Integer points, String owner, Double latitude, Double longitude) {
         this.title = title;
         this.code = code;
-        this.location = location;
         this.points = points;
         this.photos = new ArrayList<>();
         this.owners = new ArrayList<>(Arrays.asList(owner));
         this.comments = new ArrayList<>();
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     // with location and photos
-    public GameCode(String title, String code, Location location, Integer points, String photo, String owner) {
+    public GameCode(String title, String code, Integer points, String photo, String owner, Double latitude, Double longitude) {
         this.title = title;
         this.code = code;
-        this.location = location;
         this.points = points;
         this.photos = new ArrayList<>(Arrays.asList(photo));
         this.owners = new ArrayList<>(Arrays.asList(owner));
         this.comments = new ArrayList<>();
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -78,14 +79,6 @@ public class GameCode {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public Integer getPoints() {
@@ -118,5 +111,21 @@ public class GameCode {
 
     public void setComments(ArrayList<String> comments) {
         this.comments = comments;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }
