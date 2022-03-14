@@ -13,7 +13,7 @@ import java.lang.Math;
  * @References SHA-256 hashing from GeeksforGeeks; Aug 7th, 2019; https://www.geeksforgeeks.org/sha-256-hash-in-java/
  * @References hex to decimal from javatpoint; accessed Feb 22th, 2022; https://www.javatpoint.com/java-hex-to-decimal
  */
-public class Scanner {
+public class GameCodePointsController {
     /**
      * calculate points from string representation of QR or bar code
      * @param code string representation of QR or bar code
