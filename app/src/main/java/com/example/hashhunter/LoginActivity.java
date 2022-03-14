@@ -100,8 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
                     mStartForResult.launch(intent);
                 } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the user has denied.
+                    Toast.makeText(LoginActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
                 }
             });
 
