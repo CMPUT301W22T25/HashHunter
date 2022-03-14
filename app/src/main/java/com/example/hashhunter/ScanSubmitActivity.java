@@ -2,6 +2,7 @@ package com.example.hashhunter;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -105,7 +106,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getCurrentLocation();
+                if(getLocationPermissions())
+                    getCurrentLocation();
 
             }
         });
@@ -153,14 +155,20 @@ public class ScanSubmitActivity extends AppCompatActivity {
         });
     }
 
-    public void getCurrentLocation() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    public boolean getLocationPermissions() {
+        if (ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(ScanSubmitActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},1);
 
-            return;
+            return false;
         }
+        else return true;
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getCurrentLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
     }
 
@@ -255,18 +263,14 @@ public class ScanSubmitActivity extends AppCompatActivity {
             case 1: {
 
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length == 3
+                if (grantResults.length == 2
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
                     getCurrentLocation();
                 } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+
                     Toast.makeText(ScanSubmitActivity.this, "Permission denied to read your location", Toast.LENGTH_SHORT).show();
                 }
                 return;

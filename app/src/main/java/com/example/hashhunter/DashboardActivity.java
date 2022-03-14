@@ -14,11 +14,21 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(DashboardActivity.this,ScanActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(DashboardActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
                             break;
                         case R.id.scan:
                             selectedFragment = new ScanFragment();
+                            requestCameraLauncher.launch(Manifest.permission.CAMERA);
                             break;
                         case R.id.profile:
                             selectedFragment = new ProfileFragment();
