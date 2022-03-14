@@ -1,8 +1,11 @@
  package com.example.hashhunter;
 
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.UUID;
+
 
  /**
   * The Main activity for the app
@@ -25,7 +29,6 @@ import java.util.UUID;
      protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_main);
-         Button scannerButton = findViewById(R.id.scannerButton);
 
          // https://www.youtube.com/watch?v=4WxKQTUweVg
          // https://ssaurel.medium.com/how-to-retrieve-an-unique-id-to-identify-android-devices-6f99fd5369eb

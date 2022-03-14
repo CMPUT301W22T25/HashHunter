@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,9 +33,11 @@ import java.util.function.LongFunction;
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
+
     private static SharedPreferences sharedPreferences;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -80,6 +83,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
+
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                    mStartForResult.launch(intent);
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied.
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ScanActivity.class);
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
 
                 // https://developer.android.com/training/basics/firstapp/starting-activity#java
                 // https://www.youtube.com/watch?v=AD5qt7xoUU8
@@ -110,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                 // I used all the above links to learn about intents and starting activities
                 // The code is not from any single source
 
-                mStartForResult.launch(intent);
+
             }
         });
     }

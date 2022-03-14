@@ -1,10 +1,15 @@
 package com.example.hashhunter;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,9 @@ public class DashboardActivity extends AppCompatActivity {
                             break;
                         case R.id.scan:
                             selectedFragment = new ScanFragment();
+                            // DEBUG: redirect to scanner activity when fragment is chosen
+                            Intent intent = new Intent(DashboardActivity.this, ScanActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.profile:
                             selectedFragment = new ProfileFragment();
