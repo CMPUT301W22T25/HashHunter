@@ -4,6 +4,11 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A Model class that represent a GameCode object (QR code and associated metadata like points and location)
+ * Used as a schema to the database
+ * It has 4 different constructor for different kinds of object: with/without location and photos
+ */
 public class GameCode {
     private String title; // title of the code
     private String code; // string representation of the code

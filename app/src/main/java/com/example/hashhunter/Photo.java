@@ -1,5 +1,8 @@
 package com.example.hashhunter;
 
+/**
+ * A model class that represents a photo object, used as Schema to the database
+ */
 public class Photo {
     private String url;
     private String owner;
