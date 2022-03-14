@@ -1,5 +1,6 @@
 package com.example.hashhunter;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,6 +9,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -58,7 +61,6 @@ public class DashboardActivity extends AppCompatActivity {
                             startActivity(intent);
                             break;
                         case R.id.scan:
-                            selectedFragment = new ScanFragment();
                             requestCameraLauncher.launch(Manifest.permission.CAMERA);
 
                             break;
