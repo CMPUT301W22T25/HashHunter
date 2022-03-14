@@ -158,7 +158,7 @@ public class GameCode implements Parcelable {
 
     /**
      * Stores a comment that is about the QR code
-     * @param c
+     * //@param
      * The comment to be stored
      */
 //    public void storeComment(Comment c) {
