@@ -54,6 +54,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Has fields for user to submit qrcode title, location, and photo.
+ * Then creates or updates current GameCode in database
+ */
 public class ScanSubmitActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -70,6 +74,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private Double longitude;
 
     private LocationManager locationManager;
+    /**
+     * When add button is pressed, get location and show details
+     */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -165,6 +172,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * If location permissions are not granted, request for them.
+     * @return
+     * True if permissions already granted
+     */
     public boolean getLocationPermissions() {
         if (ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -176,6 +188,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
         else return true;
     }
 
+    /**
+     * This is only called with location permissions, so it is safe to suppress permissions here
+     *
+     * Gets current location as a Android.Location object
+     */
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -183,6 +200,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Store GameCode object as document in FireStore with unique ID
+     */
     private void storeGameCodeInDB() {
         // retrieve title name
         EditText titleBox = findViewById(R.id.qr_code_name);

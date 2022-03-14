@@ -18,6 +18,8 @@ import com.google.zxing.Result;
  * @References QR code scanner/decoder from Yuriy Budiyev https://github.com/yuriy-budiyev/code-scanner
  * License: MIT License
  * Copyright (c) 2017 Yuriy Budiyev [yuriy.budiyev@yandex.ru]
+ *
+ * Opens scanner which uses Camera, after getting permissions, to get a string from a qrcode
  */
 public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
@@ -46,6 +48,7 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // QR code string stored in result.getText()
 
                        // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
                         if(getCallingActivity() != null) {
