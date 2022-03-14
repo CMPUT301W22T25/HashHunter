@@ -3,29 +3,29 @@ package com.example.hashhunter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class QRComment implements Parcelable {
+public class Comment implements Parcelable {
     String userName;
     String comment;
     //Constructor for comments
-    QRComment(String name, String comment) {
+    Comment(String name, String comment) {
         this.userName = name;
         this.comment = comment;
     }
 
-    protected QRComment(Parcel in) {
+    protected Comment(Parcel in) {
         userName = in.readString();
         comment = in.readString();
     }
 
-    public static final Creator<QRComment> CREATOR = new Creator<QRComment>() {
+    public static final Creator<Comment> CREATOR = new Creator<Comment>() {
         @Override
-        public QRComment createFromParcel(Parcel in) {
-            return new QRComment(in);
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
         }
 
         @Override
-        public QRComment[] newArray(int size) {
-            return new QRComment[size];
+        public Comment[] newArray(int size) {
+            return new Comment[size];
         }
     };
 

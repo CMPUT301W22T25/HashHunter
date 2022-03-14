@@ -1,0 +1,26 @@
+package com.example.hashhunter;
+
+import java.util.ArrayList;
+
+public class PlayerDataController {
+    Player ThePlayer;
+
+    public PlayerDataController(Player p){
+        this.ThePlayer = p;
+    }
+    public String getPlayerUsername() {
+        return this.ThePlayer.getUsername();
+    }
+
+    public String getPlayerEmail(String uniqueID){
+        if (uniqueID == ThePlayer.getProfileCode()){
+            return ThePlayer.getEmail();
+        }
+        else{
+            return null;
+        }
+    }
+}
+
+
+
