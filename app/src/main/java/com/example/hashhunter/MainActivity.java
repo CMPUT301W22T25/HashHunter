@@ -53,7 +53,7 @@ import java.util.UUID;
              Intent intent = new Intent(MainActivity.this, LoginActivity.class);
              startActivity(intent);
          } else {
-             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+             Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
              startActivity(intent);
          }
 

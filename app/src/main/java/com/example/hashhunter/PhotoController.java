@@ -20,6 +20,9 @@ public class PhotoController {
     private Photo photo;
     private Bitmap imageBitmap;
 
+    public PhotoController(){
+
+    }
     public PhotoController(String urlString) {
         photo = new Photo(urlString);
     }
