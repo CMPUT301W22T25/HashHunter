@@ -42,11 +42,11 @@ public class LoginActivityTest {
      */
     public void checkRegister() {
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
-        solo.clickOnButton(R.id.register_button);
+        solo.clickOnButton("Register");
         solo.assertCurrentActivity("Wrong Activity", RegisterActivity.class);
         solo.enterText((EditText) solo.getView(R.id.username_edit_text), "RegisterTest");
         solo.enterText((EditText) solo.getView(R.id.email_edit_text), "TestEmail@gmail.com");
-        solo.clickOnButton(R.id.submit_button);
+        solo.clickOnButton("Submit");
         solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
     }
 
