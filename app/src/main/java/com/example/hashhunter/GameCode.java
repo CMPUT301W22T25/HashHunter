@@ -1,119 +1,108 @@
 package com.example.hashhunter;
 
 import android.location.Location;
-import org.w3c.dom.Comment;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+
 public class GameCode {
-    private String qrCode;
-    private PhotoController photo;
-    private Location location;
-    private Integer numPlayers;
-    private Integer points;
-    private ArrayList<Comment> commentList;
+    private String code; // string representation of the code
+    private Location location; // location of code
+    private Integer points; // points of code
+    private ArrayList<String> photos; // id of photos objects
+    private ArrayList<String> owners; // username
+    private ArrayList<String> comments; // id of comment object
 
-    // DEBUG: I think constructor doesn't need void keyword, this might cause problem later
-    // I removed the void keyword while resolving a merge conflict
-    public GameCode(String qrCode, Integer points) {
-        this.qrCode = qrCode;
-        this.photo = null;
+    /**
+     * Constructors
+     */
+    // without location and photos
+    public GameCode(String code, Integer points, String owner) {
+        this.code = code;
         this.location = null;
-        this.numPlayers = 0;
         this.points = points;
-        this.commentList = new ArrayList<Comment>();
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.photos = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
-    public GameCode(String qrCode, Location location, Integer points) {
-        this(qrCode, points);
+
+    // with location, without photos
+    public GameCode(String code, Location location, Integer points, String owner) {
+        this.code = code;
         this.location = location;
+        this.points = points;
+        this.photos = new ArrayList<>();
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
     }
-    public GameCode(String qrCode, PhotoController photo, Integer points) {
-        this(qrCode, points);
-        this.photo = photo;
+
+    // with photos, without location
+    public GameCode(String code, Integer points, ArrayList<String> photos, String owner) {
+        this.code = code;
+        this.location = null;
+        this.points = points;
+        this.photos = photos;
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
     }
-    public GameCode(String qrCode, PhotoController photo, Location location, Integer points) {
-        this(qrCode, points);
-        this.photo = photo;
+
+    // with location and photos
+    public GameCode(String code, Location location, Integer points, ArrayList<String> photos, String owner) {
+        this.code = code;
         this.location = location;
+        this.points = points;
+        this.photos = photos;
+        this.owners = new ArrayList<>(Arrays.asList(owner));
+        this.comments = new ArrayList<>();
     }
 
     /**
-     * Getter for stored photo
-     * @return
-     * The stored photo
+     * Getters and setters
      */
-    public PhotoController getPhoto() {
-        return this.photo;
+    public String getCode() {
+        return code;
     }
 
-    /**
-     * Setter for the photo
-     * @param p
-     * The photo that is to be set as the stored photo
-     */
-    public void setPhoto(PhotoController p) {
-        this.photo = p;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    /**
-     * Getter for the stored location
-     * @return
-     * The location stored
-     */
     public Location getLocation() {
-        return this.location;
+        return location;
     }
 
-    /**
-     * Setter for the location
-     * @param l
-     * The location that is to be set as the stored location
-     */
-    public void setLocation(Location l) {
-        this.location = l;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
-    /**
-     * Getter for the number of players
-     * @return
-     * The number of players that have scanned the QR code
-     */
-    public Integer getPlayers() {
-        return this.numPlayers;
-    }
-
-    /**
-     * Setter for the number of players
-     * @param n
-     * The integer that is to be set as the number of players that have scanned the QR code
-     */
-    public void setPlayers(Integer n) {
-        this.numPlayers = n;
-    }
-
-    /**
-     * Getter for the points
-     * @return
-     * The number of points that the QR code is worth
-     */
     public Integer getPoints() {
-        return this.points;
+        return points;
     }
 
-    /**
-     * Setter for the points
-     * @param p
-     * The number of points that the qr code is worth
-     */
-    public void setPoints(Integer p) {
-        this.points = p;
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
-    /**
-     * Stores a comment that is about the QR code
-     * @param c
-     * The comment to be stored
-     */
-    public void storeComment(Comment c) {
-        this.commentList.add(c);
+    public ArrayList<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
+    }
+
+    public ArrayList<String> getOwners() {
+        return owners;
+    }
+
+    public void setOwners(ArrayList<String> owners) {
+        this.owners = owners;
+    }
+
+    public ArrayList<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<String> comments) {
+        this.comments = comments;
     }
 }

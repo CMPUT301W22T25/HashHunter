@@ -42,8 +42,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
+
     private String photoId; // id of photo in firestore
-    int points; // value of points
+    private Integer points; // value of points
+    private String code; // string representation of qrcode
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +53,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scan_submit);
 
         Intent intent = getIntent();
-        Integer points = (Integer) intent.getSerializableExtra("points");
-        String qrCodeString = intent.getStringExtra("qrcode string");
-
+        points = (Integer) intent.getSerializableExtra("points");
+        code = intent.getStringExtra("qrcode string");
 
         TextView showPoints = findViewById(R.id.qr_code_points);
         showPoints.setText(points + " Points");
@@ -87,7 +88,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                     uploadPhotoToStorage();
                 } else {
                     // directly upload code data
-                    storeCodeInDB();
+                    storeGameCodeInDB();
                 }
 
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
@@ -96,8 +97,21 @@ public class ScanSubmitActivity extends AppCompatActivity {
         });
     }
     //
-    private void storeCodeInDB() {
-
+    private void storeGameCodeInDB() {
+        GameCode newGameCode = new GameCode(code, points, "username_placeholder");
+        db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("DB_OPERATION", "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DB_OPERATION", "Error writing document", e);
+                    }
+                });
     }
     // upload photo to firebase storage
     private void uploadPhotoToStorage() {
