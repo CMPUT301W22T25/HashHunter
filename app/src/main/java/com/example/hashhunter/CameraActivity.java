@@ -6,22 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,14 +26,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * test activity to build camera functionality for ScanSubmitActivity
@@ -58,7 +47,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         // test image view from url
         ImageView imageViewTest = findViewById(R.id.cam_photo_url);
-        Photo testPhoto = new Photo("https://www.petmd.com/sites/default/files/2020-11/picture-of-golden-retriever-dog_0.jpg");
+        PhotoController testPhoto = new PhotoController("https://www.petmd.com/sites/default/files/2020-11/picture-of-golden-retriever-dog_0.jpg");
         testPhoto.displayImage(imageViewTest);
         // test submit button
         Button camButton = findViewById(R.id.cam_submit_button);
@@ -111,7 +100,7 @@ public class CameraActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
-                                        Photo newPhoto = new Photo(document.getString("photos"));
+                                        PhotoController newPhoto = new PhotoController(document.getString("photos"));
                                         newPhoto.displayImage(imageViewTest);
                                     }
                                 }

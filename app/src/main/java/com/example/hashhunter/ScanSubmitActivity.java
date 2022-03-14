@@ -4,12 +4,14 @@ package com.example.hashhunter;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,7 +44,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
+
     private String photoId; // id of photo in firestore
+    private Integer points; // value of points
+    private String code; // string representation of qrcode
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +56,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scan_submit);
 
         Intent intent = getIntent();
-        Integer points = (Integer) intent.getSerializableExtra("points");
-        String qrCodeString = intent.getStringExtra("qrcode string");
-
+        points = (Integer) intent.getSerializableExtra("points");
+        code = intent.getStringExtra("qrcode string");
 
         TextView showPoints = findViewById(R.id.qr_code_points);
         showPoints.setText(points + " Points");
@@ -73,8 +78,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 /**
-                 * Upload photo to firebase storage
-                 * Add photo object containing url to firestore
+                 * Upload photo to firebase storage ✅
+                 * Add photo object containing url to firestore ✅
                  * Get database of GameCodes
                  * Check if a code with the same string and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
@@ -82,14 +87,47 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  * database if it has a location
                  */
                 if (photoBitmap != null) {
-                    // only if user take photos
+                    // need to wait for photos to be uploaded, then upload code data
                     uploadPhotoToStorage();
+                } else {
+                    // directly upload code data
+                    storeGameCodeInDB();
                 }
 
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
                 startActivity(intent);
             }
         });
+    }
+    private void storeGameCodeInDB() {
+        // retrieve title name
+        EditText titleBox = findViewById(R.id.qr_code_name);
+        String title = titleBox.getText().toString();
+        // build game code
+        GameCode newGameCode;
+        if (photoBitmap == null && location == null) {
+            newGameCode = new GameCode(title, code, points, "username_placeholder");
+        } else if (photoBitmap != null && location == null) {
+            newGameCode = new GameCode(title, code, points, photoId, "username_placeholder");
+        } else if (photoBitmap == null && location != null) {
+            newGameCode = new GameCode(title, code, location, points, "username_placeholder");
+        } else {
+            newGameCode = new GameCode(title, code, location, points, photoId, "username_placeholder");
+        }
+
+        db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("DB_OPERATION", "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DB_OPERATION", "Error writing document", e);
+                    }
+                });
     }
     // upload photo to firebase storage
     private void uploadPhotoToStorage() {
@@ -133,14 +171,14 @@ public class ScanSubmitActivity extends AppCompatActivity {
      * @param photoUrl url of photo to be stored
      */
     private void storePhotoDataInDB(String photoUrl) {
-        Map<String, Object> photo = new HashMap<>();
-        photo.put("owner", "username"); // replace value with logged in user
-        photo.put("url", photoUrl);
+        Photo newPhoto = new Photo(photoUrl, "username"); // replace value with logged in user
         photoId = UUID.randomUUID().toString();
-        db.collection("Photo").document(photoId).set(photo)
+        db.collection("Photo").document(photoId).set(newPhoto)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        // after photo is uploaded to storage and data is created in Photo collection
+                        storeGameCodeInDB();
                         Log.d("DB_OPERATION", "DocumentSnapshot successfully written!");
                     }
                 })
