@@ -126,8 +126,6 @@ public class ScanSubmitActivity extends AppCompatActivity {
             }
         });
 
-
-
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -199,9 +197,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
     }
 
-
     /**
-     * Store GameCode object as document in FireStore with unique ID
+     * Store scanned qr code in the database
      */
     private void storeGameCodeInDB() {
         // retrieve title name
@@ -234,7 +231,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 });
     }
 
-    // upload photo to firebase storage
+    /**
+     * Take image as a bitmap, convert it to byte array then upload it to firebase storage
+     */
     private void uploadPhotoToStorage() {
         // construct byte array to be uploaded
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -294,7 +293,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
                     }
                 });
     }
-    // launch camera app
+
+    /**
+     * Launch built-in camera app (permission is assumed)
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -304,7 +306,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    // get bitmap result from camera app
+
+    /**
+     * Received image from built-in camera app, store it and display it as a thumbnail
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
