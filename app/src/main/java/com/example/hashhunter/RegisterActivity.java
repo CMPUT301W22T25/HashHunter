@@ -149,17 +149,15 @@ public class RegisterActivity extends AppCompatActivity {
         Boolean result  = true;
 
         // https://www.javatpoint.com/java-email-validation
-        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
+//        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+//        Pattern pattern = Pattern.compile(regex);
+//        Matcher matcher = pattern.matcher(email);
 
-        if (username.equals("") || email.equals("")) {
+        if (username.equals("") ) {
             // check that none of the fields are empty
             result = false;
-        } else if (!matcher.matches()) {
-            // check that the email is valid
-            result = false;
         }
+
         return result;
     };
 }
