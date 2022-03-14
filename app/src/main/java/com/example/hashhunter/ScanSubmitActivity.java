@@ -1,10 +1,18 @@
 package com.example.hashhunter;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,9 +22,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,8 +46,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,11 +60,39 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
+    private Location qrcodeLocation;
 
     private String photoId; // id of photo in firestore
     private Integer points; // value of points
     private String code; // string representation of qrcode
-    private Location location;
+    // keep track of code location
+    private Double latitude;
+    private Double longitude;
+
+    private LocationManager locationManager;
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            qrcodeLocation = location;
+            latitude = qrcodeLocation.getLatitude();
+            longitude = qrcodeLocation.getLongitude();
+            Geocoder geocoder = new Geocoder(ScanSubmitActivity.this, Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses = geocoder.getFromLocation(qrcodeLocation.getLatitude(), qrcodeLocation.getLongitude(), 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String cityName = addresses.get(0).getLocality();
+            String stateName = addresses.get(0).getAdminArea();
+            String countryName = addresses.get(0).getCountryName();
+
+            TextView showLocation = findViewById(R.id.current_location);
+            showLocation.setText("Latitude: " + location.getLatitude() + "\nLongitude: " + location.getLongitude() +
+                    "\nCity: " + cityName + "\nState: " + stateName + "\nCountry: " + countryName);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +109,16 @@ public class ScanSubmitActivity extends AppCompatActivity {
         Button addPhoto = findViewById(R.id.add_photo_button);
         Button addLocation = findViewById(R.id.add_location_button);
         Button saveButton = findViewById(R.id.save_button);
+
+        addLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getLocationPermissions())
+                    getCurrentLocation();
+
+            }
+        });
+
 
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +140,17 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  * If not, construct a new GameCode object and add to player GameCodeList, and to
                  * database if it has a location
                  */
+                if (qrcodeLocation != null) {
+                    /**
+                     * Just store latitude and longitude in FireStore
+                     * When getting a location from a GameCode in Firestore:
+                     * Make a new location and set longitude/latitude, then get distance
+                     */
+//                  Location checkLocation = new Location("");
+//                  checkLocation.setLatitude(0.0d);
+//                  checkLocation.setLongitude(0.0d);
+//                  float distanceInMeters =  targetLocation.distanceTo(qrcodeLocation);
+                }
                 if (photoBitmap != null) {
                     // need to wait for photos to be uploaded, then upload code data
                     uploadPhotoToStorage();
@@ -99,20 +164,39 @@ public class ScanSubmitActivity extends AppCompatActivity {
             }
         });
     }
+
+    public boolean getLocationPermissions() {
+        if (ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(ScanSubmitActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},1);
+
+            return false;
+        }
+        else return true;
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getCurrentLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+    }
+
+
     private void storeGameCodeInDB() {
         // retrieve title name
         EditText titleBox = findViewById(R.id.qr_code_name);
         String title = titleBox.getText().toString();
         // build game code
         GameCode newGameCode;
-        if (photoBitmap == null && location == null) {
+        if (photoBitmap == null && qrcodeLocation == null) {
             newGameCode = new GameCode(title, code, points, "username_placeholder");
-        } else if (photoBitmap != null && location == null) {
+        } else if (photoBitmap != null && qrcodeLocation == null) {
             newGameCode = new GameCode(title, code, points, photoId, "username_placeholder");
-        } else if (photoBitmap == null && location != null) {
-            newGameCode = new GameCode(title, code, location, points, "username_placeholder");
+        } else if (photoBitmap == null && qrcodeLocation != null) {
+            newGameCode = new GameCode(title, code, points, "username_placeholder", latitude, longitude);
         } else {
-            newGameCode = new GameCode(title, code, location, points, photoId, "username_placeholder");
+            newGameCode = new GameCode(title, code, points, photoId, "username_placeholder", latitude, longitude);
         }
 
         db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)
@@ -129,6 +213,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                     }
                 });
     }
+
     // upload photo to firebase storage
     private void uploadPhotoToStorage() {
         // construct byte array to be uploaded
@@ -212,5 +297,30 @@ public class ScanSubmitActivity extends AppCompatActivity {
             imageView.setImageBitmap(imageBitmap);
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length == 2
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                    getCurrentLocation();
+                } else {
+
+
+                    Toast.makeText(ScanSubmitActivity.this, "Permission denied to read your location", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+        }
+    }
+
+
 
 }
