@@ -50,5 +50,14 @@ public class LoginActivityTest {
         solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
     }
 
+    @Test
+    /**
+     * Checks that the login button takes the user to the scanner
+     */
+    public void checkLoginButton() {
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
+        solo.clickOnButton("Login using a QR Code");
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
+    }
 
 }
