@@ -7,6 +7,11 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A Model class that represent a GameCode object (QR code and associated metadata like points and location)
+ * Used as a schema to the database
+ * It has 4 different constructor for different kinds of object: with/without location and photos
+ */
 public class GameCode implements Parcelable {
     private String title; // title of the code
     private String code; // string representation of the code
@@ -68,6 +73,81 @@ public class GameCode implements Parcelable {
      * Getters and setters
      */
 
+    public String getTitle(){ return title; }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public ArrayList<String> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
+    }
+
+    public ArrayList<String> getOwners() {
+        return owners;
+    }
+
+    public void setOwners(ArrayList<String> owners) {
+        this.owners = owners;
+    }
+
+    public ArrayList<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<String> comments) {
+        this.comments = comments;
+    }
+
+    public int getCommentAmount() {
+        return comments.size();
+    }
+
+    public String getComment(int position){
+        return comments.get(position);
+    }
+
+    public void addComment(String commentId) {comments.add(commentId);}
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    /**
+     * Parcelable methods
+     */
 
     protected GameCode(Parcel in) {
         code = in.readString();
@@ -95,33 +175,6 @@ public class GameCode implements Parcelable {
         }
     };
 
-    /**
-     * Getter for the number of players
-     * @return
-     * The number of players that have scanned the QR code
-     */
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -139,70 +192,5 @@ public class GameCode implements Parcelable {
         }
         parcel.writeString(title);
         parcel.writeList(comments);
-    }
-    public String getTitle(){
-        return title;
-    }
-
-    public int getCommentAmount() {
-        return comments.size();
-    }
-    public String getComment(int position){
-        return comments.get(position);
-    }
-
-    public void setComment(int userName, String commentContent){
-
-    }
-
-
-    /**
-     * Stores a comment that is about the QR code
-     * //@param
-     * The comment to be stored
-     */
-//    public void storeComment(Comment c) {
-//        this.commentList.add(c);
-//    }
-    public ArrayList<String> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(ArrayList<String> photos) {
-        this.photos = photos;
-    }
-
-    public ArrayList<String> getOwners() {
-        return owners;
-    }
-
-    public void setOwners(ArrayList<String> owners) {
-        this.owners = owners;
-    }
-
-    public ArrayList<String> getComments() {
-        return comments;
-    }
-
-    public void setComments(ArrayList<String> comments) {
-        this.comments = comments;
-    }
-    public void addComment(String code){
-        comments.add(code);
-    }
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
     }
 }
