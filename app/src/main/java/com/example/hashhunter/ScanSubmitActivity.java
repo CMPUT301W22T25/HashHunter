@@ -137,8 +137,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 /**
-                 * Upload photo to firebase storage ✅
-                 * Add photo object containing url to firestore ✅
+                 * Upload photo to firebase storage
+                 * Add photo object containing url to firestore
                  * Get database of GameCodes
                  * Check if a code with the same string and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
