@@ -35,6 +35,11 @@ import java.util.regex.Pattern;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+/**
+ * This is the activity for registering a new user
+ * It allows them to enter their username and email, checks if it is
+ * valid, then registers them as a new user and starts the Dashboard activity
+ */
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
     private static final String KEY_UNAME = "com.example.hashhunter.username";
