@@ -157,6 +157,10 @@ public class RegisterActivity extends AppCompatActivity {
                                                 }
                                             });
 
+                                    // add a player with username to firestore
+                                    Player player = new Player(username);
+                                    db.collection("Players").document(unique_id).set(player);
+
                                     Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
                                     startActivity(intent);
                                     // Should this be called?
