@@ -208,11 +208,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
                   System.out.println(myData);
 
                   //Obtain player data, specifically we want the gameCodeList
-
-                  ArrayList<String> myCodes = (ArrayList<String>) myData.get(gameCodeListCode);
-                  System.out.println(myCodes);
-                  Query myQuery = db.collection("GameCode").whereIn("docPointer", myCodes);
-                  setUpRecycler(myQuery);
+                  if (myData != null) {
+                      ArrayList<String> myCodes = (ArrayList<String>) myData.get(gameCodeListCode);
+                      System.out.println(myCodes);
+                      Query myQuery = db.collection("GameCode").whereIn("docPointer", myCodes);
+                      setUpRecycler(myQuery);
+                  }
 
 
               }
