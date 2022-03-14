@@ -1,11 +1,9 @@
 package com.example.hashhunter;
 
-import android.location.Location;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GameCode implements Parcelable {
+public class GameCode{
     private String title; // title of the code
     private String code; // string representation of the code
     private Integer points; // points of code
@@ -69,44 +67,6 @@ public class GameCode implements Parcelable {
         return title;
     }
 
-    protected GameCode(Parcel in) {
-        qrCode = in.readString();
-        location = in.readParcelable(Location.class.getClassLoader());
-        if (in.readByte() == 0) {
-            numPlayers = null;
-        } else {
-            numPlayers = in.readInt();
-        }
-        if (in.readByte() == 0) {
-            points = null;
-        } else {
-            points = in.readInt();
-        }
-        title = in.readString();
-        commentList = new ArrayList<>();
-        in.readList(commentList, getClass().getClassLoader());
-
-    }
-
-    public static final Creator<GameCode> CREATOR = new Creator<GameCode>() {
-        @Override
-        public GameCode createFromParcel(Parcel in) {
-            return new GameCode(in);
-        }
-
-        @Override
-        public GameCode[] newArray(int size) {
-            return new GameCode[size];
-        }
-    };
-
-    /**
-     * Getter for the number of players
-     * @return
-     * The number of players that have scanned the QR code
-     */
-    public Integer getPlayers() {
-        return this.numPlayers;
     public void setTitle(String title) {
         this.title = title;
     }
@@ -128,58 +88,6 @@ public class GameCode implements Parcelable {
         this.points = points;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(qrCode);
-        parcel.writeParcelable(location, i);
-        if (numPlayers == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(numPlayers);
-        }
-        if (points == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(points);
-        }
-        parcel.writeString(title);
-        parcel.writeList(commentList);
-    }
-    public String getTitle(){
-        return title;
-    }
-    public int getTreePic(){
-        return treePic;
-    }
-    public int getCommentAmount() {
-        return commentList.size();
-    }
-    public Comment getComment(int position){
-        return commentList.get(position);
-    }
-    public void addComment(Comment c){
-        commentList.add(c);
-    }
-    public void setComment(int userName, String commentContent){
-
-    }
-
-
-    /**
-     * Stores a comment that is about the QR code
-     * @param c
-     * The comment to be stored
-     */
-//    public void storeComment(Comment c) {
-//        this.commentList.add(c);
-//    }
     public ArrayList<String> getPhotos() {
         return photos;
     }
