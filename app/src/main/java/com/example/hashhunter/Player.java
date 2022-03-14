@@ -17,6 +17,14 @@ public class Player {
     private int maxGameCodePoints;
     private int displayTotal;
 
+    public Player() {}
+
+    public Player(String username) {
+        this.username = username;
+    }
+
+
+
     //public Player(String username, int totalPoints, int totalGameCode, int maxGameCodePoints) {
        //this.username = username;
         //this.totalPoints = totalPoints;
