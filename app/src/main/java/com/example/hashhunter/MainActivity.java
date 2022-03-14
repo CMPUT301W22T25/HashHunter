@@ -26,15 +26,7 @@ import java.util.UUID;
      private SharedPreferences sharedPreferences;
      private Boolean firstLogin = false;
 
-     private ActivityResultLauncher<String> requestCameraLauncher =
-             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                 if (isGranted) {
-                     Intent intent = new Intent(MainActivity.this,ScanActivity.class);
-                     startActivity(intent);
-                 } else {
-                     Toast.makeText(MainActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
-                 }
-             });
+
      @Override
      protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
@@ -61,7 +53,8 @@ import java.util.UUID;
              Intent intent = new Intent(MainActivity.this, LoginActivity.class);
              startActivity(intent);
          } else {
-             requestCameraLauncher.launch(Manifest.permission.CAMERA);
+             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+             startActivity(intent);
          }
 
 
