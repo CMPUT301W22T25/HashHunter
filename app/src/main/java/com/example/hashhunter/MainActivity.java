@@ -18,6 +18,10 @@ import java.util.UUID;
 
  /**
   * The Main activity for the app
+  * It checks to see if the user has ever logged into the app before
+  * If yes, it starts the Dashboard activity
+  * Otherwise, it starts the Login activity, which asks the user to either
+  * login using a QR code or register themselves if they are a first time user
   */
  public class MainActivity extends AppCompatActivity {
      // https://www.youtube.com/watch?v=4WxKQTUweVg
