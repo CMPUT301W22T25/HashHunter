@@ -1,11 +1,15 @@
 package com.example.hashhunter;
 
 
+import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -38,6 +42,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -72,6 +77,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
     // keep track of code location
     private Double latitude;
     private Double longitude;
+
+    private String uniqueID;
+
 
     private LocationManager locationManager;
     /**
@@ -110,6 +118,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
         points = (Integer) intent.getSerializableExtra("points");
         code = intent.getStringExtra("qrcode string");
 
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
+
         TextView showPoints = findViewById(R.id.qr_code_points);
         showPoints.setText(points + " Points");
 
@@ -136,6 +147,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 /**
                  * Upload photo to firebase storage ✅
                  * Add photo object containing url to firestore ✅
@@ -162,6 +174,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 } else {
                     // directly upload code data
                     storeGameCodeInDB();
+
                 }
 
                 Intent intent = new Intent(ScanSubmitActivity.this, DashboardActivity.class);
@@ -215,8 +228,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
         } else {
             newGameCode = new GameCode(title, code, points, photoId, "username_placeholder", latitude, longitude);
         }
-
-        db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)
+        String gameCodeId = UUID.randomUUID().toString();
+        db.collection("GameCode").document(gameCodeId).set(newGameCode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -229,6 +242,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
                         Log.w("DB_OPERATION", "Error writing document", e);
                     }
                 });
+        // Add to player
+        db.collection("Players").document(uniqueID)
+                .update("gameCodeList", FieldValue.arrayUnion(gameCodeId));
     }
 
     /**
