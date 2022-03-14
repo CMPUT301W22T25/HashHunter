@@ -25,6 +25,9 @@ public class GameCode implements Parcelable {
     /**
      * Constructors
      */
+    public GameCode(){
+        //For firebase constructor
+    }
     // without location and photos
     public GameCode(String title, String code, Integer points, String owner) {
         this.title = title;
