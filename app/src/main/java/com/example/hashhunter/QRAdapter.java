@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
-    private ArrayList<QRItem> qrList;
+    private ArrayList<GameCode> qrList;
     private OnQRListener bigQRListener;
     public static class qrViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView treeView;
@@ -46,19 +46,20 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     }
 
 
-    public QRAdapter(ArrayList<QRItem> itemList, OnQRListener qrListener){
+    public QRAdapter(ArrayList<GameCode> itemList, OnQRListener qrListener){
         qrList = itemList;
         this.bigQRListener = qrListener;
     }
     @Override
     public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
-        QRItem myItem =  qrList.get(position);
+        GameCode myItem =  qrList.get(position);
 
-        holder.treeView.setImageResource(myItem.getTreePic());
+        holder.treeView.setImageResource(R.drawable.ic_android);
 
-        holder.pointsView.setText(myItem.getQRPoints());
+        holder.pointsView.setText("Points " + myItem.getPoints());
 
-        holder.titleView.setText(myItem.getQRTitle());
+
+        holder.titleView.setText(myItem.getTitle());
     }
 
     @Override

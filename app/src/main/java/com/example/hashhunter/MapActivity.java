@@ -50,12 +50,16 @@ public class MapActivity extends AppCompatActivity {
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
             @Override
-            /**
-             *
+            /** When location values are received from phone, show map and plot points on map
+             * @Param Location
              */
             public void onLocationChanged(@NonNull Location location) {
                 supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
+                    /**
+                     * Once map is ready get the latitude and longitude of location values and place player marker
+                     * @param GoogleMap
+                     */
                     public void onMapReady(GoogleMap googleMap) {
                         // Get Location of player and put them on the map as a marker
                         LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
@@ -68,6 +72,9 @@ public class MapActivity extends AppCompatActivity {
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
+                                    /**
+                                     * Once firebase data of all QR code objects that contain latitude and longitudes is received, place them as markers on the map
+                                     */
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()){
                                             for(QueryDocumentSnapshot document : task.getResult()) {

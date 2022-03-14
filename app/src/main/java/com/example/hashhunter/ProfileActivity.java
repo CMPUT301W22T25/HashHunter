@@ -1,22 +1,39 @@
 package com.example.hashhunter;
 
+import static android.content.ContentValues.TAG;
+import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener{
 
@@ -34,7 +51,19 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private TextView TreeAmount;
     private TextView PointAmount;
     private TextView Email;
-    private ArrayList<QRItem> qrList;
+    private ArrayList<GameCode> qrList;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static DocumentSnapshot userDoc;
+    private String email;
+    private String userName;
+    private String playerCode;
+    Map<String, Object> myData;
+    String userNameCode = "com.example.hashhunter.email";
+    String EmailCode ="com.example.hashhunter.email";
+    String UniqueIDCode ="com.example.hashhunter.email";
+    private String uniqueID;
+    private PlayerDataController playerController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +80,33 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
 
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        //Retrieve unique id
+        uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
+
+
+        //Obtain all the other information from username
+
+
+        //https://firebase.google.com/docs/firestore/query-data/get-data
+        //Obtan user snapshot
+
+
+
+
+
+
+
+
+        //For example if we are searching for a user it will be different from logging in
+
+        //Currently implementing our logged in user data
+
+
+        //So depending where we are this will do a different thing
+
+
         //If the user is in another profile then we will not be able to fetch the login code
 
         //In this case it will be null
@@ -59,8 +115,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
           //Then set the left button as the profile code
 
-        //Otherwise
-        ArrayList<QRComment> testComments = new ArrayList<>();
+        ArrayList<Comment> testComments = new ArrayList<>();
         ArrayList<Integer> LocPicResources = new ArrayList<>();
 
         LocPicResources.add(R.drawable.ic_android);
@@ -69,32 +124,14 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         LocPicResources.add(R.drawable.ic_launcher_background);
 
         //Show both buttons
-        testComments.add(new QRComment("Potato123", "I hate potatoes"));
-        testComments.add(new QRComment("lil Tay", "Strongest Flexer In da game"));
-        testComments.add(new QRComment("MasterCoder", "Crappy QR code bro step up ur game I am a master coder and I'll let u know that i graduated from master coder academy"));
+        testComments.add(new Comment("Potato123", "I hate potatoes"));
+        testComments.add(new Comment("lil Tay", "Strongest Flexer In da game"));
+        testComments.add(new Comment("MasterCoder", "Crappy QR code bro step up ur game I am a master coder and I'll let u know that i graduated from master coder academy"));
 
-        testComments.add(new QRComment("MasterChief", "This ain't halo"));
+        testComments.add(new Comment("MasterChief", "This ain't halo"));
 
-        testComments.add(new QRComment("Lil Peep", "What a sad qr code"));
+        testComments.add(new Comment("Lil Peep", "What a sad qr code"));
 
-
-
-
-        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR", LocPicResources, testComments ));
-        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR", LocPicResources, testComments  ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR", LocPicResources, testComments  ));
-
-        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR" , LocPicResources, testComments ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" , LocPicResources, testComments ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR" , LocPicResources, testComments ));
-
-        qrList.add(new QRItem(R.drawable.ic_launcher_background, "420 points", "Potato QR" , LocPicResources, testComments ));
-        qrList.add(new QRItem(R.drawable.ic_android, "360 points", "Tomato QR" , LocPicResources, testComments ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_account_tree_24, "69 points", "Tomato QR" , LocPicResources, testComments ));
-
-        qrList.add(new QRItem(R.drawable.ic_baseline_child_care_24, "369 points", "Tomacco QR", LocPicResources, testComments  ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_face_24, "369 points", "Tomacco QR" , LocPicResources, testComments ));
-        qrList.add(new QRItem(R.drawable.ic_baseline_4g_plus_mobiledata_24, "4g points", "Illuminati QR", LocPicResources, testComments ));
 
 
         QRRecycler = findViewById(R.id.treeList);
@@ -106,7 +143,28 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         QRRecycler.setAdapter(QRRecycleAdapter);
         QRRecycler.setHasFixedSize(true);
 
+       // docRef = db.collection("UserInfo").document(uniqueID);
 
+        Source source = Source.CACHE;
+
+    // Get the document, forcing the SDK to use the offline cache
+    /*    docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+             @Override
+             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                 if (task.isSuccessful()) {
+                     // Document found in the offline cache
+                     DocumentSnapshot docRef = task.getResult();
+                     Map<String, Object> myData = docRef.getData();
+
+                     email = (String) myData.get(EmailCode);
+                     userName = (String) myData.get(userNameCode);
+                     playerCode = (String) myData.get(uniqueID);
+                 } else {
+                     Log.d(TAG, "Cached get failed: ", task.getException());
+                 }
+             }
+         });
+       */
 
         //Figure out which button was sent to this activity
 
@@ -133,6 +191,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
             }
         });
 
+
         loginCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,12 +208,14 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         // And when the user clicks on someone elses profile
 
 
-        //profileData class will only be used to load the data from the data base that we are allowed to access
+        //PlayerDataController class will only be used to load the data from the data base that we are allowed to access
 
         //Therefore it won't be necessary to create more than one profile class
 
 
     }
+
+
 
     public void openCodeDialog(Integer image, String buttonCode) {
         LayoutInflater inflater = getLayoutInflater();
@@ -177,11 +238,9 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     public void onQRClick(int position) {
 
         Intent intent = new Intent(this, QRVisualizerActivity.class);
-        QRItem myCurrentItem = qrList.get(position);
+        GameCode myCurrentItem = qrList.get(position);
         intent.putExtra("QR ITEM", myCurrentItem);
         startActivity(intent);
-
-
 
 
     }
