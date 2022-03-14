@@ -1,18 +1,12 @@
 package com.example.hashhunter;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
@@ -24,6 +18,8 @@ import com.google.zxing.Result;
  * @References QR code scanner/decoder from Yuriy Budiyev https://github.com/yuriy-budiyev/code-scanner
  * License: MIT License
  * Copyright (c) 2017 Yuriy Budiyev [yuriy.budiyev@yandex.ru]
+ *
+ * Opens scanner which uses Camera, after getting permissions, to get a string from a qrcode
  */
 public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
@@ -52,18 +48,22 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // QR code string stored in result.getText()
 
                        // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
                         if(getCallingActivity() != null) {
                             if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
                                 String uname = result.getText().toString();
                                 intent.putExtra(EXTRA_SCANNED_UNAME, uname);
+                                setResult(RESULT_OK, intent);
+                                String pointMessage = "The username is " + uname;
+                                Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                                 finish();
                             }
                         }
                         else {
                             qrCodeString = result.getText();
-                            points = Scanner.getCodePoints(qrCodeString);
+                            points = GameCodePointsController.getCodePoints(qrCodeString);
                             String pointMessage = "This QR is worth " + points + " Points";
                             Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                             continueButton.setVisibility(View.VISIBLE);

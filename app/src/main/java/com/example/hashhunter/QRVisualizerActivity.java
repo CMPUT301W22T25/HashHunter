@@ -1,17 +1,14 @@
 package com.example.hashhunter;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class QRVisualizerActivity extends AppCompatActivity {
@@ -21,17 +18,17 @@ public class QRVisualizerActivity extends AppCompatActivity {
     QRVisualizerAdapter LocPicAdapter;
     LinearLayoutManager myLayoutManager;
     LinearLayoutManager myHorizontalLayoutManager;
-    ArrayList<QRComment> qrComments;
+    ArrayList<Comment> qrComments;
     ArrayList<Integer> LocPicResources;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrvisualizer);
         Intent intent =getIntent();
-        QRItem myItem = intent.getParcelableExtra("QR ITEM");
+        GameCodeController myItem = intent.getParcelableExtra("QR ITEM");
 
-        qrComments = myItem.getQRComments();
-        LocPicResources = myItem.getLocationPics();
+        //qrComments = myItem.getQRComments();
+        //LocPicResources = myItem.getLocationPics();
         System.out.println("On this activity now!");
 
         CommentRecycler = findViewById(R.id.commentRecycler);

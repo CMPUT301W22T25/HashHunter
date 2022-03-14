@@ -18,6 +18,10 @@ import java.util.UUID;
 
  /**
   * The Main activity for the app
+  * It checks to see if the user has ever logged into the app before
+  * If yes, it starts the Dashboard activity
+  * Otherwise, it starts the Login activity, which asks the user to either
+  * login using a QR code or register themselves if they are a first time user
   */
  public class MainActivity extends AppCompatActivity {
      // https://www.youtube.com/watch?v=4WxKQTUweVg
@@ -26,15 +30,7 @@ import java.util.UUID;
      private SharedPreferences sharedPreferences;
      private Boolean firstLogin = false;
 
-     private ActivityResultLauncher<String> requestCameraLauncher =
-             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                 if (isGranted) {
-                     Intent intent = new Intent(MainActivity.this,ScanActivity.class);
-                     startActivity(intent);
-                 } else {
-                     Toast.makeText(MainActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
-                 }
-             });
+
      @Override
      protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
@@ -61,9 +57,9 @@ import java.util.UUID;
              Intent intent = new Intent(MainActivity.this, LoginActivity.class);
              startActivity(intent);
          } else {
-             requestCameraLauncher.launch(Manifest.permission.CAMERA);
+             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+             startActivity(intent);
          }
-
 
      }
  }

@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailEdit;
     private String unique_id;
     private Button submitButton;
-    private ImageView qrCodeIV;
+//    private ImageView qrCodeIV;
     Bitmap bitmap;
     QRGEncoder qrgEncoder;
 
@@ -54,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         usernameEdit = findViewById(R.id.username_edit_text);
         emailEdit = findViewById(R.id.email_edit_text);
-        qrCodeIV = findViewById(R.id.idIVQrcode);
+//        qrCodeIV = findViewById(R.id.idIVQrcode);
 
         submitButton = findViewById(R.id.submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -71,38 +71,38 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!isValid) {
                     // if the edittext inputs are empty then execute
                     // this method showing a toast message.
-                    Toast.makeText(RegisterActivity.this, "Enter some text to generate QR Code", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Enter valid input", Toast.LENGTH_SHORT).show();
                 } else {
                     // below is the line for getting the window manager service
-                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-                    // initializing a variable for the default display
-                    Display display = manager.getDefaultDisplay();
-
-                    // creating the variable for the point that is to be displayed in QRCode
-                    Point point = new Point();
-                    display.getSize(point);
-
-                    // getting width and height of a point
-                    int width = point.x;
-                    int height = point.y;
-
-                    // generating dimension from width and height
-                    int dimen = Math.min(width, height);
-                    dimen = (dimen * 3) / 4;
-                    // setting these dimensions inside our qrcode generator to generate the qr code
-                    qrgEncoder = new QRGEncoder(unique_id, null, QRGContents.Type.TEXT, dimen);
-                    try {
-                        // getting our qrCode in the form of a bitmap
-                        bitmap = qrgEncoder.encodeAsBitmap();
-
-                        // setting the bitmap inside our imageView
-                        qrCodeIV.setImageBitmap(bitmap);
-
-                    } catch (WriterException e) {
-                        // this method is called for exception handling
-                        Log.e("Tag", e.toString());
-                    }
+//                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+//
+//                    // initializing a variable for the default display
+//                    Display display = manager.getDefaultDisplay();
+//
+//                    // creating the variable for the point that is to be displayed in QRCode
+//                    Point point = new Point();
+//                    display.getSize(point);
+//
+//                    // getting width and height of a point
+//                    int width = point.x;
+//                    int height = point.y;
+//
+//                    // generating dimension from width and height
+//                    int dimen = Math.min(width, height);
+//                    dimen = (dimen * 3) / 4;
+//                    // setting these dimensions inside our qrcode generator to generate the qr code
+//                    qrgEncoder = new QRGEncoder(unique_id, null, QRGContents.Type.TEXT, dimen);
+//                    try {
+//                        // getting our qrCode in the form of a bitmap
+//                        bitmap = qrgEncoder.encodeAsBitmap();
+//
+//                        // setting the bitmap inside our imageView
+//                        qrCodeIV.setImageBitmap(bitmap);
+//
+//                    } catch (WriterException e) {
+//                        // this method is called for exception handling
+//                        Log.e("Tag", e.toString());
+//                    }
 
                     // still need to check and deny if the user already exists
 
@@ -154,18 +154,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         Boolean result  = true;
 
-        // https://www.javatpoint.com/java-email-validation
-        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
+         //https://www.javatpoint.com/java-email-validation
+        if (email != "") {
+            String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(email);
+            if (!matcher.matches()) {
+                Toast.makeText(RegisterActivity.this, "Invalid email!", Toast.LENGTH_SHORT).show();
+            }
+        }
 
-        if (username.equals("") || email.equals("")) {
+        if (username.equals("") ) {
             // check that none of the fields are empty
-            result = false;
-        } else if (!matcher.matches()) {
-            // check that the email is valid
+            Toast.makeText(RegisterActivity.this, "Invalid username!", Toast.LENGTH_SHORT).show();
             result = false;
         }
+
         return result;
     };
 }

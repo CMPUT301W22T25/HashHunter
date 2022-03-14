@@ -29,7 +29,9 @@ import java.util.UUID;
 import java.util.function.LongFunction;
 
 /**
- * Activity that lets the user log in by scanning a code, or register if they are a first time user
+ * This is the activity for user login for the first time
+ * If they scan a QR code, it logs them in if they are an existing user in the database
+ * If they register, it generates a unique ID for them and adds their information to the database
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
@@ -65,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
                                         editor.commit();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Logged In");
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                         startActivity(intent);
@@ -72,13 +76,19 @@ public class LoginActivity extends AppCompatActivity {
                                         //finish();
                                     } else {
                                         Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Log In Failed");
                                     }
                                 } else {
                                     Log.d(TAG, "get failed with", task.getException());
+                                    Button loginButton = findViewById(R.id.login_button);
+                                    loginButton.setText("Log In Failed");
                                 }
                             }
                         });
 
+                    } else {
+                        Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -123,7 +133,6 @@ public class LoginActivity extends AppCompatActivity {
                 // https://www.youtube.com/watch?v=7Fc79qTq7yc
                 // I used all the above links to learn about intents and starting activities
                 // The code is not from any single source
-
 
             }
         });

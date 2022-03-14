@@ -2,6 +2,7 @@ package com.example.hashhunter;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -53,6 +54,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Has fields for user to submit qrcode title, location, and photo.
+ * Then creates or updates current GameCode in database
+ */
 public class ScanSubmitActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -69,6 +74,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private Double longitude;
 
     private LocationManager locationManager;
+    /**
+     * When add button is pressed, get location and show details
+     */
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -112,12 +120,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getCurrentLocation();
+                if(getLocationPermissions())
+                    getCurrentLocation();
 
             }
         });
-
-
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,18 +170,36 @@ public class ScanSubmitActivity extends AppCompatActivity {
         });
     }
 
-    public void getCurrentLocation() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    /**
+     * If location permissions are not granted, request for them.
+     * @return
+     * True if permissions already granted
+     */
+    public boolean getLocationPermissions() {
+        if (ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(ScanSubmitActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(ScanSubmitActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},1);
 
-            return;
+            return false;
         }
+        else return true;
+    }
+
+    /**
+     * This is only called with location permissions, so it is safe to suppress permissions here
+     *
+     * Gets current location as a Android.Location object
+     */
+    @SuppressLint("MissingPermission")
+    public void getCurrentLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
     }
 
-
+    /**
+     * Store scanned qr code in the database
+     */
     private void storeGameCodeInDB() {
         // retrieve title name
         EditText titleBox = findViewById(R.id.qr_code_name);
@@ -206,7 +231,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 });
     }
 
-    // upload photo to firebase storage
+    /**
+     * Take image as a bitmap, convert it to byte array then upload it to firebase storage
+     */
     private void uploadPhotoToStorage() {
         // construct byte array to be uploaded
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -266,7 +293,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
                     }
                 });
     }
-    // launch camera app
+
+    /**
+     * Launch built-in camera app (permission is assumed)
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -276,7 +306,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    // get bitmap result from camera app
+
+    /**
+     * Received image from built-in camera app, store it and display it as a thumbnail
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -297,18 +333,14 @@ public class ScanSubmitActivity extends AppCompatActivity {
             case 1: {
 
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length == 3
+                if (grantResults.length == 2
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
                     getCurrentLocation();
                 } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+
                     Toast.makeText(ScanSubmitActivity.this, "Permission denied to read your location", Toast.LENGTH_SHORT).show();
                 }
                 return;
