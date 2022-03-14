@@ -3,6 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1405" />
+        <entry key="app/src/main/res/layout/activity_camera.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_explore.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.12916666666666668" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.29518304854801675" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_map.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.296875" />
+        <entry key="app/src/main/res/layout/activity_scan.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/main_page.xml" value="0.16145833333333334" />
+        <entry key="app/src/main/res/layout/map_page.xml" value="0.16145833333333334" />
+=======
         <entry key="..\:/Users/Aaron/AndroidStudioProjects/HashHunter/app/src/main/res/drawable/dropdown_menu_background.xml" value="0.3098958333333333" />
         <entry key="..\:/Users/Aaron/AndroidStudioProjects/HashHunter/app/src/main/res/drawable/empty_divider.xml" value="0.3323076923076923" />
         <entry key="..\:/Users/Aaron/AndroidStudioProjects/HashHunter/app/src/main/res/drawable/ic_android.xml" value="0.3828125" />
@@ -32,6 +47,7 @@
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/activity_scan.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_scan_submit.xml" value="0.2" />
+>>>>>>> 1b1ce1c4392b36162d4a9648e059d9a24a2683bf
       </map>
     </option>
   </component>

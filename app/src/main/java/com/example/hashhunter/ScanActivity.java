@@ -58,6 +58,9 @@ public class ScanActivity extends AppCompatActivity {
                             if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
                                 String uname = result.getText().toString();
                                 intent.putExtra(EXTRA_SCANNED_UNAME, uname);
+                                setResult(RESULT_OK, intent);
+                                String pointMessage = "The username is " + uname;
+                                Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                                 finish();
                             }
                         }
