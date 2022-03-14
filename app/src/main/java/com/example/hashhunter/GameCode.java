@@ -1,6 +1,8 @@
 package com.example.hashhunter;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,26 +67,19 @@ public class GameCode implements Parcelable {
     /**
      * Getters and setters
      */
-    public String getTitle() {
-        return title;
-    }
+
 
     protected GameCode(Parcel in) {
-        qrCode = in.readString();
-        location = in.readParcelable(Location.class.getClassLoader());
-        if (in.readByte() == 0) {
-            numPlayers = null;
-        } else {
-            numPlayers = in.readInt();
-        }
+        code = in.readString();
+
         if (in.readByte() == 0) {
             points = null;
         } else {
             points = in.readInt();
         }
         title = in.readString();
-        commentList = new ArrayList<>();
-        in.readList(commentList, getClass().getClassLoader());
+        comments = new ArrayList<>();
+        in.readList(comments, getClass().getClassLoader());
 
     }
 
@@ -105,8 +100,7 @@ public class GameCode implements Parcelable {
      * @return
      * The number of players that have scanned the QR code
      */
-    public Integer getPlayers() {
-        return this.numPlayers;
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -135,14 +129,8 @@ public class GameCode implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(qrCode);
-        parcel.writeParcelable(location, i);
-        if (numPlayers == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(numPlayers);
-        }
+        parcel.writeString(code);
+
         if (points == null) {
             parcel.writeByte((byte) 0);
         } else {
@@ -150,23 +138,19 @@ public class GameCode implements Parcelable {
             parcel.writeInt(points);
         }
         parcel.writeString(title);
-        parcel.writeList(commentList);
+        parcel.writeList(comments);
     }
     public String getTitle(){
         return title;
     }
-    public int getTreePic(){
-        return treePic;
-    }
+
     public int getCommentAmount() {
-        return commentList.size();
+        return comments.size();
     }
-    public Comment getComment(int position){
-        return commentList.get(position);
+    public String getComment(int position){
+        return comments.get(position);
     }
-    public void addComment(Comment c){
-        commentList.add(c);
-    }
+
     public void setComment(int userName, String commentContent){
 
     }
@@ -203,7 +187,9 @@ public class GameCode implements Parcelable {
     public void setComments(ArrayList<String> comments) {
         this.comments = comments;
     }
-
+    public void addComment(String code){
+        comments.add(code);
+    }
     public Double getLatitude() {
         return latitude;
     }

@@ -143,12 +143,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         QRRecycler.setAdapter(QRRecycleAdapter);
         QRRecycler.setHasFixedSize(true);
 
-        docRef = db.collection("UserInfo").document(uniqueID);
+       // docRef = db.collection("UserInfo").document(uniqueID);
 
         Source source = Source.CACHE;
 
     // Get the document, forcing the SDK to use the offline cache
-        docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    /*    docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
              @Override
              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                  if (task.isSuccessful()) {
@@ -164,6 +164,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
                  }
              }
          });
+       */
 
         //Figure out which button was sent to this activity
 
@@ -213,15 +214,8 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
     }
-    public void loadProfileInfo(View v){
 
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-            }
-        });
-    }
 
     public void openCodeDialog(Integer image, String buttonCode) {
         LayoutInflater inflater = getLayoutInflater();
