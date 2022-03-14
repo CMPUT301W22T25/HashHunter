@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Include method to display image from url:
+ * Controller class to display image from url:
  * - https://www.geeksforgeeks.org/how-to-load-any-image-from-url-without-using-any-dependency-in-android/
  * - https://stackoverflow.com/questions/11831188/how-to-get-bitmap-from-a-url-in-android
  */

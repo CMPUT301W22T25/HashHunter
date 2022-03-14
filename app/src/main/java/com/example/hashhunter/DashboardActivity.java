@@ -4,19 +4,18 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
-
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Contains 5 dashboard buttons that open other activities - will be fragments in the future
+ */
 public class DashboardActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<String> requestCameraLauncher =
@@ -44,6 +43,9 @@ public class DashboardActivity extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
+                /**
+                 * Uses a switch statement to determine which icon was clicked on the dashboard to move to whichever activity
+                 */
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Intent intent;
 
