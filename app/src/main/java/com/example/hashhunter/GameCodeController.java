@@ -20,9 +20,9 @@ public class GameCodeController {
         return TheGameCode.getTitle();
     }
 
-    public Comment getComment(int position){
+    public String getComment(int position){
         if (TheGameCode.getCommentAmount() > position + 1) {
-            return (Comment) TheGameCode.getComment(position);
+            return  TheGameCode.getComment(position);
         }
         else{
             return null;
@@ -31,8 +31,8 @@ public class GameCodeController {
     public GameCode getGameCode(){
         return TheGameCode;
     }
-    public void makeNewComment(String User, String content) {
-        TheGameCode.addComment((org.w3c.dom.Comment) new Comment(User, content));
+    public void makeNewComment(String commentCode) {
+        TheGameCode.addComment(commentCode);
 
     }
 

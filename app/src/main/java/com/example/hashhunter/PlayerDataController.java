@@ -14,7 +14,7 @@ public class PlayerDataController {
 
     public String getPlayerEmail(String uniqueID){
         if (uniqueID == ThePlayer.getProfileCode()){
-            return ThePlayer.getEmail();
+            return null;
         }
         else{
             return null;

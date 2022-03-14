@@ -54,7 +54,7 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
         GameCode myItem =  qrList.get(position);
 
-        holder.treeView.setImageResource(myItem.getTreePic());
+        holder.treeView.setImageResource(R.drawable.ic_android);
 
         holder.pointsView.setText("Points " + myItem.getPoints());
 

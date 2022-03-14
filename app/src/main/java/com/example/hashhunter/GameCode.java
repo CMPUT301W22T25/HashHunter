@@ -1,9 +1,13 @@
 package com.example.hashhunter;
 
+import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GameCode{
+public class GameCode implements Parcelable {
     private String title; // title of the code
     private String code; // string representation of the code
     private Integer points; // points of code
@@ -63,9 +67,39 @@ public class GameCode{
     /**
      * Getters and setters
      */
-    public String getTitle() {
-        return title;
+
+
+    protected GameCode(Parcel in) {
+        code = in.readString();
+
+        if (in.readByte() == 0) {
+            points = null;
+        } else {
+            points = in.readInt();
+        }
+        title = in.readString();
+        comments = new ArrayList<>();
+        in.readList(comments, getClass().getClassLoader());
+
     }
+
+    public static final Creator<GameCode> CREATOR = new Creator<GameCode>() {
+        @Override
+        public GameCode createFromParcel(Parcel in) {
+            return new GameCode(in);
+        }
+
+        @Override
+        public GameCode[] newArray(int size) {
+            return new GameCode[size];
+        }
+    };
+
+    /**
+     * Getter for the number of players
+     * @return
+     * The number of players that have scanned the QR code
+     */
 
     public void setTitle(String title) {
         this.title = title;
@@ -88,6 +122,48 @@ public class GameCode{
         this.points = points;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(code);
+
+        if (points == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(points);
+        }
+        parcel.writeString(title);
+        parcel.writeList(comments);
+    }
+    public String getTitle(){
+        return title;
+    }
+
+    public int getCommentAmount() {
+        return comments.size();
+    }
+    public String getComment(int position){
+        return comments.get(position);
+    }
+
+    public void setComment(int userName, String commentContent){
+
+    }
+
+
+    /**
+     * Stores a comment that is about the QR code
+     * @param c
+     * The comment to be stored
+     */
+//    public void storeComment(Comment c) {
+//        this.commentList.add(c);
+//    }
     public ArrayList<String> getPhotos() {
         return photos;
     }
@@ -111,7 +187,9 @@ public class GameCode{
     public void setComments(ArrayList<String> comments) {
         this.comments = comments;
     }
-
+    public void addComment(String code){
+        comments.add(code);
+    }
     public Double getLatitude() {
         return latitude;
     }
