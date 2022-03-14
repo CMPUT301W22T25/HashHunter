@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameCode {
+    private String title; // title of the code
     private String code; // string representation of the code
     private Location location; // location of code
     private Integer points; // points of code
@@ -16,7 +17,8 @@ public class GameCode {
      * Constructors
      */
     // without location and photos
-    public GameCode(String code, Integer points, String owner) {
+    public GameCode(String title, String code, Integer points, String owner) {
+        this.title = title;
         this.code = code;
         this.location = null;
         this.points = points;
@@ -26,7 +28,8 @@ public class GameCode {
     }
 
     // with location, without photos
-    public GameCode(String code, Location location, Integer points, String owner) {
+    public GameCode(String title, String code, Location location, Integer points, String owner) {
+        this.title = title;
         this.code = code;
         this.location = location;
         this.points = points;
@@ -36,7 +39,8 @@ public class GameCode {
     }
 
     // with photos, without location
-    public GameCode(String code, Integer points, ArrayList<String> photos, String owner) {
+    public GameCode(String title, String code, Integer points, ArrayList<String> photos, String owner) {
+        this.title = title;
         this.code = code;
         this.location = null;
         this.points = points;
@@ -46,7 +50,8 @@ public class GameCode {
     }
 
     // with location and photos
-    public GameCode(String code, Location location, Integer points, ArrayList<String> photos, String owner) {
+    public GameCode(String title, String code, Location location, Integer points, ArrayList<String> photos, String owner) {
+        this.title = title;
         this.code = code;
         this.location = location;
         this.points = points;
@@ -58,6 +63,15 @@ public class GameCode {
     /**
      * Getters and setters
      */
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
     public String getCode() {
         return code;
     }

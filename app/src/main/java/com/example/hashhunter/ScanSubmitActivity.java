@@ -4,12 +4,14 @@ package com.example.hashhunter;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +48,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private String photoId; // id of photo in firestore
     private Integer points; // value of points
     private String code; // string representation of qrcode
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +101,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
     }
     //
     private void storeGameCodeInDB() {
-        GameCode newGameCode = new GameCode(code, points, "username_placeholder");
+        EditText titleBox = findViewById(R.id.qr_code_name);
+        String title = titleBox.getText().toString();
+        GameCode newGameCode = new GameCode(title, code, points, "username_placeholder");
         db.collection("GameCode").document(UUID.randomUUID().toString()).set(newGameCode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
