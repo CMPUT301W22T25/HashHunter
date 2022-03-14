@@ -17,7 +17,9 @@ public class Player {
     private int maxGameCodePoints;
     private int displayTotal;
 
-
+    /**
+     * constructors
+     */
     public Player() {}
 
     public Player(String username) {

@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+/**
+ * displays the leaderboard, which is able to sort based of a dropdown menu and display the users rank
+ */
 public class ExploreActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -55,6 +59,8 @@ public class ExploreActivity extends AppCompatActivity {
         leaderboardRecycler = findViewById(R.id.leaderboard);
         playerList = new PlayerList();
 
+
+        // retrieves all the players from database
         //https://stackoverflow.com/questions/51361951/retrieve-all-documents-from-firestore-as-custom-objects
         db.collection("Players")
                 .get()
@@ -114,6 +120,8 @@ public class ExploreActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 int i;
+
+                //if QRScore is selected
                 if (position ==0) {
                     playerList.sortByQRScore();
                     for (i=0; i < playerList.getSize(); i++) {
@@ -125,6 +133,7 @@ public class ExploreActivity extends AppCompatActivity {
 
 
                 }
+                // if Total points is selected
                 else if (position == 1) {
                     playerList.sortByTotalPoints();
                     for (i=0; i < playerList.getSize(); i++) {
@@ -135,6 +144,7 @@ public class ExploreActivity extends AppCompatActivity {
                 }
 
                 else {
+                    //if most qr is selected
                     playerList.sortByMostQR();
                     for (i=0; i < playerList.getSize(); i++) {
                         Player player = playerList.getPlayer(i);
@@ -166,10 +176,13 @@ public class ExploreActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
+    /**
+     * displays the users rank at the bottom
+     * @param name
+     *      this is the username of the player
+     * @param playerList
+     *      this is the list of all the players
+     */
     private void displayMyRank(String name, PlayerList playerList) {
 
         int pos = playerList.findPlayerPos(name);
