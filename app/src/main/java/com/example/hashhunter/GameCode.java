@@ -72,6 +72,41 @@ public class GameCode implements Parcelable {
         this.longitude = longitude;
     }
 
+    protected GameCode(Parcel in) {
+        title = in.readString();
+        code = in.readString();
+        if (in.readByte() == 0) {
+            points = null;
+        } else {
+            points = in.readInt();
+        }
+        photos = in.createStringArrayList();
+        owners = in.createStringArrayList();
+        comments = in.createStringArrayList();
+        if (in.readByte() == 0) {
+            latitude = null;
+        } else {
+            latitude = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            longitude = null;
+        } else {
+            longitude = in.readDouble();
+        }
+    }
+
+    public static final Creator<GameCode> CREATOR = new Creator<GameCode>() {
+        @Override
+        public GameCode createFromParcel(Parcel in) {
+            return new GameCode(in);
+        }
+
+        @Override
+        public GameCode[] newArray(int size) {
+            return new GameCode[size];
+        }
+    };
+
     /**
      * Getters and setters
      */
@@ -167,35 +202,6 @@ public class GameCode implements Parcelable {
         System.out.println("Longitude: ");
         System.out.println(longitude);
     }
-    /**
-     * Parcelable methods
-     */
-
-    protected GameCode(Parcel in) {
-        code = in.readString();
-
-        if (in.readByte() == 0) {
-            points = null;
-        } else {
-            points = in.readInt();
-        }
-        title = in.readString();
-        comments = new ArrayList<>();
-        in.readList(comments, getClass().getClassLoader());
-
-    }
-
-    public static final Creator<GameCode> CREATOR = new Creator<GameCode>() {
-        @Override
-        public GameCode createFromParcel(Parcel in) {
-            return new GameCode(in);
-        }
-
-        @Override
-        public GameCode[] newArray(int size) {
-            return new GameCode[size];
-        }
-    };
 
     @Override
     public int describeContents() {
@@ -204,15 +210,28 @@ public class GameCode implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
         parcel.writeString(code);
-
         if (points == null) {
             parcel.writeByte((byte) 0);
         } else {
             parcel.writeByte((byte) 1);
             parcel.writeInt(points);
         }
-        parcel.writeString(title);
-        parcel.writeList(comments);
+        parcel.writeStringList(photos);
+        parcel.writeStringList(owners);
+        parcel.writeStringList(comments);
+        if (latitude == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(longitude);
+        }
     }
 }

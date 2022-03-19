@@ -16,35 +16,35 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 
-public class QRVisualizerAdapter extends FirestoreRecyclerAdapter<PhotoController, QRVisualizerAdapter.QRVisualizerViewHolder>{
+public class QRVisualizerAdapter extends RecyclerView.Adapter<QRVisualizerAdapter.QRVisualizerViewHolder>{
     private ArrayList<PhotoController> QRLocPicList;
 
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
-    public QRVisualizerAdapter(@NonNull FirestoreRecyclerOptions<PhotoController> options) {
-        super(options);
+
+    public QRVisualizerAdapter(ArrayList<PhotoController> somePhotos){
+        this.QRLocPicList = somePhotos;
     }
-
-
     @NonNull
     @Override
     public QRVisualizerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.qr_visualizer_pic, parent, false);
-        return new QRVisualizerViewHolder(view);
+        View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.qr_visualizer_pic, parent, false);
 
+        QRVisualizerViewHolder VisHolder =  new QRVisualizerViewHolder(myView);
+
+        return VisHolder;
     }
-
 
     @Override
-    protected void onBindViewHolder(@NonNull QRVisualizerViewHolder holder, int position, @NonNull PhotoController model) {
-        model.displayImage(holder.LocPicView);
+    public void onBindViewHolder(@NonNull QRVisualizerViewHolder holder, int position) {
+        //Get controller position
+        PhotoController pController = QRLocPicList.get(position);
+        pController.displayImage(holder.LocPicView);
 
     }
 
+    @Override
+    public int getItemCount() {
+        return QRLocPicList.size();
+    }
 
 
     public class QRVisualizerViewHolder extends RecyclerView.ViewHolder{

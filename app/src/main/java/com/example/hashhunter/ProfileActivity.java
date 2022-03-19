@@ -48,14 +48,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener{
 
     //implements QRAdapter.OnItemClickListener
     int columns = 2;
     //Set QR list, adapter, and grid manager
     private RecyclerView QRRecycler;
     private ImageView profilePic;
-    private RecyclerView.Adapter QRRecycleAdapter;
+    private QRAdapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
     private Button loginCodeButton;
@@ -400,9 +400,22 @@ public class ProfileActivity extends AppCompatActivity {
 
         QRRecycler.setLayoutManager(QRGridManager);
 
-        QRRecycleAdapter = new QRAdapter(myControllerList);
+        QRRecycleAdapter = new QRAdapter(myControllerList, this);
 
         QRRecycler.setAdapter(QRRecycleAdapter);
+    }
+
+    @Override
+    public void onQRClick(int position) {
+
+        Intent intent = new Intent(this, QRVisualizerActivity.class);
+        GameCode myCode = QRRecycleAdapter.getItem(position).getGameCode();
+        System.out.println("Attributes before passing!");
+        myCode.printAttributes();
+
+        intent.putExtra("QR ITEM", myCode);
+        startActivity(intent);
+
     }
 
     /*
