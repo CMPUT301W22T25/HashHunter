@@ -73,8 +73,8 @@ public class QRVisualizerActivity extends AppCompatActivity {
     }
 
     private void LoadCommentRecycler(Query query){
-        /*CommentRecycler = findViewById(R.id.commentRecycler);
-
+        CommentRecycler = findViewById(R.id.commentRecycler);
+        ArrayList<Comment> qrComments = new ArrayList<>();
         commentAdapter = new QRCommentAdapter(qrComments);
 
 
@@ -83,7 +83,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
         myHorizontalLayoutManager = new LinearLayoutManager( this, LinearLayoutManager.HORIZONTAL, false);
 
         CommentRecycler.setLayoutManager(myLayoutManager);
-        CommentRecycler.setAdapter(commentAdapter);*/
+        CommentRecycler.setAdapter(commentAdapter);
 
     }
 }

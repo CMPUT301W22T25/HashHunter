@@ -148,6 +148,25 @@ public class GameCode implements Parcelable {
         this.longitude = longitude;
     }
 
+    public void printAttributes(){
+        System.out.println("Title: ");
+        System.out.println(title); // title of the code
+        System.out.println("Code: ");
+        System.out.println(code); // string representation of the code
+        System.out.println("Points: ");
+        System.out.println(points); // points of code
+        System.out.println("Photos: ");
+
+        System.out.println(photos); // id of photos objects
+        System.out.println("Owners: ");
+        System.out.println(owners); // username
+        System.out.println("Comments: ");
+        System.out.println(comments); // id of comment object
+        System.out.println("Latitude: ");
+        System.out.println(latitude);
+        System.out.println("Longitude: ");
+        System.out.println(longitude);
+    }
     /**
      * Parcelable methods
      */

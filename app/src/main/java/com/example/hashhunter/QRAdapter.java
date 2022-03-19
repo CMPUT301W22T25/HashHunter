@@ -3,6 +3,7 @@ package com.example.hashhunter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,20 +16,44 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class QRAdapter extends FirestoreRecyclerAdapter<GameCodeController, QRAdapter.qrViewHolder> {
-    private ArrayList<GameCode> qrList;
-    private OnItemClickListener listener;
+public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
+    private ArrayList<GameCodeController> qrList;
+    private AdapterView.OnItemClickListener listener;
 
-    /**
-     * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
-     * FirestoreRecyclerOptions} for configuration options.
-     *
-     * @param options
-     */
-    public QRAdapter(@NonNull FirestoreRecyclerOptions options, OnItemClickListener myListener) {
-        super(options);
-        listener = myListener;
+
+
+    public QRAdapter(ArrayList<GameCodeController> controllerList){
+        qrList = controllerList;
     }
+    @NonNull
+    @Override
+
+
+    public qrViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tree_list_item, parent, false);
+
+        qrViewHolder qrHolder =  new qrViewHolder(myView);
+
+        return qrHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
+        GameCodeController myController = qrList.get(position);
+        myController.SyncController();
+        holder.treeView.setImageResource(R.drawable.ic_android);
+        System.out.println(myController.getTitle());
+        holder.titleView.setText(myController.getTitle());
+        holder.pointsView.setText("Points: "+ myController.getPoints().toString());
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return qrList.size();
+    }
+
 
     public class qrViewHolder extends RecyclerView.ViewHolder{
         public ImageView treeView;
@@ -46,45 +71,12 @@ public class QRAdapter extends FirestoreRecyclerAdapter<GameCodeController, QRAd
                 public void onClick(View view) {
                     int position = getBindingAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && listener != null){
-                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
                         System.out.println("Click!");
                     }
                 }
             });
         }
 
-    }
-
-    @NonNull
-    @Override
-    public qrViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tree_list_item, parent, false);
-
-        qrViewHolder qrHolder = new qrViewHolder(myView);
-        return qrHolder;
-    }
-
-
-    @Override
-    protected void onBindViewHolder(@NonNull qrViewHolder holder, int position, @NonNull GameCodeController model) {
-        GameCodeController myItem =  (GameCodeController) model;
-
-        holder.treeView.setImageResource(R.drawable.ic_android);
-
-        holder.pointsView.setText("Points " + myItem.getPoints());
-
-
-        holder.titleView.setText(myItem.getTitle());
-    }
-
-
-    public interface OnItemClickListener{
-        void onItemClick(DocumentSnapshot documentSnapshot, int position);
-
-    }
-    public void setOnItemClickListener(OnItemClickListener listener){
-        this.listener = listener;
     }
 
 }

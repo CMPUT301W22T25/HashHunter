@@ -19,15 +19,6 @@ public class GameCodeController implements Parcelable {
     private Double longitude;
     public GameCodeController(){}
 
-    public GameCodeController(String title, String code, Integer points, ArrayList<String> myPhotos,ArrayList<String> owners, ArrayList<String> comments){
-        this.title = title;
-        this.code = code;
-        this.points = points;
-        this.photos = myPhotos;
-        this.owners = owners;
-        this.comments = comments;
-    }
-
     public GameCodeController(GameCode myGameCode) {
         this.TheGameCode = myGameCode;
     }
@@ -77,8 +68,8 @@ public class GameCodeController implements Parcelable {
     }
 
     public String getComment(int position){
-        if (TheGameCode.getCommentAmount() > position + 1) {
-            return  TheGameCode.getComment(position);
+        if (comments.size() > position + 1) {
+            return  comments.get(position);
         }
         else{
             return null;
@@ -91,8 +82,19 @@ public class GameCodeController implements Parcelable {
         TheGameCode.addComment(commentCode);
 
     }
+    public void SyncController(){
+        this.title = TheGameCode.getTitle(); // title of the code
+        this.code = TheGameCode.getCode(); // string representation of the code
+
+        this.points = TheGameCode.getPoints(); // points of code
+        this.photos = TheGameCode.getPhotos(); // id of photos objects
+        this.owners = TheGameCode.getOwners(); // username
+        this.comments = TheGameCode.getComments(); // id of comment object
+        this.latitude = TheGameCode.getLatitude();
+        this.longitude = TheGameCode.getLongitude();
+    }
     public ArrayList<String> getPhotos(){
-        return photos;
+        return this.photos;
     }
 
     @Override

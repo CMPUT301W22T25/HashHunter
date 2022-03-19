@@ -34,10 +34,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.google.zxing.WriterException;
 
@@ -45,14 +48,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnItemClickListener{
+public class ProfileActivity extends AppCompatActivity {
 
-
+    //implements QRAdapter.OnItemClickListener
     int columns = 2;
     //Set QR list, adapter, and grid manager
     private RecyclerView QRRecycler;
     private ImageView profilePic;
-    private FirestoreRecyclerAdapter QRRecycleAdapter;
+    private RecyclerView.Adapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
     private Button loginCodeButton;
@@ -206,13 +209,70 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
                   Map<String, Object> myData = doc.getData();
                   System.out.println(myData);
+                    //This has to change
 
+                  //Try to implement it using a recycler view
                   //Obtain player data, specifically we want the gameCodeList
                   if (myData != null) {
                       ArrayList<String> myCodes = (ArrayList<String>) myData.get(gameCodeListCode);
                       System.out.println(myCodes);
-                      Query myQuery = db.collection("GameCode").whereIn("docPointer", myCodes);
-                      setUpRecycler(myQuery);
+
+
+                      //We have all the game codes here
+
+                      CollectionReference gameCodesRef = db.collection("GameCode");
+
+                      //For each game code owned by the user
+
+                      gameCodesRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                          @Override
+                          public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                              //Check every gameCode
+                              //https://stackoverflow.com/questions/66834816/how-to-get-arraylist-of-custom-objects-from-firestore-documents
+                              //Use some of the code there
+                              ArrayList<GameCodeController> myControllers = new ArrayList<>();
+                              for (QueryDocumentSnapshot document : task.getResult()){
+                                  //If the document matches the id
+                                  String myID = document.getId();
+                                  if (myCodes.contains(myID)) {
+                                      //Create new gamecode and set up its controller
+                                      GameCode myCode = document.toObject(GameCode.class);
+                                      GameCodeController myController = new GameCodeController(myCode);
+                                      //Add controller
+                                      myControllers.add(myController);
+                                  }
+                                  //Initialize recycler view
+                                  setUpRecycler(myControllers);
+                              }
+
+                          }
+                      });
+
+                      //Reconstruct the GameCode object
+
+                      //Add it to an array
+
+
+                      //For each gamecode in the collection
+
+                      //If the gamecode is equals to my gamecode
+
+
+
+
+
+                    Query myQuery = db.collection("GameCodes");
+
+                      //Print them to the screen
+
+                      //Only get the gamecodes whose name is the same as the gamecodes in my list
+
+
+                      //Pass it onto the recycler view
+
+
+
+                      //setUpRecycler(myQuery);
                   }
 
 
@@ -334,22 +394,18 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
     }
 
-    private void setUpRecycler(Query query) {
-        FirestoreRecyclerOptions<GameCodeController> options = new FirestoreRecyclerOptions.Builder<GameCodeController>()
-                .setQuery(query, GameCodeController.class)
-                .setLifecycleOwner(this)
-                .build();
-
+    private void setUpRecycler(ArrayList<GameCodeController> myControllerList) {
+        System.out.println(myControllerList);
         QRRecycler = findViewById(R.id.treeList);
 
         QRRecycler.setLayoutManager(QRGridManager);
 
-        QRRecycleAdapter = new QRAdapter(options, this::onItemClick);
+        QRRecycleAdapter = new QRAdapter(myControllerList);
+
         QRRecycler.setAdapter(QRRecycleAdapter);
-        QRRecycler.setHasFixedSize(true);
     }
 
-
+    /*
     @Override
     public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
         Intent intent = new Intent(this, QRVisualizerActivity.class);
@@ -357,5 +413,5 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
         intent.putExtra("QR ITEM", myCurrentItem);
         startActivity(intent);
 
-    }
+    }*/
 }
