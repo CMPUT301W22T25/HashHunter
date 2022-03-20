@@ -3,6 +3,11 @@ package com.example.hashhunter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 //https://stackoverflow.com/questions/10071502/read-writing-arrays-of-parcelable-objects
 //Use this list to help me implement my parcelable array
@@ -17,6 +22,7 @@ public class GameCodeController implements Parcelable {
     private ArrayList<String> comments; // id of comment object
     private Double latitude;
     private Double longitude;
+    private String dataBasePointer;
     public GameCodeController(){}
 
     public GameCodeController(GameCode myGameCode) {
@@ -45,6 +51,7 @@ public class GameCodeController implements Parcelable {
         } else {
             longitude = in.readDouble();
         }
+        dataBasePointer = in.readString();
     }
 
     public static final Creator<GameCodeController> CREATOR = new Creator<GameCodeController>() {
@@ -78,10 +85,38 @@ public class GameCodeController implements Parcelable {
     public GameCode getGameCode(){
         return TheGameCode;
     }
-    public void makeNewComment(String commentCode) {
+    public void addComment(Comment theComment, FirebaseFirestore db) {
+
+        //Get the database reference
+        DocumentReference theDoc = db.collection("Comment").document();
+
+
+        String commentCode = theDoc.getId();
+
+        System.out.println(dataBasePointer);
+        DocumentReference codeDoc = db.collection("GameCode").document(dataBasePointer);
+
+        codeDoc.update("comments", FieldValue.arrayUnion(commentCode));
+
+
+        theDoc.set(theComment);
+
+        //Update appropiate views
+
+
         TheGameCode.addComment(commentCode);
 
+
+
     }
+    public ArrayList<String> getComments(){
+        return this.comments;
+    }
+
+    public void setDataBasePointer(String pointer){
+        dataBasePointer = pointer;
+    }
+
     public void SyncController(){
         this.title = TheGameCode.getTitle(); // title of the code
         this.code = TheGameCode.getCode(); // string representation of the code
@@ -128,5 +163,7 @@ public class GameCodeController implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeDouble(longitude);
         }
+
+        parcel.writeString(dataBasePointer);
     }
 }

@@ -19,10 +19,11 @@ import java.util.ArrayList;
 public class QRVisualizerAdapter extends RecyclerView.Adapter<QRVisualizerAdapter.QRVisualizerViewHolder>{
     private ArrayList<PhotoController> QRLocPicList;
 
-
     public QRVisualizerAdapter(ArrayList<PhotoController> somePhotos){
         this.QRLocPicList = somePhotos;
     }
+
+
     @NonNull
     @Override
     public QRVisualizerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

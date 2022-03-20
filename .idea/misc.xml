@@ -4,11 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/drawable/ic_baseline_account_tree_24.xml" value="0.15" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.1453125" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_explore.xml" value="0.25" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_map.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_profile.xml" value="0.12552083333333333" />
-        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_qrvisualizer.xml" value="0.1" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_qrvisualizer.xml" value="0.6" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_register.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_scan.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_scan_submit.xml" value="0.16979166666666667" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/leaderboard_item.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/profilecodedialog.xml" value="0.16510416666666666" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/qr_comment.xml" value="0.4" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/qr_visualizer_item.xml" value="0.35908141962421714" />

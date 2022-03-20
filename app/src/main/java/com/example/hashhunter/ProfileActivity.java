@@ -198,7 +198,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         DocumentReference playerDoc = db.collection("MockPlayers").document(uniqueID);
 
-
         playerDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
           @Override
           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -238,6 +237,9 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
                                       //Create new gamecode and set up its controller
                                       GameCode myCode = document.toObject(GameCode.class);
                                       GameCodeController myController = new GameCodeController(myCode);
+
+                                      System.out.println("Document id "+ myID);
+                                      myController.setDataBasePointer(myID);
                                       //Add controller
                                       myControllers.add(myController);
                                   }
@@ -409,11 +411,11 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     public void onQRClick(int position) {
 
         Intent intent = new Intent(this, QRVisualizerActivity.class);
-        GameCode myCode = QRRecycleAdapter.getItem(position).getGameCode();
+        GameCodeController myCodeCont = QRRecycleAdapter.getItem(position);
         System.out.println("Attributes before passing!");
-        myCode.printAttributes();
-
-        intent.putExtra("QR ITEM", myCode);
+        //I feel filthy for doing this but it works
+        intent.putExtra("USERNAME", usernameView.getText());
+        intent.putExtra("QR ITEM", myCodeCont);
         startActivity(intent);
 
     }
