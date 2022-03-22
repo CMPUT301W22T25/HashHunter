@@ -1,11 +1,13 @@
 package com.example.hashhunter;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.google.android.libraries.maps.GoogleMap;
 import com.google.android.libraries.maps.OnMapReadyCallback;
 import com.google.android.libraries.maps.SupportMapFragment;
 import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.Marker;
 import com.google.android.libraries.maps.model.MarkerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -87,6 +90,41 @@ public class MapActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            /**
+                             * On clicking marker on map, move activities to QR visualizer activity
+                             */
+                            public boolean onMarkerClick(Marker marker) {
+                                String markerTitle = marker.getTitle();
+                                if (markerTitle != "Player") {
+                                    db.collection("GameCode")
+                                            .whereEqualTo("title",markerTitle)
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                /**
+                                                 * Get QRCode matching title of marker on map
+                                                 */
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()){
+                                                        for(QueryDocumentSnapshot document : task.getResult()) {
+                                                            GameCode QRCode = new GameCode(markerTitle,(String) document.get("code"),(Integer)document.get("points"),(String) document.get("owners"),(Double)document.get("latitude"),(Double) document.get("longitude"));
+                                                            GameCodeController gameCodeController = new GameCodeController(QRCode);
+                                                            Intent intent = new Intent(MapActivity.this,QRVisualizerActivity.class);
+                                                            intent.putExtra("QR ITEM", (Parcelable) gameCodeController);
+                                                            startActivity(intent);
+                                                        }
+                                                    } else {
+                                                        Log.d("Error occurred", String.valueOf(task.getException()));
+                                                    }
+                                                }
+                                            });
+
+                                }
+                                return false;
+                            }
+                        });
 
                     }
                 });
