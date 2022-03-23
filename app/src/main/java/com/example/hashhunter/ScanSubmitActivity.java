@@ -82,8 +82,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
     private String uniqueID;
 
-    private Location checkLocation;
 
+    boolean gamecodeExists = false;
 
     private LocationManager locationManager;
     /**
@@ -162,6 +162,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  * If not, construct a new GameCode object and add to player GameCodeList, and to
                  * database if it has a location
                  */
+
                 if (qrcodeLocation != null) {
                     /**
                      * Just store latitude and longitude in FireStore
@@ -185,6 +186,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
                                                 document.getReference().update("owners", FieldValue.arrayUnion(uniqueID));
                                                 db.collection("Players").document(uniqueID)
                                                         .update("gameCodeList", FieldValue.arrayUnion(document.getId()));
+                                                gamecodeExists = true;
+                                                break;
                                             }
                                         }
                                     } else {
@@ -197,7 +200,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 if (photoBitmap != null) {
                     // need to wait for photos to be uploaded, then upload code data
                     uploadPhotoToStorage();
-                } else if (qrcodeLocation == null || checkLocation == null) {
+                } else if (gamecodeExists == false) {
                     // directly upload code data
                     storeGameCodeInDB();
 
