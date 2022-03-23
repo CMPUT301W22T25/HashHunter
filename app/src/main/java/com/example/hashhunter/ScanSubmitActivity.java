@@ -40,6 +40,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.MarkerOptions;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -80,6 +82,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
     private String uniqueID;
 
+    private Location checkLocation;
+
 
     private LocationManager locationManager;
     /**
@@ -89,6 +93,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
         @Override
         public void onLocationChanged(Location location) {
             qrcodeLocation = location;
+
             latitude = qrcodeLocation.getLatitude();
             longitude = qrcodeLocation.getLongitude();
             Geocoder geocoder = new Geocoder(ScanSubmitActivity.this, Locale.getDefault());
@@ -163,15 +168,36 @@ public class ScanSubmitActivity extends AppCompatActivity {
                      * When getting a location from a GameCode in Firestore:
                      * Make a new location and set longitude/latitude, then get distance
                      */
-//                  Location checkLocation = new Location("");
-//                  checkLocation.setLatitude(0.0d);
-//                  checkLocation.setLongitude(0.0d);
-//                  float distanceInMeters =  targetLocation.distanceTo(qrcodeLocation);
+                    db.collection("GameCode")
+                            .whereEqualTo("code",code)
+                            .whereNotEqualTo("latitude", null)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()){
+                                        for(QueryDocumentSnapshot document : task.getResult()) {
+                                            Location checkLocation = new Location("");
+                                            checkLocation.setLatitude((Double) document.get("latitude"));
+                                            checkLocation.setLongitude((Double) document.get("longitude"));
+                                            if(checkLocation.distanceTo(qrcodeLocation) <= 5) {
+                                                // Game Codes are the same
+                                                document.getReference().update("owners", FieldValue.arrayUnion(uniqueID));
+                                                db.collection("Players").document(uniqueID)
+                                                        .update("gameCodeList", FieldValue.arrayUnion(document.getId()));
+                                            }
+                                        }
+                                    } else {
+                                        Log.d("Error occurred", String.valueOf(task.getException()));
+                                    }
+                                }
+                            });
+
                 }
                 if (photoBitmap != null) {
                     // need to wait for photos to be uploaded, then upload code data
                     uploadPhotoToStorage();
-                } else {
+                } else if (qrcodeLocation == null || checkLocation == null) {
                     // directly upload code data
                     storeGameCodeInDB();
 
@@ -220,13 +246,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
         // build game code
         GameCode newGameCode;
         if (photoBitmap == null && qrcodeLocation == null) {
-            newGameCode = new GameCode(title, code, points, "username_placeholder");
+            newGameCode = new GameCode(title, code, points, uniqueID);
         } else if (photoBitmap != null && qrcodeLocation == null) {
-            newGameCode = new GameCode(title, code, points, photoId, "username_placeholder");
+            newGameCode = new GameCode(title, code, points, photoId, uniqueID);
         } else if (photoBitmap == null && qrcodeLocation != null) {
-            newGameCode = new GameCode(title, code, points, "username_placeholder", latitude, longitude);
+            newGameCode = new GameCode(title, code, points, uniqueID, latitude, longitude);
         } else {
-            newGameCode = new GameCode(title, code, points, photoId, "username_placeholder", latitude, longitude);
+            newGameCode = new GameCode(title, code, points, photoId, uniqueID, latitude, longitude);
         }
         String gameCodeId = UUID.randomUUID().toString();
         db.collection("GameCode").document(gameCodeId).set(newGameCode)
