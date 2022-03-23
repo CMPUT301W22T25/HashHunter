@@ -112,7 +112,9 @@ public class MapActivity extends AppCompatActivity {
                                                             GameCode QRCode = new GameCode(markerTitle,(String) document.get("code"),(Integer)document.get("points"),(String) document.get("owners"),(Double)document.get("latitude"),(Double) document.get("longitude"));
                                                             GameCodeController gameCodeController = new GameCodeController(QRCode);
                                                             Intent intent = new Intent(MapActivity.this,QRVisualizerActivity.class);
-                                                            intent.putExtra("QR ITEM", (Parcelable) gameCodeController);
+                                                            gameCodeController.setDataBasePointer(document.getId());
+                                                            intent.putExtra("QR ITEM",gameCodeController);
+                                                            intent.putExtra("QR TITLE",markerTitle);
                                                             startActivity(intent);
                                                         }
                                                     } else {
