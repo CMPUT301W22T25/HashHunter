@@ -59,6 +59,13 @@ public class ScanActivity extends AppCompatActivity {
                                 String pointMessage = "The username is " + uname;
                                 Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                                 finish();
+                            } else if (getCallingActivity().getClassName().equals(DeleteGameCodeActivity.class.getName())) {
+                                String code = result.getText().toString();
+                                intent.putExtra(EXTRA_SCANNED_UNAME, code);
+                                setResult(RESULT_OK, intent);
+                                String pointMessage = "The QR Code is " + code;
+                                Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
+                                finish();
                             }
                         }
 
