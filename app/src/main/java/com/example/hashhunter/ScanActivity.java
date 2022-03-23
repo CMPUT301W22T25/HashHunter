@@ -61,6 +61,7 @@ public class ScanActivity extends AppCompatActivity {
                                 finish();
                             }
                         }
+
                         else {
                             qrCodeString = result.getText();
                             points = GameCodePointsController.getCodePoints(qrCodeString);

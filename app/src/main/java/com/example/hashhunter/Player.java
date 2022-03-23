@@ -17,15 +17,17 @@ public class Player {
     private int maxGameCodePoints;
     private int displayTotal;
 
+    /**
+     * constructors
+     */
+    public Player() {
+        this.gameCodeList = new ArrayList<>();
+    }
 
-    /*public Player(String username, int totalPoints, int totalGameCode, int maxGameCodePoints) {
+    public Player(String username) {
         this.username = username;
-        this.totalPoints = totalPoints;
-        this.totalGameCode = totalGameCode;
-        this.maxGameCodePoints = maxGameCodePoints;
-        this.displayTotal = maxGameCodePoints;
-
-    }*/
+        this.gameCodeList = new ArrayList<>();
+    }
 
 
     /**
