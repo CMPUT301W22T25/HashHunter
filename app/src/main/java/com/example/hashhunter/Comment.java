@@ -4,16 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Comment implements Parcelable {
-    String userName;
+    String owner;
     String comment;
     //Constructor for comments
+    public Comment() {
+
+    }
     Comment(String name, String comment) {
-        this.userName = name;
+        this.owner = name;
         this.comment = comment;
     }
 
     protected Comment(Parcel in) {
-        userName = in.readString();
+        owner = in.readString();
         comment = in.readString();
     }
 
@@ -34,8 +37,8 @@ public class Comment implements Parcelable {
         return comment;
     }
     //Gets username
-    public String getUserName(){
-        return userName;
+    public String getOwner(){
+        return owner;
     }
 
 
@@ -44,9 +47,10 @@ public class Comment implements Parcelable {
         return 0;
     }
 
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(userName);
+        parcel.writeString(owner);
         parcel.writeString(comment);
     }
 }

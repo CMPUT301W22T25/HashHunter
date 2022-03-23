@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class QRCommentAdapter extends RecyclerView.Adapter<QRCommentAdapter.CommentViewHolder>{
-    private ArrayList<Comment> CommentList;
+    private ArrayList<CommentController> CommentList;
     private Context myContext;
 
-    public QRCommentAdapter(ArrayList<Comment> myItems){
+    public QRCommentAdapter(ArrayList<CommentController> myItems){
 
         CommentList = myItems;
 
@@ -30,8 +30,8 @@ public class QRCommentAdapter extends RecyclerView.Adapter<QRCommentAdapter.Comm
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        Comment myComment = CommentList.get(position);
-        holder.QRUserName.setText(myComment.getUserName());
+        CommentController myComment = CommentList.get(position);
+        holder.QRUserName.setText(myComment.getOwner());
         holder.myQRComment.setText(myComment.getComment());
 
     }

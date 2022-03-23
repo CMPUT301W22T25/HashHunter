@@ -23,7 +23,8 @@
             ></meta-data>
 
         <activity
-            android:name=".QRVisualizerActivity">
+            android:name=".QRVisualizerActivity"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
 
