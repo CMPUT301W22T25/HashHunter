@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class DeleteGameCodeActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.DeleteGameCodeActivity";
@@ -39,24 +41,25 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
 
                         String scannedCode = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
 
-                        //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
-                        DocumentReference userDocRef = db.collection("GameCode").document(scannedCode);
-                        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-
-                                    if (document.exists()) {
-                                        // delete the gamecode
-                                    } else {
-                                        Toast.makeText(DeleteGameCodeActivity.this, "no qrcode found", Toast.LENGTH_SHORT).show();
+                        //check which gamecodes have the same title
+                        //https://stackoverflow.com/questions/62675759/how-to-remove-an-element-from-an-array-in-multiple-documents-in-firestore
+                        //https://cloud.google.com/firestore/docs/query-data/get-data#javaandroid_4
+                        db.collection("GameCode")
+                                .whereEqualTo("code", scannedCode)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                // put each code in the qr list
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
                                     }
-                                } else {
-                                    Log.d(TAG, "get failed with", task.getException());
-                                }
-                            }
-                        });
+                                });
 
                     } else {
                         Toast.makeText(DeleteGameCodeActivity.this, "result not ok", Toast.LENGTH_SHORT).show();

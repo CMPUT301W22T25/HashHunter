@@ -119,14 +119,13 @@
 
     </EditText>
 
-
+<!--    android:background="@drawable/ic_baseline_send_24"-->
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="37dp"
         android:layout_height="34dp"
         android:layout_gravity="center"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="84dp"
-        android:background="@drawable/ic_baseline_send_24"
         android:backgroundTint="@color/white"
         android:id="@+id/sendButton"
         app:layout_constraintBottom_toBottomOf="parent"
