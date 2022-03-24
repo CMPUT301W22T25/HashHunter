@@ -2,19 +2,28 @@ package com.example.hashhunter;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,9 +56,30 @@ public class ExploreActivity extends AppCompatActivity {
     private TextView myScore;
     private String name;
 
-
-
-
+    // this handles the result from the scan activity
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
+                        Toast.makeText(ExploreActivity.this, "test", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ExploreActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+    private ActivityResultLauncher<String> requestCameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(ExploreActivity.this, ScanActivity.class);
+                    mStartForResult.launch(intent);
+                } else {
+                    Toast.makeText(ExploreActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +135,13 @@ public class ExploreActivity extends AppCompatActivity {
             }
         });
 
-
+        Button scanButton = findViewById(R.id.scan_profile_button);
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestCameraLauncher.launch(Manifest.permission.CAMERA);
+            }
+        });
 
     }
 
