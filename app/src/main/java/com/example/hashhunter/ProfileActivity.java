@@ -308,7 +308,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
                 // setting this dimens
-                openCodeDialog(uniqueID, "Profile Code");
+                openCodeDialog(username, "Profile Code");
             }
         });
 
