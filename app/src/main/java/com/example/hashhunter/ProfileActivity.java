@@ -2,6 +2,7 @@ package com.example.hashhunter;
 
 import static android.content.ContentValues.TAG;
 import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     String UniqueIDCode ="com.example.hashhunter.unique_id";
     String gameCodeListCode = "gameCodeList";
     private String uniqueID;
+    private String username;
     private PlayerDataController playerController;
     final static ArrayList<String> myArray = new ArrayList<>();
 
@@ -103,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         //Retrieve unique id
         uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
-
+        username = preferences.getString(PREF_USERNAME, null);
 
         //Obtain all the other information from username
 
