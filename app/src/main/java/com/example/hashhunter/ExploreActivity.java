@@ -65,7 +65,17 @@ public class ExploreActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
                         String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
-                        Toast.makeText(ExploreActivity.this, "test", Toast.LENGTH_SHORT).show();
+                        // check if username exists
+                        boolean username_found = false;
+
+                        // relocate to profile page of the username if available
+                        if (username_found) {
+                            Intent newIntent = new Intent(ExploreActivity.this, ProfileActivity.class);
+                            startActivity(newIntent);
+                        } else {
+                            Toast.makeText(ExploreActivity.this, "username " + scannedUsername + " does not exist", Toast.LENGTH_SHORT).show();
+                        }
+
                     } else {
                         Toast.makeText(ExploreActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
                     }

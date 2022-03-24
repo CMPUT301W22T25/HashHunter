@@ -66,6 +66,11 @@ public class ScanActivity extends AppCompatActivity {
                                 String pointMessage = "The QR Code is " + code;
                                 Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                                 finish();
+                            } else if (getCallingActivity().getClassName().equals(ExploreActivity.class.getName())) {
+                                String uname = result.getText().toString();
+                                intent.putExtra(EXTRA_SCANNED_UNAME, uname);
+                                setResult(RESULT_OK, intent);
+                                finish();
                             }
                         }
 
