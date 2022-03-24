@@ -66,10 +66,16 @@ public class ExploreActivity extends AppCompatActivity {
                         Intent intent = result.getData();
                         String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
                         // check if username exists
-                        boolean username_found = false;
-
+                        boolean usernameFound = false;
+                        for (Player player : playerList.getPlayerList()) {
+                            Log.d("Explore activity", "username: " + player.getUsername());
+                            if (player.getUsername().equals(scannedUsername)) {
+                                usernameFound = true;
+                                break;
+                            }
+                        }
                         // relocate to profile page of the username if available
-                        if (username_found) {
+                        if (usernameFound) {
                             Intent newIntent = new Intent(ExploreActivity.this, ProfileActivity.class);
                             startActivity(newIntent);
                         } else {
