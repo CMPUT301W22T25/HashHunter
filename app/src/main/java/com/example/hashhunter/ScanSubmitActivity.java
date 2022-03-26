@@ -163,6 +163,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
                  * database if it has a location
                  */
 
+                if (photoBitmap != null) {
+                    // need to wait for photos to be uploaded, then upload code data
+                    uploadPhotoToStorage();
+                }
                 if (qrcodeLocation != null) {
                     /**
                      * Just store latitude and longitude in FireStore
@@ -170,8 +174,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                      * Make a new location and set longitude/latitude, then get distance
                      */
                     db.collection("GameCode")
-                            .whereEqualTo("code",code)
-                            .whereNotEqualTo("latitude", null)
+                            .whereEqualTo("code",code).whereNotEqualTo("latitude", null)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -190,6 +193,9 @@ public class ScanSubmitActivity extends AppCompatActivity {
                                                 break;
                                             }
                                         }
+                                        if(gamecodeExists == false){
+                                            storeGameCodeInDB();
+                                        }
                                     } else {
                                         Log.d("Error occurred", String.valueOf(task.getException()));
                                     }
@@ -197,10 +203,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
                             });
 
                 }
-                if (photoBitmap != null) {
-                    // need to wait for photos to be uploaded, then upload code data
-                    uploadPhotoToStorage();
-                } else if (gamecodeExists == false) {
+
+                else  {
                     // directly upload code data
                     storeGameCodeInDB();
 
