@@ -34,7 +34,7 @@ import java.util.function.LongFunction;
  * If they register, it generates a unique ID for them and adds their information to the database
  */
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "com.example.hashhunter.RegisterActivity";
+    private static final String TAG = "com.example.hashhunter.LoginActivity";
 
     private static SharedPreferences sharedPreferences;
 
@@ -62,15 +62,51 @@ public class LoginActivity extends AppCompatActivity {
                                     DocumentSnapshot document = task.getResult();
                                     // log them in and start another activity
                                     if (document.exists()) {
+                                        String username = (String) document.getData().get("com.example.hashhunter.username");
                                         Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                                         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
+                                        editor.putString(MainActivity.PREF_USERNAME, username);
                                         editor.commit();
                                         Button loginButton = findViewById(R.id.login_button);
                                         loginButton.setText("Logged In");
 
                                         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                                        startActivity(intent);
+                                        // Should this be called?
+                                        //finish();
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Log In Failed");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with", task.getException());
+                                    Button loginButton = findViewById(R.id.login_button);
+                                    loginButton.setText("Log In Failed");
+                                }
+                            }
+                        });
+
+                        DocumentReference ownerDocRef = db.collection("Owners").document(scannedUsername);
+                        ownerDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    // log them in and start another activity
+                                    if (document.exists()) {
+                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
+                                        editor.putString(MainActivity.PREF_IS_OWNER, "hmmYesOwner");
+                                        editor.commit();
+                                        Button loginButton = findViewById(R.id.login_button);
+                                        loginButton.setText("Logged In");
+
+                                        Intent intent = new Intent(LoginActivity.this, OwnerActivity.class);
                                         startActivity(intent);
                                         // Should this be called?
                                         //finish();

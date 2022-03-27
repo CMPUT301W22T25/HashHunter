@@ -27,6 +27,8 @@ import java.util.UUID;
      // https://www.youtube.com/watch?v=4WxKQTUweVg
      public static final String SHARED_PREF_NAME = "com.example.hashhunter.shared_prefs";
      public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
+     public static final String PREF_IS_OWNER = "com.example.hashhunter.owner_id";
+     public static final String PREF_USERNAME = "com.example.hashhunter.username";
      private SharedPreferences sharedPreferences;
      private Boolean firstLogin = false;
 
@@ -41,25 +43,32 @@ import java.util.UUID;
          sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
          String unique_id = sharedPreferences.getString(PREF_UNIQUE_ID, null);
 
-         // if unique_id is null, that means the user is logging in to the activity for the first
-         // time
-         if (unique_id == null) {
-             unique_id = UUID.randomUUID().toString();
-             SharedPreferences.Editor editor = sharedPreferences.edit();
-             editor.putString(PREF_UNIQUE_ID, unique_id);
-             editor.commit();
-             firstLogin = true;
-         }
+         String isOwner = sharedPreferences.getString(PREF_IS_OWNER, null);
+         if (isOwner == null) {
+             // if unique_id is null, that means the user is logging in to the activity for the first
+             // time
+             if (unique_id == null) {
+                 unique_id = UUID.randomUUID().toString();
+                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                 editor.putString(PREF_UNIQUE_ID, unique_id);
+                 editor.commit();
+                 firstLogin = true;
+             }
 
-         // if it is the first time logging in, start the log in activity, else
-         // go straight to the dashboard
-         if (firstLogin) {
-             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-             startActivity(intent);
+             // if it is the first time logging in, start the log in activity, else
+             // go straight to the dashboard
+             if (firstLogin) {
+                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                 startActivity(intent);
+             } else {
+                 Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                 startActivity(intent);
+             }
          } else {
-             Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+             Intent intent = new Intent(MainActivity.this, OwnerActivity.class);
              startActivity(intent);
          }
 
      }
+
  }
