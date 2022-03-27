@@ -55,6 +55,7 @@ public class ExploreActivity extends AppCompatActivity {
     private TextView myUsername;
     private TextView myScore;
     private String name;
+    private String scannedUsername, scannedUserId;
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -64,7 +65,7 @@ public class ExploreActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
-                        String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
+                        scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
                         // check if username exists
                         boolean usernameFound = false;
                         for (Player player : playerList.getPlayerList()) {
@@ -74,10 +75,28 @@ public class ExploreActivity extends AppCompatActivity {
                                 break;
                             }
                         }
-                        // relocate to profile page of the username if available
                         if (usernameFound) {
-                            Intent newIntent = new Intent(ExploreActivity.this, ProfileActivity.class);
-                            startActivity(newIntent);
+                            // get the user id
+                            db.collection("Players")
+                                    .whereEqualTo("username", scannedUsername)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    scannedUserId = document.getId();
+                                                    break; // only get the first result
+                                                }
+                                                // relocate to profile page sending userId
+                                                Intent newIntent = new Intent(ExploreActivity.this, ProfileActivity.class);
+                                                newIntent.putExtra("userId", scannedUserId);
+                                                startActivity(newIntent);
+                                            } else {
+                                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                            }
+                                        }
+                                    });
                         } else {
                             Toast.makeText(ExploreActivity.this, "username " + scannedUsername + " does not exist", Toast.LENGTH_SHORT).show();
                         }

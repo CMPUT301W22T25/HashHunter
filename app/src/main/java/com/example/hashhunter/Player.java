@@ -11,7 +11,7 @@ public class Player {
     private String username;
     private String playerCode;
     private String profileCode;
-    private ArrayList<GameCode> gameCodeList;
+    private ArrayList<String> gameCodeList;
     private int totalPoints;
     private int totalGameCode;
     private int maxGameCodePoints;
@@ -62,7 +62,7 @@ public class Player {
      * @return
      *      Returns the list of GameCodes
      */
-    public ArrayList<GameCode> getGameCodeList() {
+    public ArrayList<String> getGameCodeList() {
         return this.gameCodeList;
     }
 
@@ -98,7 +98,7 @@ public class Player {
      * @param gameCode
      *      this is a game code to add to gameCodeList
      */
-    public void addGameCode(GameCode gameCode) {
+    public void addGameCode(String gameCode) {
         this.gameCodeList.add(gameCode);
     }
 
@@ -107,7 +107,7 @@ public class Player {
      * @param gameCode
      *      this is a game code to remove from gameCodeList
      */
-    public void removeGameCode(GameCode gameCode) {
+    public void removeGameCode(String gameCode) {
         this.gameCodeList.remove(gameCode);
     }
 

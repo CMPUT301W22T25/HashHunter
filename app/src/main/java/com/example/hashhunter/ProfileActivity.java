@@ -103,9 +103,13 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        //Retrieve unique id
+        //Retrieve unique id, from intent if available
         uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
-        username = preferences.getString(PREF_USERNAME, null);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            uniqueID = extras.getString("userId");
+            Log.d("PROFILE_DEBUG", "userId: " + uniqueID);
+        }
 
         //Obtain all the other information from username
 
@@ -165,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         refDoc = db.collection("UserInfo").document(uniqueID);
 
         //Might redesign this, not happy with the result
-        refDoc.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        refDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
              @Override
              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                  if (task.isSuccessful()) {
