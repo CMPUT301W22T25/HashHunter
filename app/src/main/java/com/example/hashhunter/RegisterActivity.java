@@ -37,8 +37,9 @@ import androidmads.library.qrgenearator.QRGEncoder;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
-    private static final String KEY_UNAME = "com.example.hashhunter.username";
-    private static final String KEY_EMAIL = "com.example.hashhunter.email";
+    public static final String KEY_UNAME = "com.example.hashhunter.username";
+    public static final String KEY_EMAIL = "com.example.hashhunter.email";
+    public static final String KEY_UNIQUE_ID = "com.example.hashhunter.unique_id";
     private SharedPreferences sharedPreferences;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -142,6 +143,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     info = new HashMap<>();
                                     info.put(KEY_UNAME, username);
+                                    info.put(KEY_UNIQUE_ID, unique_id);
+
                                     db.collection("Usernames").document(username).set(info)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override

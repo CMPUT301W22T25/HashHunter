@@ -7,6 +7,7 @@ public class Photo {
     private String url;
     private String owner;
 
+    public Photo(){}
     public Photo(String url) {
         this.url = url;
     }
