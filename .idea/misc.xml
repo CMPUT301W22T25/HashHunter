@@ -9,8 +9,9 @@
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_map.xml" value="0.16927083333333334" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_owner.xml" value="0.25" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_profile.xml" value="0.12552083333333333" />
-        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_qrvisualizer.xml" value="0.6" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_qrvisualizer.xml" value="0.4" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_register.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_scan.xml" value="0.12760416666666666" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/activity_scan_submit.xml" value="0.16979166666666667" />
@@ -18,7 +19,7 @@
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/profilecodedialog.xml" value="0.16510416666666666" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/qr_comment.xml" value="0.4" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/qr_visualizer_item.xml" value="0.35908141962421714" />
-        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/qr_visualizer_pic.xml" value="0.4" />
+        <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/qr_visualizer_pic.xml" value="0.1" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/scanner_layout.xml" value="0.16510416666666666" />
         <entry key="..\:/Users/judaf/OneDrive/Desktop/CMPUT301/HashHunter/app/src/main/res/layout/tree_list_item.xml" value="0.12916666666666668" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.264" />
@@ -33,6 +34,9 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

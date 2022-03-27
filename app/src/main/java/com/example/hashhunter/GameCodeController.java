@@ -73,7 +73,9 @@ public class GameCodeController implements Parcelable {
     public String getTitle() {
         return this.title;
     }
-
+    public int getOwnerAmount(){
+        return this.owners.size();
+    }
     public String getComment(int position){
         if (comments.size() > position + 1) {
             return  comments.get(position);

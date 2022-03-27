@@ -27,7 +27,8 @@
 
         <activity
             android:name=".QRVisualizerActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:noHistory = "true">
 
         </activity>
 
