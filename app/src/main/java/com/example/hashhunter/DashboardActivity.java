@@ -51,7 +51,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     switch (item.getItemId()) {
                         case R.id.home:
-                            intent = new Intent(DashboardActivity.this, MainActivity.class);
+                            intent = new Intent(DashboardActivity.this, HomeActivity.class);
                             startActivity(intent);
                             break;
                         case R.id.map:
