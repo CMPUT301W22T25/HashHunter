@@ -202,7 +202,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                                         }
                                         if(gamecodeExists == false){
                                             storeGameCodeInDB();
-                                            Toast.makeText(ScanSubmitActivity.this, "Added GameCode", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ScanSubmitActivity.this, "Added new GameCode", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
                                         Log.d("Error occurred", String.valueOf(task.getException()));
@@ -215,7 +215,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 else  {
                     // directly upload code data
                     storeGameCodeInDB();
-                    Toast.makeText(ScanSubmitActivity.this, "Added GameCode", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScanSubmitActivity.this, "Added new GameCode", Toast.LENGTH_SHORT).show();
 
                 }
 
