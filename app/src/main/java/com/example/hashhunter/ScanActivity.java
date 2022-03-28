@@ -14,6 +14,8 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
+import java.security.NoSuchAlgorithmException;
+
 /**
  * @References QR code scanner/decoder from Yuriy Budiyev https://github.com/yuriy-budiyev/code-scanner
  * License: MIT License
@@ -26,6 +28,7 @@ public class ScanActivity extends AppCompatActivity {
     //private boolean cameraPerms = false;
     Integer points;
     String qrCodeString;
+    byte[] byteHash;
 
 
 
@@ -63,7 +66,12 @@ public class ScanActivity extends AppCompatActivity {
                         }
 
                         else {
-                            qrCodeString = result.getText();
+                            try {
+                                byteHash = GameCodePointsController.getHashedCode(result.getText());
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            }
+                            qrCodeString = GameCodePointsController.toHexString(byteHash);
                             points = GameCodePointsController.getCodePoints(qrCodeString);
                             String pointMessage = "This QR is worth " + points + " Points";
                             Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();

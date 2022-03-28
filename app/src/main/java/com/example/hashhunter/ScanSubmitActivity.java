@@ -1,6 +1,7 @@
 package com.example.hashhunter;
 
 
+import static android.content.ContentValues.TAG;
 import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
@@ -42,6 +43,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.MarkerOptions;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -82,8 +84,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
     private String uniqueID;
 
-
-    boolean gamecodeExists = false;
+    private boolean gamecodeExists = false;
 
     private LocationManager locationManager;
     /**
@@ -133,6 +134,8 @@ public class ScanSubmitActivity extends AppCompatActivity {
         Button addLocation = findViewById(R.id.add_location_button);
         Button saveButton = findViewById(R.id.save_button);
 
+
+
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,27 +177,32 @@ public class ScanSubmitActivity extends AppCompatActivity {
                      * Make a new location and set longitude/latitude, then get distance
                      */
                     db.collection("GameCode")
-                            .whereEqualTo("code",code).whereNotEqualTo("latitude", null)
+                            .whereEqualTo("code",code)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()){
                                         for(QueryDocumentSnapshot document : task.getResult()) {
+                                            if(document.get("latitude") == null) continue;
                                             Location checkLocation = new Location("");
                                             checkLocation.setLatitude((Double) document.get("latitude"));
                                             checkLocation.setLongitude((Double) document.get("longitude"));
-                                            if(checkLocation.distanceTo(qrcodeLocation) <= 5) {
+                                            if(checkLocation.distanceTo(qrcodeLocation) <= 10) {
                                                 // Game Codes are the same
                                                 document.getReference().update("owners", FieldValue.arrayUnion(uniqueID));
-                                                db.collection("Players").document(uniqueID)
-                                                        .update("gameCodeList", FieldValue.arrayUnion(document.getId()));
+                                                if (photoBitmap != null){
+                                                    document.getReference().update("photos", FieldValue.arrayUnion(photoId));
+                                                }
+                                                updatePlayer(document.getId());
+                                                Toast.makeText(ScanSubmitActivity.this, "GameCode Exists, adding existing GameCode to player", Toast.LENGTH_SHORT).show();
                                                 gamecodeExists = true;
                                                 break;
                                             }
                                         }
                                         if(gamecodeExists == false){
                                             storeGameCodeInDB();
+                                            Toast.makeText(ScanSubmitActivity.this, "Added GameCode", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
                                         Log.d("Error occurred", String.valueOf(task.getException()));
@@ -207,6 +215,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
                 else  {
                     // directly upload code data
                     storeGameCodeInDB();
+                    Toast.makeText(ScanSubmitActivity.this, "Added GameCode", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -276,8 +285,30 @@ public class ScanSubmitActivity extends AppCompatActivity {
                     }
                 });
         // Add to player
+        updatePlayer(gameCodeId);
+
+
+    }
+
+    private void updatePlayer(String gameCodeID){
         db.collection("Players").document(uniqueID)
-                .update("gameCodeList", FieldValue.arrayUnion(gameCodeId));
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            Player player = document.toObject(Player.class);
+                            document.getReference().update("gameCodeList", FieldValue.arrayUnion(gameCodeID));
+                            document.getReference().update("totalPoints", points+player.getTotalPoints());
+                            document.getReference().update("totalGameCode", player.getTotalGameCode()+1);
+                            if (points > player.getMaxGameCodePoints()) document.getReference().update("maxGameCodePoints", points);
+                        } else {
+                            Log.d("Get player", "get failed with ", task.getException());
+                        }
+                    }
+                });
+
     }
 
     /**
