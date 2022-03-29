@@ -76,6 +76,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private Location qrcodeLocation;
 
     private String photoId; // id of photo in firestore
+    private String gameCodeId;
     private Integer points; // value of points
     private String code; // string representation of qrcode
     // keep track of code location
@@ -191,10 +192,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
                                             if(checkLocation.distanceTo(qrcodeLocation) <= 10) {
                                                 // Game Codes are the same
                                                 document.getReference().update("owners", FieldValue.arrayUnion(uniqueID));
-                                                if (photoBitmap != null){
+                                                if (photoId != null){
                                                     document.getReference().update("photos", FieldValue.arrayUnion(photoId));
                                                 }
-                                                updatePlayer(document.getId());
+                                                gameCodeId = document.getId();
+                                                updatePlayer(gameCodeId);
                                                 Toast.makeText(ScanSubmitActivity.this, "GameCode Exists, adding existing GameCode to player", Toast.LENGTH_SHORT).show();
                                                 gamecodeExists = true;
                                                 break;
@@ -261,16 +263,16 @@ public class ScanSubmitActivity extends AppCompatActivity {
         String title = titleBox.getText().toString();
         // build game code
         GameCode newGameCode;
-        if (photoBitmap == null && qrcodeLocation == null) {
+        if (photoId == null && qrcodeLocation == null) {
             newGameCode = new GameCode(title, code, points, uniqueID);
-        } else if (photoBitmap != null && qrcodeLocation == null) {
+        } else if (photoId != null && qrcodeLocation == null) {
             newGameCode = new GameCode(title, code, points, photoId, uniqueID);
-        } else if (photoBitmap == null && qrcodeLocation != null) {
+        } else if (photoId == null && qrcodeLocation != null) {
             newGameCode = new GameCode(title, code, points, uniqueID, latitude, longitude);
         } else {
             newGameCode = new GameCode(title, code, points, photoId, uniqueID, latitude, longitude);
         }
-        String gameCodeId = UUID.randomUUID().toString();
+        gameCodeId = UUID.randomUUID().toString();
         db.collection("GameCode").document(gameCodeId).set(newGameCode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -357,21 +359,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private void storePhotoDataInDB(String photoUrl) {
         Photo newPhoto = new Photo(photoUrl, "username"); // replace value with logged in user
         photoId = UUID.randomUUID().toString();
-        db.collection("Photo").document(photoId).set(newPhoto)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // after photo is uploaded to storage and data is created in Photo collection
-                        storeGameCodeInDB();
-                        Log.d("DB_OPERATION", "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("DB_OPERATION", "Error writing document", e);
-                    }
-                });
+        db.collection("Photo").document(photoId).set(newPhoto);
+        if (gameCodeId!=null) {
+            db.collection("GameCode").document(gameCodeId).update("photos", FieldValue.arrayUnion(photoId));
+        }
+
     }
 
     /**
