@@ -40,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private UserInfoFirebaseController userInfodb;
+
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -52,9 +54,15 @@ public class LoginActivity extends AppCompatActivity {
                         assert intent != null;
 
                         String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
-
-                       //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
-                        DocumentReference userDocRef = db.collection("UserInfo").document(scannedUsername);
+//
+//                        Boolean x = userInfodb.userNameExists(scannedUsername);
+//                        if (x) {
+//                            Toast.makeText(LoginActivity.this, "username exists", Toast.LENGTH_SHORT);
+//                        } else {
+//                            Toast.makeText(LoginActivity.this, "hmm", Toast.LENGTH_SHORT);
+//                        }
+//                        //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
+                        DocumentReference userDocRef = db.collection("Usernames").document(scannedUsername);
                         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
