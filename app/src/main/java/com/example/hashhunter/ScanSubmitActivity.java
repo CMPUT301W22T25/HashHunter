@@ -3,6 +3,7 @@ package com.example.hashhunter;
 
 import static android.content.ContentValues.TAG;
 import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import android.Manifest;
@@ -84,6 +85,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private Double longitude;
 
     private String uniqueID;
+    private String username;
 
     private boolean gamecodeExists = false;
 
@@ -127,6 +129,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
+        username = preferences.getString(PREF_USERNAME, null);
 
         TextView showPoints = findViewById(R.id.qr_code_points);
         showPoints.setText(points + " Points");
@@ -357,7 +360,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
      * @param photoUrl url of photo to be stored
      */
     private void storePhotoDataInDB(String photoUrl) {
-        Photo newPhoto = new Photo(photoUrl, "username"); // replace value with logged in user
+        Photo newPhoto = new Photo(photoUrl, username); // replace value with logged in user
         photoId = UUID.randomUUID().toString();
         db.collection("Photo").document(photoId).set(newPhoto);
         if (gameCodeId!=null) {
