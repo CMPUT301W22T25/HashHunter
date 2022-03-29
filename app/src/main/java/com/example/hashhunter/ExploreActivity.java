@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +49,6 @@ public class ExploreActivity extends AppCompatActivity {
     private PlayerList playerList;
     private RecyclerView leaderboardRecycler;
     private LeaderboardAdapter adapter;
-    private String unique_id;
     private SharedPreferences sharedPreferences;
     private Player myPlayer;
     private TextView myRank;
@@ -124,50 +124,48 @@ public class ExploreActivity extends AppCompatActivity {
         leaderboardRecycler = findViewById(R.id.leaderboard);
         playerList = new PlayerList();
 
-
-        // retrieves all the players from database
-        //https://stackoverflow.com/questions/51361951/retrieve-all-documents-from-firestore-as-custom-objects
-        db.collection("Players")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Player player = document.toObject(Player.class);
-                                playerList.addPlayerList(player);
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-
-
-
-
-
-
         adapter = setAdapter();
 
-
         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-        unique_id = sharedPreferences.getString(MainActivity.PREF_UNIQUE_ID, "IDNOTFOUND");
+        name = sharedPreferences.getString(MainActivity.PREF_USERNAME, "NAMENOTFOUND");
+
+        playerList.populate(adapter);
+
+
+
+
+
+
 
         setupSort(adapter, playerList);
 
 
-        DocumentReference docRef = db.collection("Players").document(unique_id);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+        SearchView usernameSearchView = (SearchView) findViewById(R.id.username_search);
+
+        usernameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-               Player player = documentSnapshot.toObject(Player.class);
-               name = player.getUsername();
+            public boolean onQueryTextSubmit(String query) {
 
+                Intent intent;
+                intent = new Intent(ExploreActivity.this, SearchActivity.class);
+                intent.putExtra("search", query);
 
+                int pos = playerList.findPlayerPos(query);
+                if (pos != -1) {
+                    myPlayer = playerList.getPlayer(pos);
+                    intent.putExtra("player", myPlayer);
+                }
+
+                startActivity(intent);
+                return false;
             }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+
         });
 
         Button scanButton = findViewById(R.id.scan_profile_button);

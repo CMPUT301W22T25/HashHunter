@@ -181,15 +181,11 @@ public class PlayerList {
                     }
                 });
 
-
     }
 
 
 
 
-    public void getPlayer() {
-
-    }
 
 
 }
