@@ -2,6 +2,7 @@ package com.example.hashhunter;
 
 import static android.content.ContentValues.TAG;
 import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import androidx.annotation.NonNull;
@@ -34,10 +35,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.google.zxing.WriterException;
 
@@ -45,14 +49,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnItemClickListener{
+public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener{
 
-
+    //implements QRAdapter.OnItemClickListener
     int columns = 2;
     //Set QR list, adapter, and grid manager
     private RecyclerView QRRecycler;
     private ImageView profilePic;
-    private FirestoreRecyclerAdapter QRRecycleAdapter;
+    private QRAdapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
     private Button loginCodeButton;
@@ -74,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
     String UniqueIDCode ="com.example.hashhunter.unique_id";
     String gameCodeListCode = "gameCodeList";
     private String uniqueID;
+    private String username;
     private PlayerDataController playerController;
     final static ArrayList<String> myArray = new ArrayList<>();
 
@@ -98,9 +103,13 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        //Retrieve unique id
+        //Retrieve unique id, from intent if available
         uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            uniqueID = extras.getString("userId");
+            Log.d("PROFILE_DEBUG", "userId: " + uniqueID);
+        }
 
         //Obtain all the other information from username
 
@@ -160,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
         refDoc = db.collection("UserInfo").document(uniqueID);
 
         //Might redesign this, not happy with the result
-        refDoc.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        refDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
              @Override
              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                  if (task.isSuccessful()) {
@@ -195,7 +204,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
         DocumentReference playerDoc = db.collection("MockPlayers").document(uniqueID);
 
-
         playerDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
           @Override
           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -206,13 +214,73 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
                   Map<String, Object> myData = doc.getData();
                   System.out.println(myData);
+                    //This has to change
 
+                  //Try to implement it using a recycler view
                   //Obtain player data, specifically we want the gameCodeList
                   if (myData != null) {
                       ArrayList<String> myCodes = (ArrayList<String>) myData.get(gameCodeListCode);
                       System.out.println(myCodes);
-                      Query myQuery = db.collection("GameCode").whereIn("docPointer", myCodes);
-                      setUpRecycler(myQuery);
+
+
+                      //We have all the game codes here
+
+                      CollectionReference gameCodesRef = db.collection("GameCode");
+
+                      //For each game code owned by the user
+
+                      gameCodesRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                          @Override
+                          public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                              //Check every gameCode
+                              //https://stackoverflow.com/questions/66834816/how-to-get-arraylist-of-custom-objects-from-firestore-documents
+                              //Use some of the code there
+                              ArrayList<GameCodeController> myControllers = new ArrayList<>();
+                              for (QueryDocumentSnapshot document : task.getResult()){
+                                  //If the document matches the id
+                                  String myID = document.getId();
+                                  if (myCodes.contains(myID)) {
+                                      //Create new gamecode and set up its controller
+                                      GameCode myCode = document.toObject(GameCode.class);
+                                      GameCodeController myController = new GameCodeController(myCode);
+
+                                      System.out.println("Document id "+ myID);
+                                      myController.setDataBasePointer(myID);
+                                      //Add controller
+                                      myControllers.add(myController);
+                                  }
+                                  //Initialize recycler view
+                                  setUpRecycler(myControllers);
+                              }
+
+                          }
+                      });
+
+                      //Reconstruct the GameCode object
+
+                      //Add it to an array
+
+
+                      //For each gamecode in the collection
+
+                      //If the gamecode is equals to my gamecode
+
+
+
+
+
+                    Query myQuery = db.collection("GameCodes");
+
+                      //Print them to the screen
+
+                      //Only get the gamecodes whose name is the same as the gamecodes in my list
+
+
+                      //Pass it onto the recycler view
+
+
+
+                      //setUpRecycler(myQuery);
                   }
 
 
@@ -244,7 +312,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
 
                 // setting this dimens
-                openCodeDialog(uniqueID, "Profile Code");
+                openCodeDialog(username, "Profile Code");
             }
         });
 
@@ -334,22 +402,31 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
 
     }
 
-    private void setUpRecycler(Query query) {
-        FirestoreRecyclerOptions<GameCodeController> options = new FirestoreRecyclerOptions.Builder<GameCodeController>()
-                .setQuery(query, GameCodeController.class)
-                .setLifecycleOwner(this)
-                .build();
-
+    private void setUpRecycler(ArrayList<GameCodeController> myControllerList) {
+        System.out.println(myControllerList);
         QRRecycler = findViewById(R.id.treeList);
 
         QRRecycler.setLayoutManager(QRGridManager);
 
-        QRRecycleAdapter = new QRAdapter(options, this::onItemClick);
+        QRRecycleAdapter = new QRAdapter(myControllerList, this);
+
         QRRecycler.setAdapter(QRRecycleAdapter);
-        QRRecycler.setHasFixedSize(true);
     }
 
+    @Override
+    public void onQRClick(int position) {
 
+        Intent intent = new Intent(this, QRVisualizerActivity.class);
+        GameCodeController myCodeCont = QRRecycleAdapter.getItem(position);
+        System.out.println("Attributes before passing!");
+        //I feel filthy for doing this but it works
+        intent.putExtra("USERNAME", usernameView.getText());
+        intent.putExtra("QR ITEM", myCodeCont);
+        startActivity(intent);
+
+    }
+
+    /*
     @Override
     public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
         Intent intent = new Intent(this, QRVisualizerActivity.class);
@@ -357,5 +434,5 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnIt
         intent.putExtra("QR ITEM", myCurrentItem);
         startActivity(intent);
 
-    }
+    }*/
 }

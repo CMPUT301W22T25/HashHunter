@@ -107,7 +107,7 @@ public class Player {
      * @param gameCode
      *      this is a game code to remove from gameCodeList
      */
-    public void removeGameCode(GameCode gameCode) {
+    public void removeGameCode(String gameCode) {
         this.gameCodeList.remove(gameCode);
     }
 

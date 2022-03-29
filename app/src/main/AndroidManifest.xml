@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hashhunter">
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!--  Google play configuration to notify user of camera usage  -->
-    <uses-feature android:name="android.hardware.camera" />
-    <!-- Allow to open image from URL   -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Google play configuration to notify user of camera usage -->
+    <uses-feature android:name="android.hardware.camera" /> <!-- Allow to open image from URL -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,16 +15,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HashHunter">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAMXsgIeVDP9PVSE9w5ZI2OaBa38C5NotU"
-
-            ></meta-data>
+        <activity
+            android:name=".DeleteGameCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DeletePlayerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OwnerActivity"
+            android:exported="false" />
 
         <activity
-            android:name=".QRVisualizerActivity">
+            android:name=".QRVisualizerActivity"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAMXsgIeVDP9PVSE9w5ZI2OaBa38C5NotU" />
+
 
         <activity
             android:name=".CameraActivity"
