@@ -27,6 +27,8 @@ public class OwnerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // start delete code activity
+                Intent intent = new Intent(OwnerActivity.this, DeleteGameCodeActivity.class);
+                startActivity(intent);
             }
         });
     }

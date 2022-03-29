@@ -13,21 +13,34 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class DeleteGameCodeActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.DeleteGameCodeActivity";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    ListView gameCodeList;
+    ArrayAdapter<GameCode> gameCodeAdapter;
+    ArrayList<GameCode> gameCodeDataList = new ArrayList<GameCode>();
+    Integer selectedGameCodeIndex = -1;
+
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -54,7 +67,11 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                                 // put each code in the qr list
+                                                GameCode code = document.toObject(GameCode.class);
+                                                gameCodeDataList.add(code);
                                             }
+
+                                            gameCodeAdapter.notifyDataSetChanged();
                                         } else {
                                             Log.d(TAG, "Error getting documents: ", task.getException());
                                         }
@@ -81,7 +98,57 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_game_code);
+        gameCodeList = findViewById(R.id.game_code_list_view);
+        gameCodeAdapter = new GameCodeList(this, gameCodeDataList);
+
+        gameCodeList.setAdapter(gameCodeAdapter);
 
         requestCameraLauncher.launch(Manifest.permission.CAMERA);
+
+        gameCodeAdapter.notifyDataSetChanged();
+
+        gameCodeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedGameCodeIndex = i;
+                GameCode code = gameCodeDataList.get(i);
+                final String[] gameCodeID = {""};
+                db.collection("GameCode")
+                        .whereEqualTo("code", code.getCode())
+                        .whereEqualTo("latitude", code.getLatitude())
+                        .whereEqualTo("longitude", code.getLongitude())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        gameCodeID[0] = document.getId();
+                                        document.getReference().delete();
+                                    }
+                                    gameCodeAdapter.notifyDataSetChanged();
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+                db.collection("Players").whereArrayContains("gameCodeList", gameCodeID[0])
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document: task.getResult()) {
+                                        document.getReference().update("gameCodeList", FieldValue.arrayRemove(gameCodeID[0]));
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
     }
 }
