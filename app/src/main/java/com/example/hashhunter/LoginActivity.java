@@ -62,10 +62,12 @@ public class LoginActivity extends AppCompatActivity {
                                     DocumentSnapshot document = task.getResult();
                                     // log them in and start another activity
                                     if (document.exists()) {
+                                        String username = (String) document.getData().get("com.example.hashhunter.username");
                                         Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                                         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
+                                        editor.putString(MainActivity.PREF_USERNAME, username);
                                         editor.commit();
                                         Button loginButton = findViewById(R.id.login_button);
                                         loginButton.setText("Logged In");
