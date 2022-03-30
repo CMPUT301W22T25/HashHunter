@@ -32,12 +32,14 @@ import java.util.function.LongFunction;
  * This is the activity for user login for the first time
  * If they scan a QR code, it logs them in if they are an existing user in the database
  * If they register, it generates a unique ID for them and adds their information to the database
+ * reference:
+ * https://developer.android.com/training/basics/firstapp/starting-activity#java
+ * https://www.youtube.com/watch?v=AD5qt7xoUU8
+ * https://www.youtube.com/watch?v=7Fc79qTq7yc
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.LoginActivity";
-
     private static SharedPreferences sharedPreferences;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -51,45 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = result.getData();
                         assert intent != null;
 
-                        String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
+                        String scannedUserId = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
 
-                       //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
-                        DocumentReference userDocRef = db.collection("UserInfo").document(scannedUsername);
-                        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    // log them in and start another activity
-                                    if (document.exists()) {
-                                        String username = (String) document.getData().get("com.example.hashhunter.username");
-                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
-                                        editor.putString(MainActivity.PREF_USERNAME, username);
-                                        editor.commit();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Logged In");
-
-                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        startActivity(intent);
-                                        // Should this be called?
-                                        //finish();
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Log In Failed");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with", task.getException());
-                                    Button loginButton = findViewById(R.id.login_button);
-                                    loginButton.setText("Log In Failed");
-                                }
-                            }
+                        UserInfoDBController.getUserInfo(scannedUserId).addOnCompleteListener(task -> {
+                            loginUser(task, scannedUserId);
                         });
 
-                        DocumentReference ownerDocRef = db.collection("Owners").document(scannedUsername);
+                        DocumentReference ownerDocRef = db.collection("Owners").document(scannedUserId);
                         ownerDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -100,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                                         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
+                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUserId);
                                         editor.putString(MainActivity.PREF_IS_OWNER, "hmmYesOwner");
                                         editor.commit();
                                         Button loginButton = findViewById(R.id.login_button);
@@ -152,8 +122,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-                // Should this be called?
-                //finish();
             }
         });
 
@@ -163,14 +131,33 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 requestCameraLauncher.launch(Manifest.permission.CAMERA);
-
-                // https://developer.android.com/training/basics/firstapp/starting-activity#java
-                // https://www.youtube.com/watch?v=AD5qt7xoUU8
-                // https://www.youtube.com/watch?v=7Fc79qTq7yc
-                // I used all the above links to learn about intents and starting activities
-                // The code is not from any single source
-
             }
         });
+    }
+
+    public void loginUser(@NonNull Task<DocumentSnapshot> task, String scannedUserId) {
+        if (task.isSuccessful()) {
+            DocumentSnapshot document = task.getResult();
+            // log them in and start another activity
+            if (document.exists()) {
+                String username = (String) document.getData().get("com.example.hashhunter.username");
+                // save it shared preferences
+                sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUserId);
+                editor.putString(MainActivity.PREF_USERNAME, username);
+                editor.commit();
+
+                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+
+                Intent intent1 = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent1);
+            } else {
+                Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.d(TAG, "get failed with", task.getException());
+            Toast.makeText(LoginActivity.this, "task error", Toast.LENGTH_SHORT).show();
+        }
     }
 }
