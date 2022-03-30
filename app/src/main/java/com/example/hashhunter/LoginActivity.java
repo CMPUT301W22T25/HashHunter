@@ -40,62 +40,29 @@ import java.util.function.LongFunction;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.LoginActivity";
     private static SharedPreferences sharedPreferences;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private boolean isPlayer = false;
 
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent intent = result.getData();
-                        assert intent != null;
-
-                        String scannedUserId = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
-
-                        UserInfoDBController.getUserInfo(scannedUserId).addOnCompleteListener(task -> {
-                            loginUser(task, scannedUserId);
-                        });
-
-                        DocumentReference ownerDocRef = db.collection("Owners").document(scannedUserId);
-                        ownerDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    // log them in and start another activity
-                                    if (document.exists()) {
-                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUserId);
-                                        editor.putString(MainActivity.PREF_IS_OWNER, "hmmYesOwner");
-                                        editor.commit();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Logged In");
-
-                                        Intent intent = new Intent(LoginActivity.this, OwnerActivity.class);
-                                        startActivity(intent);
-                                        // Should this be called?
-                                        //finish();
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Log In Failed");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with", task.getException());
-                                    Button loginButton = findViewById(R.id.login_button);
-                                    loginButton.setText("Log In Failed");
-                                }
-                            }
-                        });
-
-                    } else {
-                        Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
-                    }
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    assert intent != null;
+                    String scannedUserId = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
+                    UserInfoDBController.getUserInfo(scannedUserId).addOnCompleteListener(task -> {
+                        loginUser(task, scannedUserId);
+                        // wait for player check to finish before checking owner id
+                        if (!isPlayer) {
+                            OwnersDBController.getOwnerInfo(scannedUserId).addOnCompleteListener(ownersTask -> {
+                                loginOwner(ownersTask, scannedUserId);
+                            });
+                        }
+                    });
+                } else {
+                    Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -140,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
             DocumentSnapshot document = task.getResult();
             // log them in and start another activity
             if (document.exists()) {
+                isPlayer = true;
                 String username = (String) document.getData().get("com.example.hashhunter.username");
                 // save it shared preferences
                 sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
@@ -151,6 +119,28 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                 Intent intent1 = new Intent(LoginActivity.this, DashboardActivity.class);
+                startActivity(intent1);
+            }
+        } else {
+            Log.d(TAG, "get failed with", task.getException());
+            Toast.makeText(LoginActivity.this, "task error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void loginOwner(@NonNull Task<DocumentSnapshot> task, String scannedUserId) {
+        if (task.isSuccessful()) {
+            DocumentSnapshot document = task.getResult();
+            // log them in and start another activity
+            if (document.exists()) {
+                // save data in shared preferences
+                sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUserId);
+                editor.putString(MainActivity.PREF_IS_OWNER, "hmmYesOwner");
+                editor.commit();
+
+                Toast.makeText(LoginActivity.this, "owner login successful", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(LoginActivity.this, OwnerActivity.class);
                 startActivity(intent1);
             } else {
                 Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
