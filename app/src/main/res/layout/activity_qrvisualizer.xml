@@ -167,6 +167,7 @@
 
     </EditText>
 
+<!--    take out android:background="@drawable/ic_baseline_send_24" as it's causing error -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sendButton"
         android:layout_width="35dp"
@@ -181,7 +182,6 @@
         app:layout_constraintStart_toEndOf="@+id/textBox"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
         app:layout_constraintVertical_bias="0.017">
-
     </androidx.appcompat.widget.AppCompatButton>
 
     <androidx.constraintlayout.widget.Guideline

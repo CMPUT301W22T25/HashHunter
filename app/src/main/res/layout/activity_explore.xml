@@ -32,6 +32,15 @@
         </SearchView>
 
 
+        <Button
+            android:id="@+id/scan_profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#F0E3B4"
+            android:text="Search by QR"
+            android:textColor="#5CB8A7" />
+
         <Spinner
             android:id="@+id/dropdown_menu"
             android:layout_width="wrap_content"
@@ -81,7 +90,6 @@
 
 
         </LinearLayout>
-
 
 
     </LinearLayout>

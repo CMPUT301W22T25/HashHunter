@@ -2,6 +2,7 @@ package com.example.hashhunter;
 
 import static android.content.ContentValues.TAG;
 import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import androidx.annotation.NonNull;
@@ -101,9 +102,13 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        //Retrieve unique id
+        //Retrieve unique id, from intent if available
         uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
-
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            uniqueID = extras.getString("userId");
+            Log.d("PROFILE_DEBUG", "userId: " + uniqueID);
+        }
 
         //Obtain all the other information from username
 
@@ -132,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         //So if login code is null
 
-          //Then set the left button as the profile code
+        //Then set the left button as the profile code
 
         ArrayList<Comment> testComments = new ArrayList<>();
         ArrayList<Integer> LocPicResources = new ArrayList<>();
@@ -146,9 +151,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         testComments.add(new Comment("Potato123", "I hate potatoes"));
         testComments.add(new Comment("lil Tay", "Strongest Flexer In da game"));
         testComments.add(new Comment("MasterCoder", "Crappy QR code bro step up ur game I am a master coder and I'll let u know that i graduated from master coder academy"));
-
         testComments.add(new Comment("MasterChief", "This ain't halo"));
-
         testComments.add(new Comment("Lil Peep", "What a sad qr code"));
 
 
@@ -163,7 +166,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         refDoc = db.collection("UserInfo").document(uniqueID);
 
         //Might redesign this, not happy with the result
-        refDoc.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        refDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
              @Override
              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                  if (task.isSuccessful()) {
@@ -306,7 +309,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
                 // setting this dimens
-                openCodeDialog(uniqueID, "Profile Code");
+                openCodeDialog(userName, "Profile Code");
             }
         });
 

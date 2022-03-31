@@ -28,6 +28,7 @@ import java.util.UUID;
      public static final String SHARED_PREF_NAME = "com.example.hashhunter.shared_prefs";
      public static final String PREF_UNIQUE_ID = "com.example.hashhunter.unique_id";
      public static final String PREF_IS_OWNER = "com.example.hashhunter.owner_id";
+     public static final String PREF_USERNAME = "com.example.hashhunter.username";
      private SharedPreferences sharedPreferences;
      private Boolean firstLogin = false;
 
