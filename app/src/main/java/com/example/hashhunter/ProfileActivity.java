@@ -78,7 +78,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     String UniqueIDCode ="com.example.hashhunter.unique_id";
     String gameCodeListCode = "gameCodeList";
     private String uniqueID;
-    private String username;
     private PlayerDataController playerController;
     final static ArrayList<String> myArray = new ArrayList<>();
 
@@ -138,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         //So if login code is null
 
-          //Then set the left button as the profile code
+        //Then set the left button as the profile code
 
         ArrayList<Comment> testComments = new ArrayList<>();
         ArrayList<Integer> LocPicResources = new ArrayList<>();
@@ -152,9 +151,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         testComments.add(new Comment("Potato123", "I hate potatoes"));
         testComments.add(new Comment("lil Tay", "Strongest Flexer In da game"));
         testComments.add(new Comment("MasterCoder", "Crappy QR code bro step up ur game I am a master coder and I'll let u know that i graduated from master coder academy"));
-
         testComments.add(new Comment("MasterChief", "This ain't halo"));
-
         testComments.add(new Comment("Lil Peep", "What a sad qr code"));
 
 
@@ -312,7 +309,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
                 // setting this dimens
-                openCodeDialog(username, "Profile Code");
+                openCodeDialog(userName, "Profile Code");
             }
         });
 
