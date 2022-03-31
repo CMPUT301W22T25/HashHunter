@@ -52,11 +52,11 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = result.getData();
                     assert intent != null;
                     String scannedUserId = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
-                    UserInfoDBController.getUserInfo(scannedUserId).addOnCompleteListener(task -> {
+                    FirestoreController.getUserInfo(scannedUserId).addOnCompleteListener(task -> {
                         loginUser(task, scannedUserId);
                         // wait for player check to finish before checking owner id
                         if (!isPlayer) {
-                            OwnersDBController.getOwnerInfo(scannedUserId).addOnCompleteListener(ownersTask -> {
+                            FirestoreController.getOwnerInfo(scannedUserId).addOnCompleteListener(ownersTask -> {
                                 loginOwner(ownersTask, scannedUserId);
                             });
                         }
