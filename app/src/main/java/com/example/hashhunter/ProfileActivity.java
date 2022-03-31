@@ -199,7 +199,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         System.out.println(myArray);
 
-        DocumentReference playerDoc = db.collection("MockPlayers").document(uniqueID);
+        DocumentReference playerDoc = db.collection("Players").document(uniqueID);
 
         playerDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
           @Override
