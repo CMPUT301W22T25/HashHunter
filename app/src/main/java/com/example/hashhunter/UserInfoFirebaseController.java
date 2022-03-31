@@ -53,6 +53,10 @@ public class UserInfoFirebaseController {
                         editor.putString(MainActivity.PREF_DB_OP_SUCCESS, "failure");
                         editor.commit();
                     }
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(MainActivity.PREF_DB_OP_SUCCESS, "failure");
+                    editor.commit();
                 }
             }
         });
