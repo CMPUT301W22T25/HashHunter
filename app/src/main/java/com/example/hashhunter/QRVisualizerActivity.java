@@ -13,10 +13,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -41,7 +43,9 @@ public class QRVisualizerActivity extends AppCompatActivity {
     LinearLayoutManager myHorizontalLayoutManager;
     ArrayList<String> PhotoCodes;
     ArrayList<CommentController> commentControllers = new ArrayList<>();
-
+    TextView titleView;
+    TextView pointView;
+    TextView amountScanView;
     ArrayList<Integer> LocPicResources;
     EditText textBoxView;
     AppCompatButton sendButton;
@@ -55,10 +59,8 @@ public class QRVisualizerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrvisualizer);
         Intent intent = getIntent();
-
         GameCodeController myController = intent.getParcelableExtra("QR ITEM");
         username = intent.getStringExtra("USERNAME");
-
         myConstLayout = findViewById(R.id.visLayout);
         textBoxView = findViewById(R.id.textBox);
         sendButton = findViewById(R.id.sendButton);
@@ -68,9 +70,21 @@ public class QRVisualizerActivity extends AppCompatActivity {
         //Synchronize the controller with the items on gamecode;
         myController.SyncController();
 
+        titleView = findViewById(R.id.gamecodeTitle);
+        pointView = findViewById(R.id.gamecodePoints);
+        amountScanView = findViewById(R.id.gameCodeScanAmount);
 
-
+        System.out.println(myController.getPoints());
+        titleView.setText(myController.getTitle());
+        pointView.setText(myController.getPoints().toString()+" Points");
+        amountScanView.setText("Scanned by " + myController.getOwnerAmount()+ " people");
         //Close keyboard if user clicks outside the screen
+
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         myConstLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +107,9 @@ public class QRVisualizerActivity extends AppCompatActivity {
                     commentControllers.add(theComController);
                     commentAdapter.notifyDataSetChanged();
                     myController.addComment(comment, db);
+                    CommentRecycler.scrollToPosition(commentAdapter.getItemCount()-1);
+                    closeKeyboard();
+                    textBoxView.getText().clear();
 
                 }
 
@@ -210,5 +227,16 @@ public class QRVisualizerActivity extends AppCompatActivity {
             InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(myView.getWindowToken(), 0);
         }
+    }
+
+   // https://stackoverflow.com/questions/36433299/setdisplayhomeasupenabled-not-working-in-preferenceactivity
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
