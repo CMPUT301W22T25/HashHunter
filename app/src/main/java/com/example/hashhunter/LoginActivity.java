@@ -35,12 +35,8 @@ import java.util.function.LongFunction;
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.LoginActivity";
-
     private static SharedPreferences sharedPreferences;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private UserInfoFirebaseController userInfodb;
+    private UserInfoFirebaseController db;
 
 
     // this handles the result from the scan activity
@@ -54,82 +50,99 @@ public class LoginActivity extends AppCompatActivity {
                         assert intent != null;
 
                         String scannedUsername = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
+
+                        db.setSharedPrefUserInfo(scannedUsername);
+
+                        String dbOPResult = sharedPreferences.getString(MainActivity.PREF_DB_OP_SUCCESS, null);
+
+                        if (dbOPResult == "success") {
+                            Button loginButton = findViewById(R.id.login_button);
+                            loginButton.setText(dbOPResult);
+                        } else {
+                            Button loginButton = findViewById(R.id.login_button);
+                            loginButton.setText(dbOPResult);
+                        }
 //
 //                        Boolean x = userInfodb.userNameExists(scannedUsername);
 //                        if (x) {
 //                            Toast.makeText(LoginActivity.this, "username exists", Toast.LENGTH_SHORT);
+//                            Button loginButton = findViewById(R.id.login_button);
+//                            loginButton.setText("Logged In");
 //                        } else {
 //                            Toast.makeText(LoginActivity.this, "hmm", Toast.LENGTH_SHORT);
+//                            Button loginButton = findViewById(R.id.login_button);
+//                            loginButton.setText("Not Logged In");
 //                        }
 //                        //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
-                        DocumentReference userDocRef = db.collection("Usernames").document(scannedUsername);
-                        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    // log them in and start another activity
-                                    if (document.exists()) {
-                                        String username = (String) document.getData().get("com.example.hashhunter.username");
-                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
-                                        editor.putString(MainActivity.PREF_USERNAME, username);
-                                        editor.commit();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Logged In");
+//                        DocumentReference userDocRef = db.collection("Usernames").document(scannedUsername);
+//                        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    DocumentSnapshot document = task.getResult();
+//                                    // log them in and start another activity
+//                                    if (document.exists()) {
+//                                        String username = (String) document.getData().get("com.example.hashhunter.username");
+//                                        String unique_id = (String) document.getData().get("com.example.hashhunter.unique_id");
+//                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
+//                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+//                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                        editor.putString(MainActivity.PREF_UNIQUE_ID, unique_id);
+//                                        editor.putString(MainActivity.PREF_USERNAME, username);
+//                                        editor.commit();
+//                                        Button loginButton = findViewById(R.id.login_button);
+//                                        loginButton.setText("Logged In");
+//
+//                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+//                                        startActivity(intent);
+//                                        // Should this be called?
+//                                        //finish();
+//                                    } else {
+//                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+//                                        Button loginButton = findViewById(R.id.login_button);
+//                                        loginButton.setText("Log In Failed");
+//                                    }
+//                                } else {
+//                                    Log.d(TAG, "get failed with", task.getException());
+//                                    Button loginButton = findViewById(R.id.login_button);
+//                                    loginButton.setText("Log In Failed");
+//                                }
+//                            }
+//                        });
 
-                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        startActivity(intent);
-                                        // Should this be called?
-                                        //finish();
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Log In Failed");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with", task.getException());
-                                    Button loginButton = findViewById(R.id.login_button);
-                                    loginButton.setText("Log In Failed");
-                                }
-                            }
-                        });
-
-                        DocumentReference ownerDocRef = db.collection("Owners").document(scannedUsername);
-                        ownerDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    // log them in and start another activity
-                                    if (document.exists()) {
-                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
-                                        editor.putString(MainActivity.PREF_IS_OWNER, "hmmYesOwner");
-                                        editor.commit();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Logged In");
-
-                                        Intent intent = new Intent(LoginActivity.this, OwnerActivity.class);
-                                        startActivity(intent);
-                                        // Should this be called?
-                                        //finish();
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
-                                        Button loginButton = findViewById(R.id.login_button);
-                                        loginButton.setText("Log In Failed");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with", task.getException());
-                                    Button loginButton = findViewById(R.id.login_button);
-                                    loginButton.setText("Log In Failed");
-                                }
-                            }
-                        });
+//                        DocumentReference ownerDocRef = db.collection("Owners").document(scannedUsername);
+//                        ownerDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    DocumentSnapshot document = task.getResult();
+//                                    // log them in and start another activity
+//                                    if (document.exists()) {
+//                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
+//                                        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+//                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                        editor.putString(MainActivity.PREF_UNIQUE_ID, scannedUsername);
+//                                        editor.putString(MainActivity.PREF_IS_OWNER, "hmmYesOwner");
+//                                        editor.commit();
+//                                        Button loginButton = findViewById(R.id.login_button);
+//                                        loginButton.setText("Logged In");
+//
+//                                        Intent intent = new Intent(LoginActivity.this, OwnerActivity.class);
+//                                        startActivity(intent);
+//                                        // Should this be called?
+//                                        //finish();
+//                                    } else {
+//                                        Toast.makeText(LoginActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+//                                        Button loginButton = findViewById(R.id.login_button);
+//                                        loginButton.setText("Log In Failed");
+//                                    }
+//                                } else {
+//                                    Log.d(TAG, "get failed with", task.getException());
+//                                    Button loginButton = findViewById(R.id.login_button);
+//                                    loginButton.setText("Log In Failed");
+//                                }
+//                            }
+//                        });
 
                     } else {
                         Toast.makeText(LoginActivity.this, "result not ok", Toast.LENGTH_SHORT).show();
@@ -152,6 +165,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        db = new UserInfoFirebaseController(this.getApplicationContext());
+        sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
 
         // registering a new user
         Button registerButton = findViewById(R.id.register_button);
