@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                         loginUser(task, scannedUserId);
                         // wait for player check to finish before checking owner id
                         if (!isPlayer) {
-                            FirestoreController.getOwnerInfo(scannedUserId).addOnCompleteListener(ownersTask -> {
+                            FirestoreController.getOwners(scannedUserId).addOnCompleteListener(ownersTask -> {
                                 loginOwner(ownersTask, scannedUserId);
                             });
                         }

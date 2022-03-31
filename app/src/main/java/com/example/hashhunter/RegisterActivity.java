@@ -42,15 +42,10 @@ public class RegisterActivity extends AppCompatActivity {
     public static final String KEY_UNIQUE_ID = "com.example.hashhunter.unique_id";
     private SharedPreferences sharedPreferences;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private EditText usernameEdit;
     private EditText emailEdit;
     private String unique_id;
     private Button submitButton;
-//    private ImageView qrCodeIV;
-    Bitmap bitmap;
-    QRGEncoder qrgEncoder;
 
 
     @Override
@@ -60,7 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         usernameEdit = findViewById(R.id.username_edit_text);
         emailEdit = findViewById(R.id.email_edit_text);
-//        qrCodeIV = findViewById(R.id.idIVQrcode);
 
         submitButton = findViewById(R.id.submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -71,112 +65,62 @@ public class RegisterActivity extends AppCompatActivity {
                 sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
                 unique_id = sharedPreferences.getString(MainActivity.PREF_UNIQUE_ID, "IDNOTFOUND");
 
-                // generate a qr Code
-                //https://www.geeksforgeeks.org/how-to-generate-qr-code-in-android/
                 Boolean validInput = validateInput(username, email);
                 if (!validInput) {
                     // if the edittext inputs are empty then execute
-                    // this method showing a toast message.
                     Toast.makeText(RegisterActivity.this, "Enter valid input", Toast.LENGTH_SHORT).show();
                 } else {
-                    // below is the line for getting the window manager service
-//                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-//
-//                    // initializing a variable for the default display
-//                    Display display = manager.getDefaultDisplay();
-//
-//                    // creating the variable for the point that is to be displayed in QRCode
-//                    Point point = new Point();
-//                    display.getSize(point);
-//
-//                    // getting width and height of a point
-//                    int width = point.x;
-//                    int height = point.y;
-//
-//                    // generating dimension from width and height
-//                    int dimen = Math.min(width, height);
-//                    dimen = (dimen * 3) / 4;
-//                    // setting these dimensions inside our qrcode generator to generate the qr code
-//                    qrgEncoder = new QRGEncoder(unique_id, null, QRGContents.Type.TEXT, dimen);
-//                    try {
-//                        // getting our qrCode in the form of a bitmap
-//                        bitmap = qrgEncoder.encodeAsBitmap();
-//
-//                        // setting the bitmap inside our imageView
-//                        qrCodeIV.setImageBitmap(bitmap);
-//
-//                    } catch (WriterException e) {
-//                        // this method is called for exception handling
-//                        Log.e("Tag", e.toString());
-//                    }
-
                     // still need to check and deny if the user already exists
                     //  https://firebase.google.com/docs/firestore/query-data/get-data#java_4
-                    DocumentReference userDocRef = db.collection("Usernames").document(username);
-                    userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Toast.makeText(RegisterActivity.this, "Username already exists!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // https://www.youtube.com/watch?v=MILE4PVx1kE&list=PLrnPJCHvNZuDrSqu-dKdDi3Q6nM-VUyxD&index=2
-                                    Map<String, Object> info = new HashMap<>();
-                                    info.put(KEY_UNAME, username);
-                                    info.put(KEY_EMAIL, email);
-                                    info.put(MainActivity.PREF_UNIQUE_ID, unique_id);
-                                    db.collection("UserInfo").document(unique_id).set(info)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(RegisterActivity.this, "added to db", Toast.LENGTH_SHORT).show();
-                                                    // store userId and username in shared preferences
-                                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                                    editor.putString(MainActivity.PREF_UNIQUE_ID, unique_id);
-                                                    editor.putString(MainActivity.PREF_USERNAME, username);
-                                                    editor.commit();
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(RegisterActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-                                                    Log.d(TAG, e.toString());
-                                                }
-                                            });
-
-                                    info = new HashMap<>();
-                                    info.put(KEY_UNAME, username);
-                                    info.put(KEY_UNIQUE_ID, unique_id);
-
-                                    db.collection("Usernames").document(username).set(info)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(RegisterActivity.this, "added to db", Toast.LENGTH_SHORT).show();
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(RegisterActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-                                                    Log.d(TAG, e.toString());
-                                                }
-                                            });
-
-                                    // add a player with username to firestore
-                                    Player player = new Player(username);
-                                    db.collection("Players").document(unique_id).set(player);
-
-                                    Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
-                                    startActivity(intent);
-                                    // Should this be called?
-                                    //finish();
-                                }
+                    FirestoreController.getUsernames(username).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Toast.makeText(RegisterActivity.this, "Username already exists!", Toast.LENGTH_SHORT).show();
                             } else {
-                                Log.d(TAG, "get failed with", task.getException());
+                                // https://www.youtube.com/watch?v=MILE4PVx1kE&list=PLrnPJCHvNZuDrSqu-dKdDi3Q6nM-VUyxD&index=2
+                                Map<String, Object> info = new HashMap<>();
+                                info.put(KEY_UNAME, username);
+                                info.put(KEY_EMAIL, email);
+                                info.put(MainActivity.PREF_UNIQUE_ID, unique_id);
+                                FirestoreController.postUserInfo(unique_id, info)
+                                        .addOnSuccessListener(unused -> {
+                                            // store userId and username in shared preferences
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.putString(MainActivity.PREF_UNIQUE_ID, unique_id);
+                                            editor.putString(MainActivity.PREF_USERNAME, username);
+                                            editor.commit();
+                                            // store username
+                                            Map<String, Object> newUsername = new HashMap<>();
+                                            newUsername.put(KEY_UNAME, username);
+                                            newUsername.put(KEY_UNIQUE_ID, unique_id);
+                                            FirestoreController.postUsernames(username, info)
+                                                    .addOnSuccessListener(unused2 -> {
+                                                        // add a player with username to firestore
+                                                        Player player = new Player(username);
+                                                        FirestoreController.postPlayers(unique_id, player)
+                                                                .addOnSuccessListener(unused3 -> {
+                                                                    Toast.makeText(RegisterActivity.this, "registration successful", Toast.LENGTH_SHORT).show();
+                                                                    Intent intent = new Intent(RegisterActivity.this, DashboardActivity.class);
+                                                                    startActivity(intent);
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Toast.makeText(RegisterActivity.this, "registration error!", Toast.LENGTH_SHORT).show();
+                                                                    Log.d(TAG, e.toString());
+                                                                });
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(RegisterActivity.this, "registration error!", Toast.LENGTH_SHORT).show();
+                                                        Log.d(TAG, e.toString());
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(RegisterActivity.this, "registration error!", Toast.LENGTH_SHORT).show();
+                                            Log.d(TAG, e.toString());
+                                        });
                             }
+                        } else {
+                            Log.d(TAG, "get failed with", task.getException());
                         }
                     });
                 }
