@@ -1,17 +1,11 @@
  package com.example.hashhunter;
 
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.Manifest;
-import android.content.Intent;
+ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.UUID;
 
@@ -69,6 +63,7 @@ import java.util.UUID;
              Intent intent = new Intent(MainActivity.this, OwnerActivity.class);
              startActivity(intent);
          }
+
 
      }
 
