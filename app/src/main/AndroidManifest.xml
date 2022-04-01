@@ -62,7 +62,11 @@
         <activity
             android:name=".ExploreActivity"
             android:exported="false"
-            android:parentActivityName=".DashboardActivity" />
+            android:parentActivityName=".DashboardActivity"/>
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:parentActivityName=".ExploreActivity"/>
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
