@@ -153,6 +153,12 @@ public class PlayerList {
     }
 
 
+    /**
+     * populates a list with all the players in the databse and updates an adapter so that the results can be displayed
+     * after getting the players
+     * @param listAdapter
+     *      the adapter that needs to be updated
+     */
     public void populate(LeaderboardAdapter listAdapter) {
 
         // retrieves all the players from database
@@ -171,6 +177,7 @@ public class PlayerList {
                                 player.setDisplayTotal(player.getMaxGameCodePoints());
                                 playerList.add(player);
                             }
+                            //update adapter
                             sortByQRScore();
                             listAdapter.notifyDataSetChanged();
 

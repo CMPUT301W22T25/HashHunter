@@ -24,6 +24,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+/**
+ * Displays the results of searching for a player, shows "Player not found" if there is no player with that username
+ * otherwise shows the players username and on click goes to that players profile
+ */
 public class SearchActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -41,6 +45,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        //get the results from the explore activity
         Bundle extras = getIntent().getExtras();
         System.out.println(extras.size());
         if (extras.size() == 1) {
@@ -51,6 +56,7 @@ public class SearchActivity extends AppCompatActivity {
             player = extras.getParcelable("player");
         }
 
+        //display results
         searchText = (TextView) findViewById(R.id.search_text);
         username = (TextView) findViewById(R.id.search_username);
 
@@ -59,6 +65,7 @@ public class SearchActivity extends AppCompatActivity {
         if (player == null) {
             username.setText("Player Not Found");
         }
+        // get the unique id for the username and pass to profile activity
         else {
             username.setText(name);
             username.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +96,8 @@ public class SearchActivity extends AppCompatActivity {
             });
         }
 
-        profilePic = (ImageView) findViewById(R.id.search_profile_picture);
-        profilePic.setImageResource(R.drawable.ic_android);
+        //profilePic = (ImageView) findViewById(R.id.search_profile_picture);
+        //profilePic.setImageResource(R.drawable.ic_android);
 
 
 

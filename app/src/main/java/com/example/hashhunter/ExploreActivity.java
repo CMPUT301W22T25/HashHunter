@@ -126,6 +126,7 @@ public class ExploreActivity extends AppCompatActivity {
 
         adapter = setAdapter();
 
+        //gets the users username from shared preferences
         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
         name = sharedPreferences.getString(MainActivity.PREF_USERNAME, "NAMENOTFOUND");
 
@@ -140,7 +141,7 @@ public class ExploreActivity extends AppCompatActivity {
         setupSort(adapter, playerList);
 
 
-
+        // code for the search bar
         SearchView usernameSearchView = (SearchView) findViewById(R.id.username_search);
 
         usernameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -151,6 +152,7 @@ public class ExploreActivity extends AppCompatActivity {
                 intent = new Intent(ExploreActivity.this, SearchActivity.class);
                 intent.putExtra("search", query);
 
+                //find the player with the username
                 int pos = playerList.findPlayerPos(query);
                 if (pos != -1) {
                     myPlayer = playerList.getPlayer(pos);
@@ -178,6 +180,14 @@ public class ExploreActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * sets up the logic for the drop down menu,
+     * sorts the list and updates the view
+     * @param listAdapter
+     *      the adapter that has to be updated after sorting
+     * @param playerList
+     *      A list of all the players in the database to be displayed
+     */
     private void setupSort(LeaderboardAdapter listAdapter, PlayerList playerList) {
         Spinner spinner = (Spinner) findViewById(R.id.dropdown_menu);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -221,6 +231,7 @@ public class ExploreActivity extends AppCompatActivity {
                         displayMyRank(name, playerList);
                     }
                 }
+                //update view
                 listAdapter.notifyDataSetChanged();
 
             }
@@ -233,8 +244,11 @@ public class ExploreActivity extends AppCompatActivity {
     }
 
 
-
-
+    /**
+     * sets an adapter
+     * @return
+     *      the adapter that has been set
+     */
     private LeaderboardAdapter setAdapter() {
         LeaderboardAdapter adapter = new LeaderboardAdapter(playerList.getPlayerList());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
