@@ -57,9 +57,7 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                         //check which gamecodes have the same title
                         //https://stackoverflow.com/questions/62675759/how-to-remove-an-element-from-an-array-in-multiple-documents-in-firestore
                         //https://cloud.google.com/firestore/docs/query-data/get-data#javaandroid_4
-                        db.collection("GameCode")
-                                .whereEqualTo("code", scannedCode)
-                                .get()
+                        FirestoreController.getGameCodeListWithCode(scannedCode)
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -112,42 +110,7 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedGameCodeIndex = i;
                 GameCode code = gameCodeDataList.get(i);
-                final String[] gameCodeID = {""};
-                db.collection("GameCode")
-                        .whereEqualTo("code", code.getCode())
-                        .whereEqualTo("latitude", code.getLatitude())
-                        .whereEqualTo("longitude", code.getLongitude())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                        gameCodeID[0] = document.getId();
-                                        document.getReference().delete();
-                                    }
-                                    gameCodeAdapter.notifyDataSetChanged();
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-
-                db.collection("Players").whereArrayContains("gameCodeList", gameCodeID[0])
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document: task.getResult()) {
-                                        document.getReference().update("gameCodeList", FieldValue.arrayRemove(gameCodeID[0]));
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error: ", task.getException());
-                                }
-                            }
-                        });
+                FirestoreController.adminDeleteGameCode(code);
             }
         });
     }
