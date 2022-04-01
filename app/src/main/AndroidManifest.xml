@@ -27,18 +27,16 @@
 
         <activity
             android:name=".QRVisualizerActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:noHistory = "true">
 
         </activity>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAMXsgIeVDP9PVSE9w5ZI2OaBa38C5NotU" />
 
 
-        <activity
-            android:name=".CameraActivity"
-            android:exported="false" />
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />

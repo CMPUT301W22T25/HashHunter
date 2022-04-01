@@ -13,6 +13,7 @@
         android:layout_width="349dp"
         android:layout_height="318dp"
         app:cardBackgroundColor="#F0E3B4"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,26 +41,30 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/gameCodeLocation"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:text="Location"
+                android:textColor="#5CB8A7"
 
-                android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/textView6"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@+id/gameCodeScanAmount"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
             </TextView>
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/gameCodeScanAmount"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="Amount scanned"
-                android:textSize="12sp"
+                android:textColor="#5CB8A7"
+                android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -67,12 +72,17 @@
             </TextView>
 
             <TextView
-                android:layout_width="81dp"
+                android:id="@+id/gamecodeTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:gravity="center"
                 android:text="Title"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@+id/textView7"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#5CB8A7"
+
+                app:layout_constraintBottom_toTopOf="@+id/gameCodeLocation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,53 +95,93 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="88dp" />
+                app:layout_constraintGuide_begin="90dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="97dp"
+                android:layout_height="25dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/LocationPicRecycler"
+                app:layout_constraintVertical_bias="1.0">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="#5CB8A7">
+
+                    <TextView
+                        android:id="@+id/gamecodePoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="11dp"
+                        android:gravity="center"
+                        android:text="Points"
+                        android:textAlignment="gravity"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </TextView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentRecycler"
-        android:layout_width="352dp"
-        android:layout_height="106dp"
+        android:layout_width="347dp"
+        android:layout_height="158dp"
+        android:clipToPadding="false"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintVertical_bias="0.189">
+        app:layout_constraintTop_toTopOf="@+id/guideline2">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 
     <EditText
         android:id="@+id/textBox"
         android:layout_width="335dp"
         android:layout_height="47dp"
+        android:layout_marginStart="16dp"
         android:background="@color/white"
         android:backgroundTint="@android:color/white"
         android:elevation="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.302"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentRecycler">
+        app:layout_constraintTop_toTopOf="@+id/guideline6"
+        app:layout_constraintVertical_bias="0.022">
 
     </EditText>
 
 <!--    take out android:background="@drawable/ic_baseline_send_24" as it's causing error -->
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="37dp"
-        android:layout_height="34dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="84dp"
-        android:backgroundTint="@color/white"
         android:id="@+id/sendButton"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="35dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/ic_baseline_send_24"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textBox">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textBox"
+        app:layout_constraintTop_toTopOf="@+id/guideline6"
+        app:layout_constraintVertical_bias="0.017">
     </androidx.appcompat.widget.AppCompatButton>
 
     <androidx.constraintlayout.widget.Guideline
@@ -140,6 +190,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="387dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="603dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="695dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
