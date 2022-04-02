@@ -121,9 +121,7 @@ public class FirestoreController {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot doc = task.getResult();
-
                 GameCode myCode = doc.toObject(GameCode.class);
-
                 Integer points = myCode.getPoints();
                 subtractPlayerTotalPoints(playerId, points);
                 subtractGameCodeCount(playerId);
@@ -145,7 +143,7 @@ public class FirestoreController {
                 db.collection("Players")
                         .document(playerId)
                         .update(objectToUpdate);
-            }
+                }
         });
 
     }
@@ -163,23 +161,37 @@ public class FirestoreController {
                         .document(playerId)
                         .update(objectToUpdate);
                 Integer maxPoints = player.getMaxGameCodePoints();
+                System.out.println(player.getGameCodeList().size());
+                System.out.println("--------------------Max Points-----------------------");
 
-                if (pointToSubtract == maxPoints) {
+                System.out.println(maxPoints);
+                System.out.println(pointToSubtract);
+                if (pointToSubtract.equals(maxPoints)) {
+                    System.out.println("--------------------Went here Points-----------------------");
+
                     getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            Integer max = 0;
-                            for (QueryDocumentSnapshot document : task.getResult()){
-                                String id = document.getId();
-                                if (player.getGameCodeList().contains(id)){
-                                    GameCode code = document.toObject(GameCode.class);
-                                    Integer points = code.getPoints();
-                                    if (points > max) {
-                                        max = points;
-                                    }
+                            System.out.println("--------------------Went here Complete-----------------------");
 
+                            Integer max = 0;
+                            if (player.getGameCodeList().size() >0) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String id = document.getId();
+                                    if (player.getGameCodeList().contains(id)) {
+                                        GameCode code = document.toObject(GameCode.class);
+                                        Integer points = code.getPoints();
+                                        if (points > max) {
+                                            max = points;
+                                        }
+
+                                    }
                                 }
                             }
+                            System.out.println("--------------------Max-----------------------");
+                            System.out.print(max);
+                            System.out.println("--------------------Max-----------------------");
+
                             objectToUpdate.put("maxGameCodePoints",max);
                             db.collection("Players")
                                     .document(playerId)

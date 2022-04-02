@@ -173,6 +173,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
                 deleteVisButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dialog.dismiss();
                         deleteCode();
                         setResult(RESULT_RESTART);
                         finish();
