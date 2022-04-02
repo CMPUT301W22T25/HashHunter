@@ -41,8 +41,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                 EditText usernameText = findViewById(R.id.del_username_edit_text);
                 String username = usernameText.getText().toString();
 
-                DocumentReference userDocRef = db.collection("Usernames").document(username);
-                userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                FirestoreController.getUsernames(username).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -55,8 +54,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                 Toast.makeText(DeletePlayerActivity.this, unique_id, Toast.LENGTH_SHORT).show();
 
                                 // delete from Usernames
-                                db.collection("Usernames").document(username)
-                                        .delete()
+                                FirestoreController.deleteUsernames(username)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -71,8 +69,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                         });
 
                                 // delete from UserInfo
-                                db.collection("UserInfo").document(unique_id)
-                                        .delete()
+                                FirestoreController.deleteUserInfo(unique_id)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -90,9 +87,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                 // array, remove them
                                 //https://stackoverflow.com/questions/62675759/how-to-remove-an-element-from-an-array-in-multiple-documents-in-firestore
                                 //https://cloud.google.com/firestore/docs/query-data/get-data#javaandroid_4
-                                db.collection("GameCode")
-                                        .whereArrayContains("owners", username)
-                                        .get()
+                                FirestoreController.getGameCodesWithOwner(username)
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -109,8 +104,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                         });
 
                                 // delete from Players
-                                db.collection("Players").document(unique_id)
-                                        .delete()
+                                FirestoreController.deletePlayers(unique_id)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

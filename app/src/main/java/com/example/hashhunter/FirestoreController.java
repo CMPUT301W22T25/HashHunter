@@ -169,6 +169,12 @@ public class FirestoreController {
         return colRef.get();
     }
 
+    @NonNull
+    public static Task<QuerySnapshot> getGameCodesWithOwner(String username) {
+        CollectionReference colRef = (CollectionReference) db.collection("GameCode").whereArrayContains("owners", username);
+        return colRef.get();
+    }
+
 
     /*
     Comment collection
