@@ -110,7 +110,95 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedGameCodeIndex = i;
                 GameCode code = gameCodeDataList.get(i);
-                FirestoreController.adminDeleteGameCode(code);
+                FirestoreController.getGameCodeWithCodeLatLon(code.getCode(), code.getLatitude(), code.getLongitude())
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document: task.getResult()) {
+                                        String gameCodeID = document.getId();
+                                        Integer gameCodePoints = code.getPoints();
+                                        Integer pointsToSubtract = -1*code.getPoints();
+                                        // delete the gameCode from the gameCodeList of the players that have scanned it
+                                        FirestoreController.getPlayersWithScannedCode(gameCodeID)
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot document: task.getResult()) {
+                                                                document.getReference().update("gameCodeList", FieldValue.arrayRemove(gameCodeID));
+                                                                document.getReference().update("totalPoints", FieldValue.increment(pointsToSubtract));
+                                                                document.getReference().update("totalGameCode", FieldValue.increment(-1));
+
+                                                                // see if max points need to be changed
+                                                                Integer playerMaxGameCodePoints = (Integer) document.get("maxGameCodePoints");
+                                                                if (playerMaxGameCodePoints == gameCodePoints) {
+                                                                    Integer newMaxPoints = 0;
+                                                                    ArrayList<String> gameCodes = (ArrayList<String>) document.get("gameCodeList");
+                                                                    try {
+                                                                        for (String id : gameCodes) {
+                                                                            if (!id.equals(gameCodeID)) {
+                                                                                DocumentSnapshot documentSnapshot =  FirestoreController.getGameCode(id).getResult();
+                                                                                Integer gcPoints = (Integer) documentSnapshot.get("points");
+
+                                                                                try {
+                                                                                    if (gcPoints > newMaxPoints) {
+                                                                                        newMaxPoints = gcPoints;
+                                                                                    }
+                                                                                } catch (NullPointerException e) {
+                                                                                    continue;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    } catch (NullPointerException e) {
+                                                                        Log.d(TAG, "Error: ", e);
+                                                                        newMaxPoints = 0;
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            Log.d(TAG, "Error: ", task.getException());
+                                                        }
+                                                    }
+                                                });
+
+                                        // delete the comments associated with the gameCode
+                                        try {
+                                            ArrayList<String> gameCodeComments = (ArrayList<String>) document.get("comments");
+                                            for (int i = 0; i < gameCodeComments.size(); i++) {
+                                                String commentID = gameCodeComments.get(i);
+                                                FirestoreController.deleteComment(commentID);
+                                            }
+                                        } catch (NullPointerException e) {
+                                            // no existing comments for that I assume
+                                        }
+
+                                        // delete the photos associated with the gameCode
+                                        try {
+                                            ArrayList<String> gameCodePhotos = (ArrayList<String>) document.get("Photos");
+                                            for (int i = 0; i < gameCodePhotos.size(); i++) {
+                                                String photoID = gameCodePhotos.get(i);
+                                                FirestoreController.deletePhoto(photoID);
+                                            }
+                                        } catch (NullPointerException e) {
+                                            // no existing photos for the game code I assume
+                                        }
+
+                                        // delete the gameCode itself
+                                        document.getReference().delete()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Log.d(TAG, "onComplete: successfully deleted gamecode");
+                                                    }
+                                                });
+
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
             }
         });
     }

@@ -13,6 +13,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.CollationElementIterator;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -105,6 +106,12 @@ public class FirestoreController {
         return collRef.get();
     }
 
+    @NonNull
+    public static Task<QuerySnapshot> getPlayersWithScannedCode(String gameCodeID) {
+        CollectionReference colRef = (CollectionReference) db.collection("Players").whereArrayContains("gameCodeList", gameCodeID);
+        return colRef.get();
+    }
+
     /*
     GameCode collection
      */
@@ -154,67 +161,14 @@ public class FirestoreController {
     }
 
     @NonNull
-    public static void adminDeleteGameCode(GameCode code) {
-        String gameCodeID = "";
-        db.collection("GameCode")
-                .whereEqualTo("code", code.getCode())
-                .whereEqualTo("latitude", code.getLatitude())
-                .whereEqualTo("longitude", code.getLongitude())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String gameCodeID = document.getId();
-
-                                // delete the gameCode from the gameCodeList of the players that have scanned it
-                                db.collection("Players").whereArrayContains("gameCodeList", gameCodeID)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot document: task.getResult()) {
-                                                        document.getReference().update("gameCodeList", FieldValue.arrayRemove(gameCodeID));
-                                                    }
-                                                } else {
-                                                    //Log.d(TAG, "Error: ", task.getException());
-                                                }
-                                            }
-                                        });
-
-                                // delete the comments associated with the gameCode
-                                try {
-                                    ArrayList<String> gameCodeComments = (ArrayList<String>) document.get("comments");
-                                    for (int i = 0; i < gameCodeComments.size(); i++) {
-                                        String comment = gameCodeComments.get(i);
-                                        db.collection("Comment").document(comment).delete();
-                                    }
-                                } catch (NullPointerException e) {
-                                    // no existing comments for that I assume
-                                }
-
-                                // delete the photos associated with the gameCode
-                                try {
-                                    ArrayList<String> gameCodePhotos = (ArrayList<String>) document.get("Photos");
-                                    for (int i = 0; i < gameCodePhotos.size(); i++) {
-                                        String photo = gameCodePhotos.get(i);
-                                        db.collection("Photo").document(photo).delete();
-                                    }
-                                } catch (NullPointerException e) {
-                                    // no existing photos for the game code I assume
-                                }
-
-                                // delete the gameCode itself
-                                document.getReference().delete();
-                            }
-                        } else {
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+    public static Task<QuerySnapshot> getGameCodeWithCodeLatLon(String code, Double lat, Double lon) {
+        CollectionReference colRef = (CollectionReference) db.collection("GameCode")
+                .whereEqualTo("code", code)
+                .whereEqualTo("latitude", lat)
+                .whereEqualTo("longitude", lon);
+        return colRef.get();
     }
+
 
     /*
     Comment collection
