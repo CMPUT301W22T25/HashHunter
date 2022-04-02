@@ -12,6 +12,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="349dp"
         android:layout_height="318dp"
+        android:id="@+id/codeCardHolder"
         app:cardBackgroundColor="#F0E3B4"
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"

@@ -6,6 +6,7 @@ import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -67,6 +68,8 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private TextView emailView;
     private ArrayList<GameCodeController> qrList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public static final Integer RESULT_RESTART = 3;
+    private FirestoreController dbController = new FirestoreController();
     private DocumentReference refDoc;
     private static DocumentSnapshot userDoc;
     private String email;
@@ -98,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         profileCodeButton = findViewById(R.id.profileCodeButton);
         loginCodeButton = findViewById(R.id.loginCodeButton);
 
-
+        PointAmount = findViewById(R.id.pointAmount);
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -166,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         refDoc = db.collection("UserInfo").document(uniqueID);
 
         //Might redesign this, not happy with the result
-        refDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        dbController.getUserInfo(uniqueID).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
              @Override
              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                  if (task.isSuccessful()) {
@@ -199,16 +202,17 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         System.out.println(myArray);
 
-        DocumentReference playerDoc = db.collection("Players").document(uniqueID);
 
-        playerDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        dbController.getPlayers(uniqueID).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
           @Override
           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
               if (task.isSuccessful()) {
                   // Document found in the offline cache
                   DocumentSnapshot doc = task.getResult();
                   System.out.println(doc);
-
+                  Player player = doc.toObject(Player.class);
+                  Integer points = player.getTotalPoints();
+                  PointAmount.setText("Total points: " + points.toString());
                   Map<String, Object> myData = doc.getData();
                   System.out.println(myData);
                     //This has to change
@@ -266,7 +270,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
 
-                    Query myQuery = db.collection("GameCodes");
 
                       //Print them to the screen
 
@@ -419,17 +422,20 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         //I feel filthy for doing this but it works
         intent.putExtra("USERNAME", usernameView.getText());
         intent.putExtra("QR ITEM", myCodeCont);
-        startActivity(intent);
+        intent.putExtra("USER ID", uniqueID);
+        startActivityForResult(intent, 0);
 
     }
 
-    /*
     @Override
-    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-        Intent intent = new Intent(this, QRVisualizerActivity.class);
-        GameCodeController myCurrentItem = documentSnapshot.toObject(GameCodeController.class);
-        intent.putExtra("QR ITEM", myCurrentItem);
-        startActivity(intent);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_RESTART){
+            Intent restart = new Intent(this, ProfileActivity.class);
+            startActivity(restart);
+            finish();
 
-    }*/
+        }
+
+    }
 }
