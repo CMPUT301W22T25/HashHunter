@@ -72,16 +72,16 @@ public class MainFragment extends Fragment {
                             Player player = document.toObject(Player.class);
                             playerScore = player.getTotalPoints();
                             //Set image and text based on user points
-                            if (playerScore < 25) {
+                            if (playerScore < 35) {
                                 imageName = R.drawable.stage1;
                                 flairText = "Your forest could use some work! \nKeep on hunting!";
-                            } else if (playerScore >= 25 && playerScore < 50) {
+                            } else if (playerScore >= 35 && playerScore < 75) {
                                 imageName = R.drawable.stage2;
                                 flairText = "Nice forest! \nKeep it growing!";
-                            } else if (playerScore >= 50 && playerScore < 75) {
+                            } else if (playerScore >= 75 && playerScore < 100) {
                                 imageName = R.drawable.stage3;
                                 flairText = "Wow you are quite the hunter! \nGreat job!";
-                            }else if (playerScore >= 75) {
+                            }else if (playerScore >= 100) {
                                 imageName = R.drawable.stage4;
                                 flairText = "Amazing work! \nYou are truly a top hunter!";
                             }
