@@ -12,10 +12,18 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * a class for displaying gamecodes in a listview
+ */
 public class GameCodeList extends ArrayAdapter<GameCode> {
     private ArrayList<GameCode> gameCodes;
     private Context context;
 
+    /**
+     * constructor for the class
+     * @param context the context (passed by an activity)
+     * @param gameCodes the list of gamecodes
+     */
     public GameCodeList(Context context, ArrayList<GameCode> gameCodes) {
         super(context, 0, gameCodes);
 
@@ -23,6 +31,13 @@ public class GameCodeList extends ArrayAdapter<GameCode> {
         this.context = context;
     }
 
+    /**
+     * returns the view for a single gamecode
+     * @param position position of the view
+     * @param convertView a View, not used in the method
+     * @param parent a ViewGroup, not used in the method
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

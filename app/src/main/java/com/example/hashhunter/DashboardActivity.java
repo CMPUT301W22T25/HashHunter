@@ -35,7 +35,9 @@ public class DashboardActivity extends AppCompatActivity {
         initializeActivity();
     }
 
-
+    /**
+     * method for initializing the activity
+     */
     private void initializeActivity() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
