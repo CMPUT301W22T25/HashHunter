@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Player implements Parcelable {
 
     private String username;
-    private String playerCode;
     private String profileCode;
     private ArrayList<String> gameCodeList;
     private int totalPoints;
@@ -35,7 +34,6 @@ public class Player implements Parcelable {
 
     protected Player(Parcel in) {
         username = in.readString();
-        playerCode = in.readString();
         profileCode = in.readString();
         gameCodeList = in.createStringArrayList();
         totalPoints = in.readInt();
@@ -65,14 +63,6 @@ public class Player implements Parcelable {
         return this.username;
     }
 
-    /**
-     * Gets the players player code
-     * @return
-     *      Returns the string representing the players player code
-     */
-    public String getPlayerCode(){
-        return this.playerCode;
-    }
 
     /**
      * Gets the players profile code
@@ -191,7 +181,6 @@ public class Player implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(username);
-        parcel.writeString(playerCode);
         parcel.writeString(profileCode);
         parcel.writeStringList(gameCodeList);
         parcel.writeInt(totalPoints);
