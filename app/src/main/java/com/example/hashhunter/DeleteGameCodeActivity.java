@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DeleteGameCodeActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.DeleteGameCodeActivity";
@@ -41,6 +42,30 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
     ArrayList<GameCode> gameCodeDataList = new ArrayList<GameCode>();
     Integer selectedGameCodeIndex = -1;
 
+//    public interface OnArrFilledListener {
+//        void onArrFilled(ArrayList<Long> arr);
+//        void onError(Exception taskException);
+//    }
+//
+//    public void getMaxPoints(String playerID, OnArrFilledListener listener) {
+//        FirestoreController.getGameCodesWithOwner(playerID).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    ArrayList<Long> pointsArr = new ArrayList<>();
+//
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Long points = document.getLong("points");
+//                        pointsArr.add(points);
+//                    }
+//
+//                    listener.onArrFilled(pointsArr);
+//                } else {
+//                    listener.onError(task.getException());
+//                }
+//            }
+//        });
+//    }
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -117,8 +142,7 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document: task.getResult()) {
                                         String gameCodeID = document.getId();
-                                        Integer gameCodePoints = code.getPoints();
-                                        Integer pointsToSubtract = -1*code.getPoints();
+                                        Integer pointsToSubtract = code.getPoints();
                                         // delete the gameCode from the gameCodeList of the players that have scanned it
                                         FirestoreController.getPlayersWithScannedCode(gameCodeID)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -127,33 +151,40 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             for (QueryDocumentSnapshot document: task.getResult()) {
                                                                 document.getReference().update("gameCodeList", FieldValue.arrayRemove(gameCodeID));
-                                                                document.getReference().update("totalPoints", FieldValue.increment(Long.valueOf(pointsToSubtract)));
+                                                                document.getReference().update("totalPoints", FieldValue.increment(Long.valueOf(-1*pointsToSubtract)));
                                                                 document.getReference().update("totalGameCode", FieldValue.increment(Long.valueOf(-1)));
 
                                                                 // see if max points need to be changed
-                                                                Long playerMaxGameCodePoints = (Long) document.get("maxGameCodePoints");
-                                                                if (playerMaxGameCodePoints == Long.valueOf(gameCodePoints)) {
-                                                                    Long newMaxPoints = Long.valueOf(0);
-                                                                    ArrayList<String> gameCodes = (ArrayList<String>) document.get("gameCodeList");
-                                                                    try {
-                                                                        for (String id : gameCodes) {
-                                                                            if (!id.equals(gameCodeID)) {
-                                                                                DocumentSnapshot documentSnapshot =  FirestoreController.getGameCode(id).getResult();
-                                                                                Long gcPoints = (Long) documentSnapshot.get("points");
+                                                                // https://stackoverflow.com/questions/53064375/how-can-i-return-data-and-not-0-value-from-firestore-through-java-method
+//                                                                Long playerMaxGameCodePoints = (Long) document.get("maxGameCodePoints");
 
-                                                                                try {
-                                                                                    if (gcPoints > newMaxPoints) {
-                                                                                        newMaxPoints = gcPoints;
+                                                                Player player = document.toObject(Player.class);
+                                                                String playerID = document.getId();
+                                                                HashMap<String, Object> objectToUpdate = new HashMap<>();
+                                                                Integer maxPoints = player.getMaxGameCodePoints();
+                                                                if (pointsToSubtract.equals(maxPoints)) {
+                                                                    FirestoreController.getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                            Integer max = 0;
+                                                                            if (player.getGameCodeList().size() >0) {
+                                                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                                    String id = document.getId();
+                                                                                    if (!id.equals(gameCodeID) && player.getGameCodeList().contains(id)) {
+                                                                                        GameCode code = document.toObject(GameCode.class);
+                                                                                        Integer points = code.getPoints();
+                                                                                        if (points > max) {
+                                                                                            max = points;
+                                                                                        }
                                                                                     }
-                                                                                } catch (NullPointerException e) {
-                                                                                    continue;
                                                                                 }
                                                                             }
+                                                                            objectToUpdate.put("maxGameCodePoints",max);
+                                                                            db.collection("Players")
+                                                                                    .document(playerID)
+                                                                                    .update(objectToUpdate);
                                                                         }
-                                                                    } catch (NullPointerException e) {
-                                                                        Log.d(TAG, "Error: ", e);
-                                                                        newMaxPoints = Long.valueOf(0);
-                                                                    }
+                                                                    });
                                                                 }
                                                             }
                                                         } else {
