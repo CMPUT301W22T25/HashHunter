@@ -5,6 +5,7 @@ import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainFragment extends Fragment {
     /**
@@ -34,7 +32,6 @@ public class MainFragment extends Fragment {
     private int imageName;
     private String unique_id;
     private String flairText;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Nullable
     @Override
     //Set layout file
@@ -59,45 +56,49 @@ public class MainFragment extends Fragment {
         flairView = getActivity().findViewById(R.id.flair_text);
 
 
-
-        DocumentReference docRef = db.collection("Players").document(unique_id);
         /**
          * Get player class from unique id,
          * and take total points from player and then change flair text and image corresponding to score
          * @param Task
          */
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    //Get points of player
-                    Player player = document.toObject(Player.class);
-                    playerScore = player.getTotalPoints();
-                    //Set image and text based on user points
-                    if (playerScore < 25) {
-                        imageName = R.drawable.ic_baseline_star_border_24;
-                        flairText = "Your forest could use some work! \nKeep on hunting!";
-                    } else if (playerScore >= 25 && playerScore < 50) {
-                        imageName = R.drawable.ic_baseline_star_half_24;
-                        flairText = "Nice forest! \nKeep it growing!";
-                    } else if (playerScore >= 50 && playerScore < 75) {
-                        imageName = R.drawable.ic_baseline_star_rate_24;
-                        flairText = "Wow you are quite the hunter! \nGreat job!";
-                    }else if (playerScore >= 75) {
-                        imageName = R.drawable.ic_baseline_stars_24;
-                        flairText = "Amazing work! \nYou are truly a top hunter!";
-                    }
-                    //Display image and text
-                    scoreImage.setImageResource(imageName);
-                    scoreDisplay.setText(String.valueOf(playerScore));
-                    flairView.setText(flairText);
-                } else {
-                    System.out.println("Get failed with " + task.getException());
+        FirestoreController.getPlayers(unique_id).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                //Get points of player
+                Player player = document.toObject(Player.class);
+                playerScore = player.getTotalPoints();
+                //Set image and text based on user points
+                if (playerScore < 25) {
+                    imageName = R.drawable.ic_baseline_star_border_24;
+                    flairText = "Your forest could use some work! \nKeep on hunting!";
+                } else if (playerScore >= 25 && playerScore < 50) {
+                    imageName = R.drawable.ic_baseline_star_half_24;
+                    flairText = "Nice forest! \nKeep it growing!";
+                } else if (playerScore >= 50 && playerScore < 75) {
+                    imageName = R.drawable.ic_baseline_star_rate_24;
+                    flairText = "Wow you are quite the hunter! \nGreat job!";
+                }else if (playerScore >= 75) {
+                    imageName = R.drawable.ic_baseline_stars_24;
+                    flairText = "Amazing work! \nYou are truly a top hunter!";
                 }
+                //Display image and text
+                scoreImage.setImageResource(imageName);
+                scoreDisplay.setText(String.valueOf(playerScore));
+                flairView.setText(flairText);
+            } else {
+                System.out.println("Get failed with " + task.getException());
             }
+
         });
+        // Reload current fragment
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false);
+        }
+        ft.detach(this).attach(this).commit();
+
 
 
     }
+
 }

@@ -75,31 +75,29 @@ public class MapActivity extends AppCompatActivity {
                      */
                     public void onMapReady(GoogleMap googleMap) {
                         // Get Location of player and put them on the map as a marker
-                        LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
+                        LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
                         MarkerOptions options = new MarkerOptions().position(latlng).title("Player");
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng,16));
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
                         googleMap.addMarker(options);
                         // Add all QR codes with location data to the map
-                        db.collection("GameCode")
-                                .whereNotEqualTo("latitude",null)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    /**
-                                     * Once firebase data of all QR code objects that contain latitude and longitudes is received, place them as markers on the map
-                                     */
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()){
+                        /**
+                         * Once firebase data of all QR code objects that contain latitude and longitudes is received, place them as markers on the map
+                         */
+                        FirestoreController.getGameCodeListWithLocation().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()){
                                             for(QueryDocumentSnapshot document : task.getResult()) {
-                                                LatLng codeLatLng = new LatLng((Double)document.get("latitude"),(Double)document.get("longitude"));
+                                                GameCode QRCode = document.toObject(GameCode.class);
+                                                LatLng codeLatLng = new LatLng(QRCode.getLatitude(),QRCode.getLongitude());
                                                 MarkerOptions options = new MarkerOptions().position(codeLatLng).title(document.get("title").toString());
                                                 googleMap.addMarker(options);
                                             }
                                         } else {
                                             Log.d("Error occurred", String.valueOf(task.getException()));
                                         }
-                                    }
-                                });
+                            }
+                        });
                         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             /**
@@ -107,44 +105,35 @@ public class MapActivity extends AppCompatActivity {
                              * @param Marker
                              * @return boolean
                              */
+                            //Adds on click method for all markers that are not the player marker
                             public boolean onMarkerClick(Marker marker) {
                                 String markerTitle = marker.getTitle();
                                 if (markerTitle != "Player") {
-                                    db.collection("GameCode")
-                                            .whereEqualTo("title",markerTitle)
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                /**
-                                                 * Get QRCode matching title of marker on map and then moves to QRVisualizer activity to show the QRCode data
-                                                 * @param Task<QuerySnapShot>
-                                                 */
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()){
-                                                        for(QueryDocumentSnapshot document : task.getResult()) {
-                                                            GameCode QRCode = document.toObject(GameCode.class);
-                                                            GameCodeController gameCodeController = new GameCodeController(QRCode);
-                                                            Intent intent = new Intent(MapActivity.this,QRVisualizerActivity.class);
-                                                            gameCodeController.setDataBasePointer(document.getId());
-                                                            intent.putExtra("QR ITEM",gameCodeController);
-                                                            intent.putExtra("USERNAME",username);
-                                                            startActivity(intent);
-                                                        }
-                                                    } else {
-                                                        Log.d("Error occurred", String.valueOf(task.getException()));
-                                                    }
+                                    FirestoreController.getGameCodeListWithTitle(markerTitle).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    GameCode QRCode = document.toObject(GameCode.class);
+                                                    GameCodeController gameCodeController = new GameCodeController(QRCode);
+                                                    Intent intent = new Intent(MapActivity.this, QRVisualizerActivity.class);
+                                                    gameCodeController.setDataBasePointer(document.getId());
+                                                    intent.putExtra("QR ITEM", gameCodeController);
+                                                    intent.putExtra("USERNAME", username);
+                                                    startActivity(intent);
                                                 }
-                                            });
-
+                                            } else {
+                                                Log.d("Error occurred", String.valueOf(task.getException()));
+                                            }
+                                        }
+                                    });
                                 }
                                 return false;
                             }
                         });
-
                     }
                 });
             }
         });
-
     }
 }
