@@ -405,7 +405,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
                     Integer points = player.getTotalPoints();
                     Integer codeTotal = player.getTotalGameCode();
                     PointAmount.setText("Total points: " + points.toString());
-                    totalCodes.setText(" Codes scanned: "+codeTotal );
+                    totalCodes.setText("| Codes scanned: "+codeTotal );
 
                 } else {
                     Log.d(TAG, "Current data: null");
