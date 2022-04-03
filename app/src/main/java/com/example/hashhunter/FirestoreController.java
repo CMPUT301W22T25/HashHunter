@@ -13,8 +13,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
+import java.text.CollationElementIterator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FirestoreController {
@@ -215,6 +216,12 @@ public class FirestoreController {
     }
 
 
+    @NonNull
+    public static Task<QuerySnapshot> getPlayersWithScannedCode(String gameCodeID) {
+        Query colRef =  db.collection("Players").whereArrayContains("gameCodeList", gameCodeID);
+        return colRef.get();
+    }
+
     /*
     GameCode collection
      */
@@ -280,6 +287,23 @@ public class FirestoreController {
                 .document(gameCodeId)
                 .update(elementToDelete);
     }
+
+
+    @NonNull
+    public static Task<QuerySnapshot> getGameCodeWithCodeLatLon(String code, Double lat, Double lon) {
+        Query colRef = db.collection("GameCode")
+                .whereEqualTo("code", code)
+                .whereEqualTo("latitude", lat)
+                .whereEqualTo("longitude", lon);
+        return colRef.get();
+    }
+
+    @NonNull
+    public static Task<QuerySnapshot> getGameCodesWithOwner(String uniqueID) {
+        Query colRef = db.collection("GameCode").whereArrayContains("owners", uniqueID);
+        return colRef.get();
+    }
+
 
     /*
     Comment collection

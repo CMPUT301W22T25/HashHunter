@@ -1,6 +1,6 @@
 package com.example.hashhunter;
 
-import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
+import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 
 import android.Manifest;
 import android.content.Context;
@@ -27,8 +27,6 @@ import com.google.android.libraries.maps.SupportMapFragment;
 import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.Marker;
 import com.google.android.libraries.maps.model.MarkerOptions;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -44,13 +42,13 @@ public class MapActivity extends AppCompatActivity {
     private SupportMapFragment supportMapFragment;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private SharedPreferences sharedPreferences;
-    private String unique_id;
     private String username;
+    // Main function that asks for permissions, initializes google map fragment, and adds markers on fragments and clicking on markers to go to qr visualizer activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         // If permissions are not granted, ask for location permissions
@@ -58,20 +56,10 @@ public class MapActivity extends AppCompatActivity {
         ContextCompat.checkSelfPermission(MapActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,},1);
         }
-        unique_id = sharedPreferences.getString(SHARED_PREF_NAME, "IDNOTFOUND");
+        //Get shared preferences info for username
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_USERNAME, Context.MODE_PRIVATE);
+        username = sharedPreferences.getString(PREF_USERNAME, null);
 
-        DocumentReference docRef = db.collection("Players").document(unique_id);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    username= (String) document.get("username");
-                } else {
-                    System.out.println("Get failed with "+ task.getException());
-                }
-            }
-        });
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
             @Override
@@ -117,6 +105,7 @@ public class MapActivity extends AppCompatActivity {
                             /**
                              * On clicking marker on map, move activities to QR visualizer activity
                              * @param Marker
+                             * @return boolean
                              */
                             public boolean onMarkerClick(Marker marker) {
                                 String markerTitle = marker.getTitle();

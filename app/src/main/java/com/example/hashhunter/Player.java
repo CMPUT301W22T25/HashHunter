@@ -1,12 +1,15 @@
 package com.example.hashhunter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * This is a class that keeps track of a player
  */
 
-public class Player {
+public class Player implements Parcelable {
 
     private String username;
     private String playerCode;
@@ -29,6 +32,29 @@ public class Player {
         this.gameCodeList = new ArrayList<>();
     }
 
+
+    protected Player(Parcel in) {
+        username = in.readString();
+        playerCode = in.readString();
+        profileCode = in.readString();
+        gameCodeList = in.createStringArrayList();
+        totalPoints = in.readInt();
+        totalGameCode = in.readInt();
+        maxGameCodePoints = in.readInt();
+        displayTotal = in.readInt();
+    }
+
+    public static final Creator<Player> CREATOR = new Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel in) {
+            return new Player(in);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
 
     /**
      * Gets the players username
@@ -157,8 +183,20 @@ public class Player {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-
-
-
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(username);
+        parcel.writeString(playerCode);
+        parcel.writeString(profileCode);
+        parcel.writeStringList(gameCodeList);
+        parcel.writeInt(totalPoints);
+        parcel.writeInt(totalGameCode);
+        parcel.writeInt(maxGameCodePoints);
+        parcel.writeInt(displayTotal);
+    }
 }
