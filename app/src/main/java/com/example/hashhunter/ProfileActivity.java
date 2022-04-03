@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
@@ -121,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
         sortSpinner = findViewById(R.id.sortSpinner);
-        ArrayAdapter<CharSequence> sortStringAdapter = ArrayAdapter.createFromResource(this, R.array.sortOptions, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> sortStringAdapter = ArrayAdapter.createFromResource(this, R.array.sortOptions, R.layout.spiner_item);
         sortStringAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(sortStringAdapter);
 

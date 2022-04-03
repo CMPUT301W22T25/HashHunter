@@ -121,8 +121,8 @@ public class GameCodeController implements Parcelable {
         this.photos = TheGameCode.getPhotos(); // id of photos objects
         this.owners = TheGameCode.getOwners(); // username
         this.comments = TheGameCode.getComments(); // id of comment object
-        this.latitude = TheGameCode.getLatitude();
-        this.longitude = TheGameCode.getLongitude();
+        this.latitude = TheGameCode.getLatitude(); // longitude
+        this.longitude = TheGameCode.getLongitude(); // latitude
     }
     public ArrayList<String> getPhotos(){
         return this.photos;
