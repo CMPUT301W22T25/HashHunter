@@ -42,6 +42,7 @@ import java.util.List;
 
 /**
  * displays the leaderboard, which is able to sort based of a dropdown menu and display the users rank
+ * It also is able to search for player based on username and on profile code
  */
 public class ExploreActivity extends AppCompatActivity {
 
@@ -124,18 +125,39 @@ public class ExploreActivity extends AppCompatActivity {
         leaderboardRecycler = findViewById(R.id.leaderboard);
         playerList = new PlayerList();
 
+
+
         adapter = setAdapter();
 
         //gets the users username from shared preferences
         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
         name = sharedPreferences.getString(MainActivity.PREF_USERNAME, "NAMENOTFOUND");
 
-        playerList.populate(adapter);
+
+        // get the players from the data base and put it into the player list
+        FirestoreController.getPlayersList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Player player = document.toObject(Player.class);
+                        player.setDisplayTotal(player.getMaxGameCodePoints());
+                        playerList.addPlayerList(player);
+                    }
+                    //update adapter
+                    playerList.sortByQRScore();
+                    adapter.notifyDataSetChanged();
+                    displayMyRank(name, playerList);
 
 
 
 
-
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
 
 
         setupSort(adapter, playerList);
@@ -266,7 +288,7 @@ public class ExploreActivity extends AppCompatActivity {
      * @param playerList
      *      this is the list of all the players
      */
-    private void displayMyRank(String name, PlayerList playerList) {
+    public void displayMyRank(String name, PlayerList playerList) {
 
         int pos = playerList.findPlayerPos(name);
         myPlayer = playerList.getPlayer(pos);
@@ -282,7 +304,6 @@ public class ExploreActivity extends AppCompatActivity {
 
 
     }
-
 
 
 

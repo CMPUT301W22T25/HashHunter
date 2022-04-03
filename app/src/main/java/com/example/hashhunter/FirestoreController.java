@@ -115,6 +115,11 @@ public class FirestoreController {
         CollectionReference collRef = db.collection("Players");
         return collRef.get();
     }
+    //read document from Players collection that matches a username
+    @NonNull
+    public static Task<QuerySnapshot> getPlayersName(String name) {
+        return db.collection("Players").whereEqualTo("username", name).get();
+    }
 
     public static void deletePlayerGameCodeReference(String playerId, String gameCodeId){
         //Delete username from the owners list of gamecodes
