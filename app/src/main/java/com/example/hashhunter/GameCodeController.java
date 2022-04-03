@@ -106,7 +106,11 @@ public class GameCodeController implements Parcelable {
         return this.owners.size();
     }
 
-
+    /**
+     * returns the id of a single comment associated with the gamecode
+     * @param position the index of the id in the array of comments
+     * @return a string (comment id)
+     */
     public String getComment(int position){
         if (comments.size() > position + 1) {
             return  comments.get(position);
@@ -115,12 +119,27 @@ public class GameCodeController implements Parcelable {
             return null;
         }
     }
+
+    /**
+     * gets the gamecode that the controller uses
+     * @return a gamecode object
+     */
     public GameCode getGameCode(){
         return TheGameCode;
     }
+
+    /**
+     * gets the array of strings of the ids of all the players that have scanned the gamecode
+     * @return an array of strings (player unique ids)
+     */
     public ArrayList<String> getOwners(){
         return this.owners;
     }
+
+    /**
+     * adds a comment id to the array of comments associated with the gamecode
+     * @param theComment a string (the id of the comment to be added)
+     */
     public void addComment(Comment theComment) {
 
         //Get the database reference
@@ -136,14 +155,26 @@ public class GameCodeController implements Parcelable {
 
 
     }
+
+    /**
+     * gets an array of strings of ids of all the comments associated with the gamecode
+     * @return an array of strings (comment ids)
+     */
     public ArrayList<String> getComments(){
         return this.comments;
     }
 
+    /**
+     * sets the string dataBasePointer
+     * @param pointer the string that is to be set
+     */
     public void setDataBasePointer(String pointer){
         dataBasePointer = pointer;
     }
 
+    /**
+     * sets the attributes for the controller using the gamecode
+     */
     public void SyncController(){
         this.title = TheGameCode.getTitle(); // title of the code
         this.code = TheGameCode.getCode(); // string representation of the code
@@ -155,24 +186,54 @@ public class GameCodeController implements Parcelable {
         this.latitude = TheGameCode.getLatitude(); // longitude
         this.longitude = TheGameCode.getLongitude(); // latitude
     }
+
+
+    /**
+     * gets the array of strings of the ids of all the photos associated with the gamecode
+     * @return an array of strings (photo ids)
+     */
     public ArrayList<String> getPhotos(){
         return this.photos;
     }
+
+    /**
+     * gets the string dataBasePointer
+     * @return a string
+     */
     public String getDataBasePointer(){
         return this.dataBasePointer;
     }
+
+    /**
+     * used to make the gamecode controller parcelable
+     * @return returns 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * gets the latitude of the gamecode
+     * @return a double
+     */
     public Double getLatitude(){
         return (Double)this.latitude;
     }
+
+    /**
+     * gets the longitude of the gamecode
+     * @return a double
+     */
     public Double getLongitude(){
         return (Double) this.longitude;
     }
 
+    /**
+     * to make the gamecode controller parcelable
+     * @param parcel the parcel that is to be written to
+     * @param i an integer, not used
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(TheGameCode, i);
