@@ -83,6 +83,11 @@ public class FirestoreController {
     /*
     Players collection
      */
+    @NonNull
+    public static DocumentReference getPlayerDoc(String userId){
+        return db.collection("Players").document(userId);
+    }
+
     // read one document from Players collection
     @NonNull
     public static Task<DocumentSnapshot> getPlayers(String userId) {
@@ -108,6 +113,7 @@ public class FirestoreController {
         CollectionReference collRef = db.collection("Players");
         return collRef.get();
     }
+
     public static void deletePlayerGameCodeReference(String playerId, String gameCodeId){
         //Delete username from the owners list of gamecodes
         Map<String, Object> elementToDelete = new HashMap<>();

@@ -135,6 +135,13 @@ public class GameCodeController implements Parcelable {
         return 0;
     }
 
+    public Double getLatitude(){
+        return (Double)this.latitude;
+    }
+    public Double getLongitude(){
+        return (Double) this.longitude;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(TheGameCode, i);

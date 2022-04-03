@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -43,7 +45,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class QRVisualizerActivity extends AppCompatActivity {
     RecyclerView CommentRecycler;
@@ -69,6 +74,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
     GameCodeController myController;
     String playerId;
     Button deleteVisButton;
+    TextView locationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +105,10 @@ public class QRVisualizerActivity extends AppCompatActivity {
         //Close keyboard if user clicks outside the screen
 
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
+        if (myController.getLatitude() != null  && myController.getLongitude() != null) {
+            getLocation(myController.getLatitude(), myController.getLongitude());
+        }
         myConstLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -317,4 +323,24 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
 
     }
+    public void getLocation(double latitude, double longitude ) {
+
+        Geocoder geocoder = new Geocoder(QRVisualizerActivity.this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+        }
+        String cityName = addresses.get(0).getLocality();
+        String countryName = addresses.get(0).getCountryName();
+
+        locationView = findViewById(R.id.gameCodeLocation);
+        locationView.setText(countryName +", " + cityName );
+
+
+
+    }
+
 }
