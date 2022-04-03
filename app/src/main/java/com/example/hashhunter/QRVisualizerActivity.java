@@ -337,7 +337,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
         String countryName = addresses.get(0).getCountryName();
 
         locationView = findViewById(R.id.gameCodeLocation);
-        locationView.setText(countryName +", " + cityName );
+        locationView.setText(cityName +", " + countryName );
 
 
 
