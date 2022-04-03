@@ -70,6 +70,16 @@ public class DashboardActivityTest {
         solo.waitForActivity(DashboardActivity.class);
         solo.assertCurrentActivity("Wrong Activity", ProfileActivity.class);
     }
+    /**
+     * Checks clicking of dashboard buttons and going to each separate activity
+     */
+    @Test
+    public void checkHomeFragmentText() {
+        assert(solo.searchText("Your forest could use some work! \nKeep on hunting!"));
+        assert(solo.searchText("Wow you are quite the hunter! \nGreat job!"));
+        assert(solo.searchText("Nice forest! \nKeep it growing!"));
+        assert(solo.searchText("Amazing work! \nYou are truly a top hunter!"));
+    }
 
 
 

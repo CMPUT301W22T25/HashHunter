@@ -2,6 +2,7 @@ package com.example.hashhunter;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -9,8 +10,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
+import java.text.CollationElementIterator;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -130,12 +136,15 @@ public class FirestoreController {
     /*
     Players collection
      */
-
     /**
      * // read one document from Players collection
      * @param userId
      * @return task can be appended with onCompeleteListener
      */
+    @NonNull
+    public static DocumentReference getPlayerDoc(String userId){
+        return db.collection("Players").document(userId);
+    }
     @NonNull
     public static Task<DocumentSnapshot> getPlayers(String userId) {
         DocumentReference docRef = db.collection("Players").document(userId);
@@ -171,6 +180,118 @@ public class FirestoreController {
     public static Task<QuerySnapshot> getPlayersList() {
         CollectionReference collRef = db.collection("Players");
         return collRef.get();
+    }
+    //read document from Players collection that matches a username
+    @NonNull
+    public static Task<QuerySnapshot> getPlayersName(String name) {
+        return db.collection("Players").whereEqualTo("username", name).get();
+    }
+
+    public static void deletePlayerGameCodeReference(String playerId, String gameCodeId){
+        //Delete username from the owners list of gamecodes
+        Map<String, Object> elementToDelete = new HashMap<>();
+
+        elementToDelete.put("gameCodeList", FieldValue.arrayRemove(gameCodeId));
+        db.collection("Players")
+                .document(playerId)
+                .update(elementToDelete);
+        //Subtract points from the player
+        getGameCode(gameCodeId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                GameCode myCode = doc.toObject(GameCode.class);
+                Integer points = myCode.getPoints();
+                subtractPlayerTotalPoints(playerId, points);
+                subtractGameCodeCount(playerId);
+            }
+        });
+
+
+    }
+
+    public static void subtractGameCodeCount(String playerId){
+
+        getPlayers(playerId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                Player player = task.getResult().toObject(Player.class);
+                HashMap<String , Object> objectToUpdate = new HashMap<>();
+
+                objectToUpdate.put("totalGameCode",player.getTotalGameCode()-1);
+                db.collection("Players")
+                        .document(playerId)
+                        .update(objectToUpdate);
+                }
+        });
+
+    }
+
+    public static void subtractPlayerTotalPoints(String playerId, Integer pointToSubtract){
+        getPlayers(playerId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                Player player = task.getResult().toObject(Player.class);
+                HashMap<String , Object> objectToUpdate = new HashMap<>();
+                Integer previousPoints = player.getTotalPoints();
+                objectToUpdate.put("totalPoints",previousPoints-pointToSubtract);
+                db.collection("Players")
+                        .document(playerId)
+                        .update(objectToUpdate);
+                Integer maxPoints = player.getMaxGameCodePoints();
+                System.out.println(player.getGameCodeList().size());
+                System.out.println("--------------------Max Points-----------------------");
+
+                System.out.println(maxPoints);
+                System.out.println(pointToSubtract);
+                if (pointToSubtract.equals(maxPoints)) {
+                    System.out.println("--------------------Went here Points-----------------------");
+
+                    getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            System.out.println("--------------------Went here Complete-----------------------");
+
+                            Integer max = 0;
+                            if (player.getGameCodeList().size() >0) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String id = document.getId();
+                                    if (player.getGameCodeList().contains(id)) {
+                                        GameCode code = document.toObject(GameCode.class);
+                                        Integer points = code.getPoints();
+                                        if (points > max) {
+                                            max = points;
+                                        }
+
+                                    }
+                                }
+                            }
+                            System.out.println("--------------------Max-----------------------");
+                            System.out.print(max);
+                            System.out.println("--------------------Max-----------------------");
+
+                            objectToUpdate.put("maxGameCodePoints",max);
+                            db.collection("Players")
+                                    .document(playerId)
+                                    .update(objectToUpdate);
+
+                        }
+                    });
+                }
+
+            }
+        });
+
+
+
+    }
+
+
+    @NonNull
+    public static Task<QuerySnapshot> getPlayersWithScannedCode(String gameCodeID) {
+        Query colRef =  db.collection("Players").whereArrayContains("gameCodeList", gameCodeID);
+        return colRef.get();
     }
 
     /*
@@ -262,6 +383,38 @@ public class FirestoreController {
         return db.collection("GameCode").document(gameCodeId).update("photos", FieldValue.arrayUnion(photoId));
     }
 
+    public static Task<Void> updateGameCodeComment(String gameCodeId, String commentId) {
+
+        return db.collection("GameCode").document(gameCodeId).update("comments", FieldValue.arrayUnion(commentId));
+
+    }
+    public void deleteGameCodeUsernameReference(String gameCodeId, String usernameId){
+
+        Map<String, Object> elementToDelete = new HashMap<>();
+
+        elementToDelete.put("owners", FieldValue.arrayRemove(usernameId));
+        db.collection("GameCode")
+                .document(gameCodeId)
+                .update(elementToDelete);
+    }
+
+
+    @NonNull
+    public static Task<QuerySnapshot> getGameCodeWithCodeLatLon(String code, Double lat, Double lon) {
+        Query colRef = db.collection("GameCode")
+                .whereEqualTo("code", code)
+                .whereEqualTo("latitude", lat)
+                .whereEqualTo("longitude", lon);
+        return colRef.get();
+    }
+
+    @NonNull
+    public static Task<QuerySnapshot> getGameCodesWithOwner(String uniqueID) {
+        Query colRef = db.collection("GameCode").whereArrayContains("owners", uniqueID);
+        return colRef.get();
+    }
+
+
     /*
     Comment collection
      */
@@ -284,8 +437,12 @@ public class FirestoreController {
      * @return task can be appended with onCompeleteListener
      */
     @NonNull
-    public static Task<Void> postComment(String commentId, Map<String, Object> newComment) {
-        return db.collection("Comment").document(commentId).set(newComment);
+    public static String postComment(Comment newComment) {
+        DocumentReference theDoc = db.collection("Comment").document();
+        String commentCode = theDoc.getId();
+
+        theDoc.set(newComment);
+        return commentCode;
     }
 
     /**

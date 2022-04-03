@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#5CB8A7"
     android:theme="@style/Theme.AppCompat"
+    android:id="@+id/scan_submit_activity"
     tools:context=".ProfileActivity">
 
 
