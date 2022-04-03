@@ -103,6 +103,42 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                             }
                                         });
 
+                                // delete related comments
+                                FirestoreController.getCommentList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                try {
+                                                    if (document.getString("owner").equals(username)) {
+                                                        document.getReference().delete();
+                                                    }
+                                                } catch (NullPointerException e) {
+                                                    Log.d(TAG, "nullpointer: " + e.toString());
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
+                                // delete related photos
+                                FirestoreController.getPhotoList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document: task.getResult()) {
+                                                try {
+                                                    if (document.getString("owner").equals(username)) {
+                                                        document.getReference().delete();
+                                                    }
+                                                } catch (NullPointerException e) {
+                                                    Log.d(TAG, "nullpointer: " + e.toString());
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
                                 // delete from Players
                                 FirestoreController.deletePlayers(unique_id)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
