@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Activity for deleting gamecodes and players. Has buttons that let the owner of the app (the admin) choose
+ * what they want to do and redirect them to the appropriate activity
+ */
 public class OwnerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
