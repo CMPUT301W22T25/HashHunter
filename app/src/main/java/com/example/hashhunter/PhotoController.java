@@ -23,6 +23,9 @@ public class PhotoController {
     public PhotoController(){
 
     }
+    public PhotoController(Photo myPhoto){
+        this.photo = myPhoto;
+    }
     public PhotoController(String urlString) {
         photo = new Photo(urlString);
     }

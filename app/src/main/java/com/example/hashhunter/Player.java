@@ -1,17 +1,19 @@
 package com.example.hashhunter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * This is a class that keeps track of a player
  */
 
-public class Player {
+public class Player implements Parcelable {
 
     private String username;
-    private String playerCode;
     private String profileCode;
-    private ArrayList<GameCode> gameCodeList;
+    private ArrayList<String> gameCodeList;
     private int totalPoints;
     private int totalGameCode;
     private int maxGameCodePoints;
@@ -30,6 +32,28 @@ public class Player {
     }
 
 
+    protected Player(Parcel in) {
+        username = in.readString();
+        profileCode = in.readString();
+        gameCodeList = in.createStringArrayList();
+        totalPoints = in.readInt();
+        totalGameCode = in.readInt();
+        maxGameCodePoints = in.readInt();
+        displayTotal = in.readInt();
+    }
+
+    public static final Creator<Player> CREATOR = new Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel in) {
+            return new Player(in);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
+
     /**
      * Gets the players username
      * @return
@@ -39,14 +63,6 @@ public class Player {
         return this.username;
     }
 
-    /**
-     * Gets the players player code
-     * @return
-     *      Returns the string representing the players player code
-     */
-    public String getPlayerCode(){
-        return this.playerCode;
-    }
 
     /**
      * Gets the players profile code
@@ -62,7 +78,7 @@ public class Player {
      * @return
      *      Returns the list of GameCodes
      */
-    public ArrayList<GameCode> getGameCodeList() {
+    public ArrayList<String> getGameCodeList() {
         return this.gameCodeList;
     }
 
@@ -98,7 +114,7 @@ public class Player {
      * @param gameCode
      *      this is a game code to add to gameCodeList
      */
-    public void addGameCode(GameCode gameCode) {
+    public void addGameCode(String gameCode) {
         this.gameCodeList.add(gameCode);
     }
 
@@ -107,7 +123,7 @@ public class Player {
      * @param gameCode
      *      this is a game code to remove from gameCodeList
      */
-    public void removeGameCode(GameCode gameCode) {
+    public void removeGameCode(String gameCode) {
         this.gameCodeList.remove(gameCode);
     }
 
@@ -157,8 +173,19 @@ public class Player {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-
-
-
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(username);
+        parcel.writeString(profileCode);
+        parcel.writeStringList(gameCodeList);
+        parcel.writeInt(totalPoints);
+        parcel.writeInt(totalGameCode);
+        parcel.writeInt(maxGameCodePoints);
+        parcel.writeInt(displayTotal);
+    }
 }

@@ -3,6 +3,11 @@ package com.example.hashhunter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 //https://stackoverflow.com/questions/10071502/read-writing-arrays-of-parcelable-objects
 //Use this list to help me implement my parcelable array
@@ -17,16 +22,8 @@ public class GameCodeController implements Parcelable {
     private ArrayList<String> comments; // id of comment object
     private Double latitude;
     private Double longitude;
+    private String dataBasePointer;
     public GameCodeController(){}
-
-    public GameCodeController(String title, String code, Integer points, ArrayList<String> myPhotos,ArrayList<String> owners, ArrayList<String> comments){
-        this.title = title;
-        this.code = code;
-        this.points = points;
-        this.photos = myPhotos;
-        this.owners = owners;
-        this.comments = comments;
-    }
 
     public GameCodeController(GameCode myGameCode) {
         this.TheGameCode = myGameCode;
@@ -54,6 +51,7 @@ public class GameCodeController implements Parcelable {
         } else {
             longitude = in.readDouble();
         }
+        dataBasePointer = in.readString();
     }
 
     public static final Creator<GameCodeController> CREATOR = new Creator<GameCodeController>() {
@@ -75,10 +73,12 @@ public class GameCodeController implements Parcelable {
     public String getTitle() {
         return this.title;
     }
-
+    public int getOwnerAmount(){
+        return this.owners.size();
+    }
     public String getComment(int position){
-        if (TheGameCode.getCommentAmount() > position + 1) {
-            return  TheGameCode.getComment(position);
+        if (comments.size() > position + 1) {
+            return  comments.get(position);
         }
         else{
             return null;
@@ -87,17 +87,59 @@ public class GameCodeController implements Parcelable {
     public GameCode getGameCode(){
         return TheGameCode;
     }
-    public void makeNewComment(String commentCode) {
+    public ArrayList<String> getOwners(){
+        return this.owners;
+    }
+    public void addComment(Comment theComment) {
+
+        //Get the database reference
+
+        FirestoreController dbController = new FirestoreController();
+
+        String commentCode = dbController.postComment(theComment);
+
+        dbController.updateGameCodeComment(dataBasePointer, commentCode);
+
         TheGameCode.addComment(commentCode);
 
+
+
     }
-    public ArrayList<String> getPhotos(){
-        return photos;
+    public ArrayList<String> getComments(){
+        return this.comments;
     }
 
+    public void setDataBasePointer(String pointer){
+        dataBasePointer = pointer;
+    }
+
+    public void SyncController(){
+        this.title = TheGameCode.getTitle(); // title of the code
+        this.code = TheGameCode.getCode(); // string representation of the code
+
+        this.points = TheGameCode.getPoints(); // points of code
+        this.photos = TheGameCode.getPhotos(); // id of photos objects
+        this.owners = TheGameCode.getOwners(); // username
+        this.comments = TheGameCode.getComments(); // id of comment object
+        this.latitude = TheGameCode.getLatitude(); // longitude
+        this.longitude = TheGameCode.getLongitude(); // latitude
+    }
+    public ArrayList<String> getPhotos(){
+        return this.photos;
+    }
+    public String getDataBasePointer(){
+        return this.dataBasePointer;
+    }
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public Double getLatitude(){
+        return (Double)this.latitude;
+    }
+    public Double getLongitude(){
+        return (Double) this.longitude;
     }
 
     @Override
@@ -126,5 +168,7 @@ public class GameCodeController implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeDouble(longitude);
         }
+
+        parcel.writeString(dataBasePointer);
     }
 }

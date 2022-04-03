@@ -1,5 +1,18 @@
 package com.example.hashhunter;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -137,5 +150,10 @@ public class PlayerList {
     public int indexOfPlayer(Player player) {
         return this.playerList.indexOf(player);
     }
+
+
+
+
+
 
 }
