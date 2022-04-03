@@ -52,7 +52,7 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
         GameCodeController myController = qrList.get(position);
         myController.SyncController();
-        holder.treeView.setImageResource(R.drawable.ic_android);
+        holder.treeView.setImageResource(R.drawable.ic_baseline_qr_code_scanner_24);
         System.out.println(myController.getTitle());
         holder.titleView.setText(myController.getTitle());
         holder.pointsView.setText("Points: "+ myController.getPoints().toString());
