@@ -26,9 +26,9 @@ import java.security.NoSuchAlgorithmException;
 public class ScanActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
     //private boolean cameraPerms = false;
-    Integer points;
-    String qrCodeString;
-    byte[] byteHash;
+    private Integer points;
+    private String qrCodeString;
+    private byte[] byteHash;
 
 
 
