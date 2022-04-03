@@ -87,7 +87,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                 // array, remove them
                                 //https://stackoverflow.com/questions/62675759/how-to-remove-an-element-from-an-array-in-multiple-documents-in-firestore
                                 //https://cloud.google.com/firestore/docs/query-data/get-data#javaandroid_4
-                                FirestoreController.getGameCodesWithOwner(username)
+                                FirestoreController.getGameCodesWithOwner(unique_id)
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {

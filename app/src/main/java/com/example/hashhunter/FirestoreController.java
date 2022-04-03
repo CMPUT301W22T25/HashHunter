@@ -108,7 +108,7 @@ public class FirestoreController {
 
     @NonNull
     public static Task<QuerySnapshot> getPlayersWithScannedCode(String gameCodeID) {
-        CollectionReference colRef = (CollectionReference) db.collection("Players").whereArrayContains("gameCodeList", gameCodeID);
+        Query colRef =  db.collection("Players").whereArrayContains("gameCodeList", gameCodeID);
         return colRef.get();
     }
 
@@ -162,7 +162,7 @@ public class FirestoreController {
 
     @NonNull
     public static Task<QuerySnapshot> getGameCodeWithCodeLatLon(String code, Double lat, Double lon) {
-        CollectionReference colRef = (CollectionReference) db.collection("GameCode")
+        Query colRef = db.collection("GameCode")
                 .whereEqualTo("code", code)
                 .whereEqualTo("latitude", lat)
                 .whereEqualTo("longitude", lon);
@@ -170,8 +170,8 @@ public class FirestoreController {
     }
 
     @NonNull
-    public static Task<QuerySnapshot> getGameCodesWithOwner(String username) {
-        CollectionReference colRef = (CollectionReference) db.collection("GameCode").whereArrayContains("owners", username);
+    public static Task<QuerySnapshot> getGameCodesWithOwner(String uniqueID) {
+        Query colRef = db.collection("GameCode").whereArrayContains("owners", uniqueID);
         return colRef.get();
     }
 
