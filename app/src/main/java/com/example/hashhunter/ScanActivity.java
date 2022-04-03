@@ -54,7 +54,9 @@ public class ScanActivity extends AppCompatActivity {
                         // QR code string stored in result.getText()
 
                        // https://stackoverflow.com/questions/4967799/how-to-know-the-calling-activity-in-android
+                        // Do different actions sepending on which activity called the scanner
                         if(getCallingActivity() != null) {
+                            // Scan login code
                             if (getCallingActivity().getClassName().equals(LoginActivity.class.getName())) {
                                 String uname = result.getText().toString();
                                 intent.putExtra(EXTRA_SCANNED_UNAME, uname);
@@ -62,6 +64,7 @@ public class ScanActivity extends AppCompatActivity {
                                 String pointMessage = "The username is " + uname;
                                 Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                                 finish();
+                            // Scan code to delete
                             } else if (getCallingActivity().getClassName().equals(DeleteGameCodeActivity.class.getName())) {
                                 String code = result.getText().toString();
                                 intent.putExtra(EXTRA_SCANNED_UNAME, code);
@@ -69,6 +72,7 @@ public class ScanActivity extends AppCompatActivity {
                                 String pointMessage = "The QR Code is " + code;
                                 Toast.makeText(ScanActivity.this, pointMessage, Toast.LENGTH_LONG).show();
                                 finish();
+                            // Scan code to search player
                             } else if (getCallingActivity().getClassName().equals(ExploreActivity.class.getName())) {
                                 String uname = result.getText().toString();
                                 intent.putExtra(EXTRA_SCANNED_UNAME, uname);
@@ -77,6 +81,7 @@ public class ScanActivity extends AppCompatActivity {
                             }
                         }
 
+                        // Get decoded string and hash, send hash and points to submit activity
                         else {
                             try {
                                 byteHash = GameCodePointsController.getHashedCode(result.getText());
