@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +49,6 @@ public class ExploreActivity extends AppCompatActivity {
     private PlayerList playerList;
     private RecyclerView leaderboardRecycler;
     private LeaderboardAdapter adapter;
-    private String unique_id;
     private SharedPreferences sharedPreferences;
     private Player myPlayer;
     private TextView myRank;
@@ -124,50 +124,50 @@ public class ExploreActivity extends AppCompatActivity {
         leaderboardRecycler = findViewById(R.id.leaderboard);
         playerList = new PlayerList();
 
-
-        // retrieves all the players from database
-        //https://stackoverflow.com/questions/51361951/retrieve-all-documents-from-firestore-as-custom-objects
-        db.collection("Players")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Player player = document.toObject(Player.class);
-                                playerList.addPlayerList(player);
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-
-
-
-
-
-
         adapter = setAdapter();
 
-
+        //gets the users username from shared preferences
         sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-        unique_id = sharedPreferences.getString(MainActivity.PREF_UNIQUE_ID, "IDNOTFOUND");
+        name = sharedPreferences.getString(MainActivity.PREF_USERNAME, "NAMENOTFOUND");
+
+        playerList.populate(adapter);
+
+
+
+
+
+
 
         setupSort(adapter, playerList);
 
 
-        DocumentReference docRef = db.collection("Players").document(unique_id);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        // code for the search bar
+        SearchView usernameSearchView = (SearchView) findViewById(R.id.username_search);
+
+        usernameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-               Player player = documentSnapshot.toObject(Player.class);
-               name = player.getUsername();
+            public boolean onQueryTextSubmit(String query) {
 
+                Intent intent;
+                intent = new Intent(ExploreActivity.this, SearchActivity.class);
+                intent.putExtra("search", query);
 
+                //find the player with the username
+                int pos = playerList.findPlayerPos(query);
+                if (pos != -1) {
+                    myPlayer = playerList.getPlayer(pos);
+                    intent.putExtra("player", myPlayer);
+                }
+
+                startActivity(intent);
+                return false;
             }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+
         });
 
         Button scanButton = findViewById(R.id.scan_profile_button);
@@ -180,6 +180,14 @@ public class ExploreActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * sets up the logic for the drop down menu,
+     * sorts the list and updates the view
+     * @param listAdapter
+     *      the adapter that has to be updated after sorting
+     * @param playerList
+     *      A list of all the players in the database to be displayed
+     */
     private void setupSort(LeaderboardAdapter listAdapter, PlayerList playerList) {
         Spinner spinner = (Spinner) findViewById(R.id.dropdown_menu);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -223,6 +231,7 @@ public class ExploreActivity extends AppCompatActivity {
                         displayMyRank(name, playerList);
                     }
                 }
+                //update view
                 listAdapter.notifyDataSetChanged();
 
             }
@@ -235,8 +244,11 @@ public class ExploreActivity extends AppCompatActivity {
     }
 
 
-
-
+    /**
+     * sets an adapter
+     * @return
+     *      the adapter that has been set
+     */
     private LeaderboardAdapter setAdapter() {
         LeaderboardAdapter adapter = new LeaderboardAdapter(playerList.getPlayerList());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
