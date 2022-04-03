@@ -98,7 +98,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                         Log.d(TAG, document.getId() + " => " + document.getData());
-                                                        document.getReference().update("owners", FieldValue.arrayRemove(username));
+                                                        document.getReference().update("owners", FieldValue.arrayRemove(unique_id));
                                                     }
 
                                                 } else {
