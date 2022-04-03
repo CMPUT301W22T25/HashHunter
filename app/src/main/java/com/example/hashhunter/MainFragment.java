@@ -75,16 +75,16 @@ public class MainFragment extends Fragment {
                             playerScore = player.getTotalPoints();
                             //Set image and text based on user points
                             if (playerScore < 25) {
-                                imageName = R.drawable.ic_baseline_star_border_24;
+                                imageName = R.drawable.stage1;
                                 flairText = "Your forest could use some work! \nKeep on hunting!";
                             } else if (playerScore >= 25 && playerScore < 50) {
-                                imageName = R.drawable.ic_baseline_star_half_24;
+                                imageName = R.drawable.stage2;
                                 flairText = "Nice forest! \nKeep it growing!";
                             } else if (playerScore >= 50 && playerScore < 75) {
-                                imageName = R.drawable.ic_baseline_star_rate_24;
+                                imageName = R.drawable.stage3;
                                 flairText = "Wow you are quite the hunter! \nGreat job!";
                             }else if (playerScore >= 75) {
-                                imageName = R.drawable.ic_baseline_stars_24;
+                                imageName = R.drawable.stage4;
                                 flairText = "Amazing work! \nYou are truly a top hunter!";
                             }
                             //Display image and text
