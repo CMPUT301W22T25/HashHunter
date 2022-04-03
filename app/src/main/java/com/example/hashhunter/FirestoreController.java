@@ -539,7 +539,7 @@ public class FirestoreController {
      * @return task can be appended with onCompeleteListener
      */
     @NonNull
-    public static Task<Void> postPhoto(String photoId, Map<String, Object> newPhoto) {
+    public static Task<Void> postPhoto(String photoId, Photo newPhoto) {
         return db.collection("Photo").document(photoId).set(newPhoto);
     }
 
