@@ -32,40 +32,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Activity for deleting a game code as an Owner of the app (referred to as Admin from now on).
+ * Can only be accessed by an admin. After scanning  qr code, all the codes in the database with the
+ * same string represented by the code will be displayed in a list. Then one can click on the list
+ * to delete a game code from the database.
+ */
 public class DeleteGameCodeActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.DeleteGameCodeActivity";
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    ListView gameCodeList;
-    ArrayAdapter<GameCode> gameCodeAdapter;
-    ArrayList<GameCode> gameCodeDataList = new ArrayList<GameCode>();
-    Integer selectedGameCodeIndex = -1;
-
-//    public interface OnArrFilledListener {
-//        void onArrFilled(ArrayList<Long> arr);
-//        void onError(Exception taskException);
-//    }
-//
-//    public void getMaxPoints(String playerID, OnArrFilledListener listener) {
-//        FirestoreController.getGameCodesWithOwner(playerID).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    ArrayList<Long> pointsArr = new ArrayList<>();
-//
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        Long points = document.getLong("points");
-//                        pointsArr.add(points);
-//                    }
-//
-//                    listener.onArrFilled(pointsArr);
-//                } else {
-//                    listener.onError(task.getException());
-//                }
-//            }
-//        });
-//    }
+    ListView gameCodeList; // A list view of the game codes that match the scanned qr code
+    ArrayAdapter<GameCode> gameCodeAdapter; // array adapter for displaying the gamecodes in the list view
+    ArrayList<GameCode> gameCodeDataList = new ArrayList<GameCode>(); // for storing the gamecode objects
+    Integer selectedGameCodeIndex = -1; // for determining which gamecode was clicked on
 
     // this handles the result from the scan activity
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -79,7 +58,7 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
 
                         String scannedCode = intent.getStringExtra(ScanActivity.EXTRA_SCANNED_UNAME);
 
-                        //check which gamecodes have the same title
+                        //check which gamecodes have the same code
                         //https://stackoverflow.com/questions/62675759/how-to-remove-an-element-from-an-array-in-multiple-documents-in-firestore
                         //https://cloud.google.com/firestore/docs/query-data/get-data#javaandroid_4
                         FirestoreController.getGameCodeListWithCode(scannedCode)
@@ -93,7 +72,6 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                                                 GameCode code = document.toObject(GameCode.class);
                                                 gameCodeDataList.add(code);
                                             }
-
                                             gameCodeAdapter.notifyDataSetChanged();
                                         } else {
                                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -107,6 +85,7 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                 }
             });
 
+    // this handles the camera permissions before launching the scan activity
     private ActivityResultLauncher<String> requestCameraLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -121,6 +100,7 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_game_code);
+
         gameCodeList = findViewById(R.id.game_code_list_view);
         gameCodeAdapter = new GameCodeList(this, gameCodeDataList);
 
@@ -134,15 +114,18 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedGameCodeIndex = i;
-                GameCode code = gameCodeDataList.get(i);
+                GameCode code = gameCodeDataList.get(i); // the gamecode that is to be deleted
+
+                // getting the gamecode from the database
                 FirestoreController.getGameCodeWithCodeLatLon(code.getCode(), code.getLatitude(), code.getLongitude())
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document: task.getResult()) {
-                                        String gameCodeID = document.getId();
-                                        Integer pointsToSubtract = code.getPoints();
+                                        String gameCodeID = document.getId(); // this is the id used to store the gamecode
+                                        Integer pointsToSubtract = code.getPoints(); // these are the points the gamecode is worth
+
                                         // delete the gameCode from the gameCodeList of the players that have scanned it
                                         FirestoreController.getPlayersWithScannedCode(gameCodeID)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -150,18 +133,23 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                         if (task.isSuccessful()) {
                                                             for (QueryDocumentSnapshot document: task.getResult()) {
+                                                                // remove the gamecode from the list of codes they have scanned
                                                                 document.getReference().update("gameCodeList", FieldValue.arrayRemove(gameCodeID));
+
+                                                                // subtract the gamecode points from the total points the player has
                                                                 document.getReference().update("totalPoints", FieldValue.increment(Long.valueOf(-1*pointsToSubtract)));
+
+                                                                // update the total number of gamecodes that the player has
                                                                 document.getReference().update("totalGameCode", FieldValue.increment(Long.valueOf(-1)));
 
                                                                 // see if max points need to be changed
-                                                                // https://stackoverflow.com/questions/53064375/how-can-i-return-data-and-not-0-value-from-firestore-through-java-method
-//                                                                Long playerMaxGameCodePoints = (Long) document.get("maxGameCodePoints");
 
-                                                                Player player = document.toObject(Player.class);
-                                                                String playerID = document.getId();
+                                                                Player player = document.toObject(Player.class); // the player object stored by this document
+                                                                String playerID = document.getId(); // the unique id of the player
                                                                 HashMap<String, Object> objectToUpdate = new HashMap<>();
                                                                 Integer maxPoints = player.getMaxGameCodePoints();
+
+                                                                // if the max points are the same as the gamecode points, we will update that
                                                                 if (pointsToSubtract.equals(maxPoints)) {
                                                                     FirestoreController.getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                                         @Override
@@ -180,9 +168,17 @@ public class DeleteGameCodeActivity extends AppCompatActivity {
                                                                                 }
                                                                             }
                                                                             objectToUpdate.put("maxGameCodePoints",max);
-                                                                            db.collection("Players")
-                                                                                    .document(playerID)
-                                                                                    .update(objectToUpdate);
+                                                                            FirestoreController.getPlayers(playerID)
+                                                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                            DocumentSnapshot document = task.getResult();
+                                                                                            document.getReference().update(objectToUpdate);
+                                                                                        }
+                                                                                    });
+                                                                            // use this if the above breaks
+                                                                            // db.collection("Players").document(playerID).update(objectToUpdate)
+
                                                                         }
                                                                     });
                                                                 }
