@@ -22,13 +22,23 @@ public class GameCode implements Parcelable {
     private Double latitude;
     private Double longitude;
 
+
     /**
-     * Constructors
+     * an empty constructor, to be used with firebase
      */
     public GameCode(){
         //For firebase constructor
     }
+
     // without location and photos
+
+    /**
+     * used to construct the gamecode without providing a location or photos
+     * @param title the title of the gamecode
+     * @param code the string representation of the gamecode
+     * @param points the points that the gamecode is worth
+     * @param owner the unique id of the player who scanned the code
+     */
     public GameCode(String title, String code, Integer points, String owner) {
         this.title = title;
         this.code = code;
@@ -39,6 +49,15 @@ public class GameCode implements Parcelable {
     }
 
     // with photos, without location
+
+    /**
+     * used to construct the gamecode without providing a location
+     * @param title the title of the gamecode
+     * @param code the string representation of the gamecode
+     * @param points the points that the gamecode is worth
+     * @param photo the id of the photo associated with the gamecode
+     * @param owner the unique id of the player who scanned the code
+     */
     public GameCode(String title, String code, Integer points, String photo, String owner) {
         this.title = title;
         this.code = code;
@@ -49,6 +68,16 @@ public class GameCode implements Parcelable {
     }
 
     // with location, without photos
+
+    /**
+     * used to construct the gamecode without providing photos
+     * @param title the title of the gamecode
+     * @param code the string representation of the gamecode
+     * @param points the points that the gamecode is worth
+     * @param owner the unique id of the player who scanned the code
+     * @param latitude the latitude of the gamecode
+     * @param longitude the longitude of the gamecode
+     */
     public GameCode(String title, String code, Integer points, String owner, Double latitude, Double longitude) {
         this.title = title;
         this.code = code;
@@ -61,6 +90,17 @@ public class GameCode implements Parcelable {
     }
 
     // with location and photos
+
+    /**
+     * used to construct the gamecode with both location and photos
+     * @param title the title of the gamecode
+     * @param code  the string representation of the gamecode
+     * @param points the points that the gamecode is worth
+     * @param photo the id of the photo associated with the gamecode
+     * @param owner the unique id of the player who scanned the code
+     * @param latitude the latitude of the gamecode
+     * @param longitude the longitude of the gamecode
+     */
     public GameCode(String title, String code, Integer points, String photo, String owner, Double latitude, Double longitude) {
         this.title = title;
         this.code = code;
@@ -72,6 +112,10 @@ public class GameCode implements Parcelable {
         this.longitude = longitude;
     }
 
+    /**
+     * Used to make the gamecode parcelable
+     * @param in the parcel that is to be read
+     */
     protected GameCode(Parcel in) {
         title = in.readString();
         code = in.readString();
@@ -107,82 +151,159 @@ public class GameCode implements Parcelable {
         }
     };
 
-    /**
-     * Getters and setters
-     */
 
+    /**
+     * gets the title of the gamecode
+     * @return the title of the gamecode
+     */
     public String getTitle(){ return title; }
 
+    /**
+     * sets the title of the gamecode to the given title
+     * @param title the title that is to be set
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * gets the string representation of the gamecode (string representation of the qr code that was scanned)
+     * @return the string representation of the gamecode
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * sets the code for the gamecode to the given code
+     * @param code string representation of the gamecode that is to be set
+     */
     public void setCode(String code) {
         this.code = code;
     }
 
+    /**
+     * gets the points for the gamecode
+     * @return the points that the gamecode is worth
+     */
     public Integer getPoints() {
         return points;
     }
 
+    /**
+     * sets the points for the gamecode
+     * @param points the points that are to be set
+     */
     public void setPoints(Integer points) {
         this.points = points;
     }
 
+    /**
+     * gets the array of strings of the ids of all the photos associated with the gamecode
+     * @return an array of strings (photo ids)
+     */
     public ArrayList<String> getPhotos() {
         return photos;
     }
 
+    /**
+     * sets the array of photo ids associated to the gamecode
+     * @param photos an array of strings (photo ids)
+     */
     public void setPhotos(ArrayList<String> photos) {
         this.photos = photos;
     }
 
+    /**
+     * gets the array of strings of the ids of all the players that have scanned the gamecode
+     * @return an array of strings (player unique ids)
+     */
     public ArrayList<String> getOwners() {
         return owners;
     }
 
+    /**
+     * sets the array owners to a new array
+     * @param owners an array of strings (unique ids of the players that have scanned the code)
+     */
     public void setOwners(ArrayList<String> owners) {
         this.owners = owners;
     }
 
+    /**
+     * gets an array of strings of ids of all the comments associated with the gamecode
+     * @return an array of strings (comment ids)
+     */
     public ArrayList<String> getComments() {
         return comments;
     }
 
+    /**
+     * sets the array comments to a new array
+     * @param comments an array of strings (comment ids)
+     */
     public void setComments(ArrayList<String> comments) {
         this.comments = comments;
     }
 
+    /**
+     * returns the number of comments associated with the gamecode
+     * @return an integer
+     */
     public int getCommentAmount() {
         return comments.size();
     }
 
+    /**
+     * returns the id of a single comment associated with the gamecode
+     * @param position the index of the id in the array of comments
+     * @return a string (comment id)
+     */
     public String getComment(int position){
         return comments.get(position);
     }
 
+    /**
+     * adds a comment id to the array of comments associated with the gamecode
+     * @param commentId a string (the id of the comment to be added)
+     */
     public void addComment(String commentId) {comments.add(commentId);}
 
+    /**
+     * gets the latitude of the gamecode
+     * @return a double
+     */
     public Double getLatitude() {
         return latitude;
     }
 
+    /**
+     * sets the latitude of the gamecode
+     * @param latitude a double (the latitude that is to be set)
+     */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     * gets the longitude of the gamecode
+     * @return a double
+     */
     public Double getLongitude() {
         return longitude;
     }
 
+    /**
+     * sets the longitude of the gamecode
+     * @param longitude a double (the longitude that is to be set)
+     */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
+    /**
+     * prints all the attributes of the gamecode
+     */
     public void printAttributes(){
         System.out.println("Title: ");
         System.out.println(title); // title of the code
@@ -203,11 +324,20 @@ public class GameCode implements Parcelable {
         System.out.println(longitude);
     }
 
+    /**
+     * for making the gamecode parcelable
+     * @return returns 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * to make the gamecode parcelable
+     * @param parcel the parcel that is to be written to
+     * @param i an integer, not used
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(title);
