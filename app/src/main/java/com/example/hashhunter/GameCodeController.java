@@ -11,6 +11,10 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 //https://stackoverflow.com/questions/10071502/read-writing-arrays-of-parcelable-objects
 //Use this list to help me implement my parcelable array
+
+/**
+ * a controller for the gamecode class
+ */
 public class GameCodeController implements Parcelable {
     private GameCode TheGameCode;
     private String title; // title of the code
@@ -23,12 +27,24 @@ public class GameCodeController implements Parcelable {
     private Double latitude;
     private Double longitude;
     private String dataBasePointer;
+
+    /**
+     * an empty constructor, to be used with firebase
+     */
     public GameCodeController(){}
 
+    /**
+     * constructor that uses a gamecode object to create the controller
+     * @param myGameCode the gamecode object
+     */
     public GameCodeController(GameCode myGameCode) {
         this.TheGameCode = myGameCode;
     }
 
+    /**
+     * for making the gamecodecontroller parcelable
+     * @param in the parcel that is to be read from
+     */
     protected GameCodeController(Parcel in) {
         TheGameCode = in.readParcelable(GameCode.class.getClassLoader());
         title = in.readString();
@@ -66,16 +82,31 @@ public class GameCodeController implements Parcelable {
         }
     };
 
+    /**
+     * returns the points that the gamecode is worth
+     * @return points
+     */
     public Integer getPoints() {
         return this.points;
     }
 
+    /**
+     * gets the title of the gamecode
+     * @return the title of the gamecode
+     */
     public String getTitle() {
         return this.title;
     }
+
+    /**
+     * gets the number of owners of the gamecode
+     * @return number of owners
+     */
     public int getOwnerAmount(){
         return this.owners.size();
     }
+
+
     public String getComment(int position){
         if (comments.size() > position + 1) {
             return  comments.get(position);
