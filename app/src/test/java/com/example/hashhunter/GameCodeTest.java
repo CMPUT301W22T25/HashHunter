@@ -8,6 +8,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class GameCodeTest {
+    /**
+     * Creates a mock gamecode for testing purposes
+     * @return
+     */
     public GameCode mockGameCode() {
         String title = "gcTitle";
         String code = "gcCode";
@@ -21,6 +25,9 @@ public class GameCodeTest {
         return gc;
     }
 
+    /**
+     * tests the get title method
+     */
     @Test
     public void testGetTitle() {
         GameCode gc = mockGameCode();
@@ -28,6 +35,9 @@ public class GameCodeTest {
         assertEquals("gcTitle", title);
     }
 
+    /**
+     * tests the set title method
+     */
     @Test
     public void testSetTitle() {
         GameCode gc = mockGameCode();
@@ -38,6 +48,9 @@ public class GameCodeTest {
         assertEquals(title, gc.getTitle());
     }
 
+    /**
+     * tests the get code method
+     */
     @Test
     public void testGetCode() {
         GameCode gc = mockGameCode();
@@ -45,6 +58,9 @@ public class GameCodeTest {
         assertEquals("gcCode", code);
     }
 
+    /**
+     * tests the set code method
+     */
     @Test
     public void testSetCode() {
         GameCode gc = mockGameCode();
@@ -55,6 +71,9 @@ public class GameCodeTest {
         assertEquals(code, gc.getCode());
     }
 
+    /**
+     * tests the get points method
+     */
     @Test
     public void testGetPoints() {
         GameCode gc = mockGameCode();
@@ -62,6 +81,9 @@ public class GameCodeTest {
         assertEquals(Integer.valueOf(10), p);
     }
 
+    /**
+     * tests the set points method
+     */
     @Test
     public void testSetPoints() {
         GameCode gc = mockGameCode();
@@ -72,6 +94,9 @@ public class GameCodeTest {
         assertEquals(p, gc.getPoints());
     }
 
+    /**
+     * tests the get photos method
+     */
     @Test
     public void testGetPhotos() {
         GameCode gc = mockGameCode();
@@ -80,6 +105,9 @@ public class GameCodeTest {
         assertTrue(photos.contains("supposedToBePhotoID"));
     }
 
+    /**
+     * tests the set photos method
+     */
     @Test
     public void testSetPhotos() {
         GameCode gc = mockGameCode();
@@ -91,6 +119,9 @@ public class GameCodeTest {
         assertEquals(2, gc.getPhotos().size());
     }
 
+    /**
+     * tests the get owners method
+     */
     @Test
     public void testGetOwners() {
         GameCode gc = mockGameCode();
@@ -99,6 +130,9 @@ public class GameCodeTest {
         assertTrue(owners.contains("player1"));
     }
 
+    /**
+     * tests the set owners method
+     */
     @Test
     public void testSetOwners() {
         GameCode gc = mockGameCode();
@@ -110,6 +144,9 @@ public class GameCodeTest {
         assertEquals(2, gc.getOwners().size());
     }
 
+    /**
+     * tests the get comments method
+     */
     @Test
     public void testGetComments() {
         GameCode gc = mockGameCode();
@@ -117,6 +154,9 @@ public class GameCodeTest {
         assertEquals(0, comments.size());
     }
 
+    /**
+     * tests the set comments method
+     */
     @Test
     public void testSetComments() {
         GameCode gc = mockGameCode();
@@ -127,6 +167,9 @@ public class GameCodeTest {
         assertEquals(1, gc.getComments().size());
     }
 
+    /**
+     * tests the get comment amount method
+     */
     @Test
     public void testGetCommentAmount() {
         GameCode gc = mockGameCode();
@@ -134,6 +177,9 @@ public class GameCodeTest {
         assertEquals(Integer.valueOf(0), commentAmount);
     }
 
+    /**
+     * tests the add comment method
+     */
     @Test
     public void testAddComment() {
         GameCode gc = mockGameCode();
@@ -143,6 +189,9 @@ public class GameCodeTest {
         assertTrue(gc.getComments().contains("commentID"));
     }
 
+    /**
+     * tests the get comment method
+     */
     @Test
     public void testGetComment() {
         GameCode gc = mockGameCode();
@@ -154,6 +203,9 @@ public class GameCodeTest {
         assertEquals("commentID", comment);
     }
 
+    /**
+     * tests the get latitude method
+     */
     @Test
     public void testGetLatitude() {
         GameCode gc = mockGameCode();
@@ -161,6 +213,9 @@ public class GameCodeTest {
         assertEquals(Double.valueOf(-35), lat);
     }
 
+    /**
+     * tests the set latitude method
+     */
     @Test
     public void testSetLatitude() {
         GameCode gc = mockGameCode();
@@ -171,6 +226,9 @@ public class GameCodeTest {
         assertEquals(Double.valueOf(50), gc.getLatitude());
     }
 
+    /**
+     * tests the get longitude method
+     */
     @Test
     public void testGetLongitude() {
         GameCode gc = mockGameCode();
@@ -178,6 +236,9 @@ public class GameCodeTest {
         assertEquals(Double.valueOf(55), lon);
     }
 
+    /**
+     * tests the set longitude method
+     */
     @Test
     public void testSetLongitude() {
         GameCode gc = mockGameCode();
