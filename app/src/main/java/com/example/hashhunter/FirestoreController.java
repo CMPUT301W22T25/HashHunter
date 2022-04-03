@@ -137,14 +137,20 @@ public class FirestoreController {
     Players collection
      */
     /**
-     * // read one document from Players collection
+     * read one document from Players collection
      * @param userId
-     * @return task can be appended with onCompeleteListener
+     * @return Document reference
      */
     @NonNull
     public static DocumentReference getPlayerDoc(String userId){
         return db.collection("Players").document(userId);
     }
+
+    /**
+     * read one document from Players collection
+     * @param userId
+     * @return task can be appended with onCompeleteListener
+     */
     @NonNull
     public static Task<DocumentSnapshot> getPlayers(String userId) {
         DocumentReference docRef = db.collection("Players").document(userId);
@@ -152,7 +158,7 @@ public class FirestoreController {
     }
 
     /**
-     *  // create a new document in Players collection
+     *  create a new document in Players collection
      * @param userId
      * @param player
      * @return task can be appended with onCompeleteListener
@@ -181,12 +187,22 @@ public class FirestoreController {
         CollectionReference collRef = db.collection("Players");
         return collRef.get();
     }
-    //read document from Players collection that matches a username
+
+    /**
+     * read document from Players collection that matches a username
+     * @param name
+     * @return task can be appended with onCompeleteListener
+     */
     @NonNull
     public static Task<QuerySnapshot> getPlayersName(String name) {
         return db.collection("Players").whereEqualTo("username", name).get();
     }
 
+    /**
+     * delete player associated with GameCode
+     * @param playerId
+     * @param gameCodeId
+     */
     public static void deletePlayerGameCodeReference(String playerId, String gameCodeId){
         //Delete username from the owners list of gamecodes
         Map<String, Object> elementToDelete = new HashMap<>();
@@ -210,6 +226,10 @@ public class FirestoreController {
 
     }
 
+    /**
+     * subtract game code count from a player
+     * @param playerId
+     */
     public static void subtractGameCodeCount(String playerId){
 
         getPlayers(playerId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -227,6 +247,11 @@ public class FirestoreController {
 
     }
 
+    /**
+     * subtract player total points
+     * @param playerId
+     * @param pointToSubtract
+     */
     public static void subtractPlayerTotalPoints(String playerId, Integer pointToSubtract){
         getPlayers(playerId).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -287,7 +312,11 @@ public class FirestoreController {
 
     }
 
-
+    /**
+     * get players with a certain scanned code
+     * @param gameCodeID
+     * @return
+     */
     @NonNull
     public static Task<QuerySnapshot> getPlayersWithScannedCode(String gameCodeID) {
         Query colRef =  db.collection("Players").whereArrayContains("gameCodeList", gameCodeID);
@@ -383,11 +412,23 @@ public class FirestoreController {
         return db.collection("GameCode").document(gameCodeId).update("photos", FieldValue.arrayUnion(photoId));
     }
 
+    /**
+     * update game code comments
+     * @param gameCodeId
+     * @param commentId
+     * @return
+     */
     public static Task<Void> updateGameCodeComment(String gameCodeId, String commentId) {
 
         return db.collection("GameCode").document(gameCodeId).update("comments", FieldValue.arrayUnion(commentId));
 
     }
+
+    /**
+     * delete username reference in game code
+     * @param gameCodeId
+     * @param usernameId
+     */
     public void deleteGameCodeUsernameReference(String gameCodeId, String usernameId){
 
         Map<String, Object> elementToDelete = new HashMap<>();
@@ -398,7 +439,13 @@ public class FirestoreController {
                 .update(elementToDelete);
     }
 
-
+    /**
+     * get game code with certain location
+     * @param code
+     * @param lat
+     * @param lon
+     * @return
+     */
     @NonNull
     public static Task<QuerySnapshot> getGameCodeWithCodeLatLon(String code, Double lat, Double lon) {
         Query colRef = db.collection("GameCode")
@@ -408,6 +455,11 @@ public class FirestoreController {
         return colRef.get();
     }
 
+    /**
+     * get GameCode documents with certain owner
+     * @param uniqueID
+     * @return
+     */
     @NonNull
     public static Task<QuerySnapshot> getGameCodesWithOwner(String uniqueID) {
         Query colRef = db.collection("GameCode").whereArrayContains("owners", uniqueID);
@@ -432,7 +484,7 @@ public class FirestoreController {
 
     /**
      * create a new document in Comment collection
-     * @param commentId
+     * @param newComment
      * @param newComment
      * @return task can be appended with onCompeleteListener
      */
