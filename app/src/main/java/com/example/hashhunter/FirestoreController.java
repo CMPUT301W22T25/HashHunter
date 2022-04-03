@@ -187,7 +187,7 @@ public class FirestoreController {
     }
     // create a new document in Photo collection
     @NonNull
-    public static Task<Void> postPhoto(String photoId, Map<String, Object> newPhoto) {
+    public static Task<Void> postPhoto(String photoId, Photo newPhoto) {
         return db.collection("Photo").document(photoId).set(newPhoto);
     }
     // delete a document in Photo collection
