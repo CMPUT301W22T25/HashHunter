@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.CollationElementIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FirestoreController {
