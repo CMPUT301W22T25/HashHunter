@@ -27,7 +27,6 @@ import java.util.Map;
  */
 public class SearchActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String name;
     private TextView searchText;
     private TextView username;
