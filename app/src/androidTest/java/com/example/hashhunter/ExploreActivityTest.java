@@ -66,6 +66,19 @@ public class ExploreActivityTest {
         solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
     }
 
+    /**
+     * Checks if scanning profile code takes you to ProfileActivity. Need camera and code to scan to test.
+     */
+    @Test
+    public void checkProfileQR(){
+        solo.assertCurrentActivity("Wrong Activity", ExploreActivity.class);
+        solo.clickOnView(solo.getView(R.id.scan_profile_button)); //Select Scan by QR Button
+        solo.waitForActivity(ScanActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
+        solo.waitForActivity(ProfileActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", ProfileActivity.class);
+    }
+
 
 
 }

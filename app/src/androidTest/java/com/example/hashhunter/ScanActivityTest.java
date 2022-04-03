@@ -10,12 +10,13 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * Test class for ScanSubmitActivity. All the UI tests are written here. Robotium test framework is
+ * Test class for ScanActivity. All the UI tests are written here. Robotium test framework is
  used
  */
 public class ScanActivityTest {
 
     private Solo solo;
+
 
     @Rule
     public ActivityTestRule<ScanActivity> rule =
@@ -41,4 +42,5 @@ public class ScanActivityTest {
         solo.waitForActivity(ScanSubmitActivity.class);
         solo.assertCurrentActivity("Wrong Activity", ScanSubmitActivity.class);
     }
+
 }
