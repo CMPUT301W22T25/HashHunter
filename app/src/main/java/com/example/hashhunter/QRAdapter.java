@@ -15,6 +15,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     private ArrayList<GameCodeController> qrList;
@@ -102,6 +103,18 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     public interface OnQRListener{
         void onQRClick(int position);
     }
+    public void sortAscending(){
+
+        Collections.sort(qrList, new CustomComparator());
+
+
+    }
+    public void sortDescending(){
+        Collections.sort(qrList, new CustomComparator());
+        Collections.reverse(qrList);
+
+    }
+
 
 
 }
