@@ -35,5 +35,25 @@ public class OwnerActivityTest {
         Activity activity = rule.getActivity();
     }
 
+    /**
+     * Checks if the delete player button works in the owner activity
+     */
+    @Test
+    public void checkDeletePlayerButton() {
+        solo.assertCurrentActivity("Wrong Activity", OwnerActivity.class);
+        solo.clickOnButton("Delete Player");
+        solo.assertCurrentActivity("Wrong Activity", DeletePlayerActivity.class);
+    }
+
+    /**
+     * Checks if the delete code button works in the owner activity
+     */
+    @Test
+    public void checkDeleteCodeButton() {
+        solo.assertCurrentActivity("Wrong Activity", OwnerActivity.class);
+        solo.clickOnButton("Delete Code");
+        solo.assertCurrentActivity("Wrong Activity", DeleteGameCodeActivity.class);
+    }
+
 
 }
