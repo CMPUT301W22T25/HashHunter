@@ -59,7 +59,7 @@ public class MainFragment extends Fragment {
         /**
          * Get player class from unique id,
          * and take total points from player and then change flair text and image corresponding to score
-         * @param Task
+         *
          */
         FirestoreController.getPlayerDoc(unique_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
