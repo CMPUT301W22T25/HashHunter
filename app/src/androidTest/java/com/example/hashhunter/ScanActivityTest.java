@@ -1,7 +1,5 @@
 package com.example.hashhunter;
 
-import static org.junit.Assert.assertTrue;
-
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -15,13 +13,13 @@ import org.junit.Test;
  * Test class for ScanSubmitActivity. All the UI tests are written here. Robotium test framework is
  used
  */
-public class ScanSubmitActivityTest {
+public class ScanActivityTest {
 
     private Solo solo;
 
     @Rule
-    public ActivityTestRule<ScanSubmitActivity> rule =
-            new ActivityTestRule<>(ScanSubmitActivity.class, true, true);
+    public ActivityTestRule<ScanActivity> rule =
+            new ActivityTestRule<>(ScanActivity.class, true, true);
 
     /**
      * Runs before all tests and creates solo instance.
@@ -34,12 +32,13 @@ public class ScanSubmitActivityTest {
     }
 
     /**
-     * Checks if current location is given. Needs location permissions.
+     * Checks if continue takes you to ScanSubmitActivity. Need camera and code to scan to test.
      */
     @Test
-    public void checkAddLocation(){
+    public void checkSubmit(){
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
+        solo.clickOnView(solo.getView(R.id.continue_button)); //Select Continue Button
+        solo.waitForActivity(ScanSubmitActivity.class);
         solo.assertCurrentActivity("Wrong Activity", ScanSubmitActivity.class);
-        solo.clickOnView(solo.getView(R.id.add_location_button)); //Select Add Location Button
-        assertTrue(solo.waitForText("City", 1, 10000));
     }
 }
