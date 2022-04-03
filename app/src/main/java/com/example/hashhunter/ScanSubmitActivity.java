@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -86,6 +88,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private String uniqueID; // id of user accessing app
     private String username; // username of user accessing app
 
+    ConstraintLayout myLayout;
     private boolean gamecodeExists = false; // flag to see if gamecode in firestore
 
     private LocationManager locationManager;
@@ -135,8 +138,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
         Button addPhoto = findViewById(R.id.add_photo_button);
         Button addLocation = findViewById(R.id.add_location_button);
         Button saveButton = findViewById(R.id.save_button);
-
-
+        myLayout = findViewById(R.id.scan_submit_activity);
+        myLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeKeyboard();
+            }
+        });
 
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -408,7 +416,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
         }
     }
-
+    private void closeKeyboard(){
+        View myView = getCurrentFocus();
+        if (myView != null) {
+            InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(myView.getWindowToken(), 0);
+        }
+    }
 
 
 }

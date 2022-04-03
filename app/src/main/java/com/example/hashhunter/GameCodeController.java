@@ -87,24 +87,18 @@ public class GameCodeController implements Parcelable {
     public GameCode getGameCode(){
         return TheGameCode;
     }
-    public void addComment(Comment theComment, FirebaseFirestore db) {
+    public ArrayList<String> getOwners(){
+        return this.owners;
+    }
+    public void addComment(Comment theComment) {
 
         //Get the database reference
-        DocumentReference theDoc = db.collection("Comment").document();
 
+        FirestoreController dbController = new FirestoreController();
 
-        String commentCode = theDoc.getId();
+        String commentCode = dbController.postComment(theComment);
 
-        System.out.println(dataBasePointer);
-        DocumentReference codeDoc = db.collection("GameCode").document(dataBasePointer);
-
-        codeDoc.update("comments", FieldValue.arrayUnion(commentCode));
-
-
-        theDoc.set(theComment);
-
-        //Update appropiate views
-
+        dbController.updateGameCodeComment(dataBasePointer, commentCode);
 
         TheGameCode.addComment(commentCode);
 
@@ -127,16 +121,25 @@ public class GameCodeController implements Parcelable {
         this.photos = TheGameCode.getPhotos(); // id of photos objects
         this.owners = TheGameCode.getOwners(); // username
         this.comments = TheGameCode.getComments(); // id of comment object
-        this.latitude = TheGameCode.getLatitude();
-        this.longitude = TheGameCode.getLongitude();
+        this.latitude = TheGameCode.getLatitude(); // longitude
+        this.longitude = TheGameCode.getLongitude(); // latitude
     }
     public ArrayList<String> getPhotos(){
         return this.photos;
     }
-
+    public String getDataBasePointer(){
+        return this.dataBasePointer;
+    }
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public Double getLatitude(){
+        return (Double)this.latitude;
+    }
+    public Double getLongitude(){
+        return (Double) this.longitude;
     }
 
     @Override

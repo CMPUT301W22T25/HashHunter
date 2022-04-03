@@ -6,6 +6,7 @@ import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,7 +18,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -25,8 +29,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -38,18 +46,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 import com.google.zxing.WriterException;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener{
+public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener, AdapterView.OnItemSelectedListener {
 
     //implements QRAdapter.OnItemClickListener
     int columns = 2;
@@ -67,11 +82,14 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private TextView emailView;
     private ArrayList<GameCodeController> qrList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public static final Integer RESULT_RESTART = 3;
+    private FirestoreController dbController = new FirestoreController();
     private DocumentReference refDoc;
     private static DocumentSnapshot userDoc;
     private String email;
     private String userName;
     private String playerCode;
+    private TextView totalCodes;
     Map<String, Object> myData;
     String userNameCode = "com.example.hashhunter.username";
     String EmailCode ="com.example.hashhunter.email";
@@ -80,14 +98,15 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private String uniqueID;
     private PlayerDataController playerController;
     final static ArrayList<String> myArray = new ArrayList<>();
-
+    Spinner sortSpinner;
+    public static ProfileActivity profileInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         //Set the layout manager
-
+        profileInstance = this;
         //Do profile pic
         profilePic = findViewById(R.id.profilePicture);
 
@@ -98,7 +117,14 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         profileCodeButton = findViewById(R.id.profileCodeButton);
         loginCodeButton = findViewById(R.id.loginCodeButton);
 
+        PointAmount = findViewById(R.id.pointAmount);
+        totalCodes = findViewById(R.id.codeScannedAmount);
 
+
+        sortSpinner = findViewById(R.id.sortSpinner);
+        ArrayAdapter<CharSequence> sortStringAdapter = ArrayAdapter.createFromResource(this, R.array.sortOptions, R.layout.spiner_item);
+        sortStringAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(sortStringAdapter);
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -113,31 +139,8 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         //Obtain all the other information from username
 
 
-        //https://firebase.google.com/docs/firestore/query-data/get-data
-        //Obtan user snapshot
 
 
-
-
-
-
-
-
-        //For example if we are searching for a user it will be different from logging in
-
-        //Currently implementing our logged in user data
-
-
-        //So depending where we are this will do a different thing
-
-
-        //If the user is in another profile then we will not be able to fetch the login code
-
-        //In this case it will be null
-
-        //So if login code is null
-
-        //Then set the left button as the profile code
 
         ArrayList<Comment> testComments = new ArrayList<>();
         ArrayList<Integer> LocPicResources = new ArrayList<>();
@@ -162,144 +165,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
        // docRef = db.collection("UserInfo").document(uniqueID);
 
-        Source source = Source.CACHE;
-        refDoc = db.collection("UserInfo").document(uniqueID);
-
-        //Might redesign this, not happy with the result
-        refDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-             @Override
-             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                 if (task.isSuccessful()) {
-                     // Document found in the offline cache
-                     DocumentSnapshot docRef = task.getResult();
-
-                     Map<String, Object> myData = docRef.getData();
-                     System.out.println(myData);
-                     email = (String) myData.get(EmailCode);
-                     System.out.println(email);
-
-                     //Not proud of this, but haven't found out do this outside the method
-
-                     //Maybe they really don't want us to retrieve info outside this for some reason
-                     userName = (String) myData.get(userNameCode);
-                     playerCode = (String) myData.get(uniqueID);
-
-                     //For now set the text view to this
-                     //Though I will have to change this later after submission
-                     //I really tried getting this part outside of the code but it did not let me.
-                     usernameView.setText(userName);
-                     emailView.setText(email);
-
-
-                 } else {
-                     Log.d(TAG, "Cached get failed: ", task.getException());
-                 }
-             }
-         });
-
-        System.out.println(myArray);
-
-        DocumentReference playerDoc = db.collection("Players").document(uniqueID);
-
-        playerDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-          @Override
-          public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-              if (task.isSuccessful()) {
-                  // Document found in the offline cache
-                  DocumentSnapshot doc = task.getResult();
-                  System.out.println(doc);
-
-                  Map<String, Object> myData = doc.getData();
-                  System.out.println(myData);
-                    //This has to change
-
-                  //Try to implement it using a recycler view
-                  //Obtain player data, specifically we want the gameCodeList
-                  if (myData != null) {
-                      ArrayList<String> myCodes = (ArrayList<String>) myData.get(gameCodeListCode);
-                      System.out.println(myCodes);
-
-
-                      //We have all the game codes here
-
-                      CollectionReference gameCodesRef = db.collection("GameCode");
-
-                      //For each game code owned by the user
-
-                      gameCodesRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                          @Override
-                          public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                              //Check every gameCode
-                              //https://stackoverflow.com/questions/66834816/how-to-get-arraylist-of-custom-objects-from-firestore-documents
-                              //Use some of the code there
-                              ArrayList<GameCodeController> myControllers = new ArrayList<>();
-                              for (QueryDocumentSnapshot document : task.getResult()){
-                                  //If the document matches the id
-                                  String myID = document.getId();
-                                  if (myCodes.contains(myID)) {
-                                      //Create new gamecode and set up its controller
-                                      GameCode myCode = document.toObject(GameCode.class);
-                                      GameCodeController myController = new GameCodeController(myCode);
-
-                                      System.out.println("Document id "+ myID);
-                                      myController.setDataBasePointer(myID);
-                                      //Add controller
-                                      myControllers.add(myController);
-                                  }
-                                  //Initialize recycler view
-                                  setUpRecycler(myControllers);
-                              }
-
-                          }
-                      });
-
-                      //Reconstruct the GameCode object
-
-                      //Add it to an array
-
-
-                      //For each gamecode in the collection
-
-                      //If the gamecode is equals to my gamecode
-
-
-
-
-
-                    Query myQuery = db.collection("GameCodes");
-
-                      //Print them to the screen
-
-                      //Only get the gamecodes whose name is the same as the gamecodes in my list
-
-
-                      //Pass it onto the recycler view
-
-
-
-                      //setUpRecycler(myQuery);
-                  }
-
-
-              }
-          }
-      });
-
-        //Figure out which button was sent to this activity
-
-            //If someone searched for someone elses profile then this is going to be sent with a different code
-
-        //In case the user wants to check their own profile
-
-            //Load the users data
-
-        //Regardless of whos profile it is we are going to need 4 things
-
-        //Profile picture, user name, profile code, tree amount and point amount
-
-        //Player code is optional(Eg if I'm checking someone elses profile), so we will set it to null by default.
-
-
+        loadProfileInfo();
         //Create the profile stuff click listener
        // https://www.youtube.com/watch?v=69C1ljfDvl0
         //https://www.geeksforgeeks.org/how-to-generate-qr-code-in-android/
@@ -322,17 +188,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
             }
         });
-        //Put it into the profile data model
-
-        //Update the appropiate views (Within the model)
-
-        //There are technically two types of profile activities here. When the user clicks on their own profile
-        // And when the user clicks on someone elses profile
-
-
-        //PlayerDataController class will only be used to load the data from the data base that we are allowed to access
-
-        //Therefore it won't be necessary to create more than one profile class
 
 
     }
@@ -356,16 +211,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         codeDialogBuilder.show();
     }
 
-   /* @Override
-    public void onQRClick(int position) {
-
-        Intent intent = new Intent(this, QRVisualizerActivity.class);
-        GameCodeController myCurrentItem = (GameCodeController) QRRecycleAdapter.getItem(position);
-        intent.putExtra("QR ITEM", myCurrentItem);
-        startActivity(intent);
-
-
-    } */
     public Bitmap convertToQr(String code) {
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Bitmap bitmap = null;
@@ -408,6 +253,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         QRRecycleAdapter = new QRAdapter(myControllerList, this);
 
         QRRecycler.setAdapter(QRRecycleAdapter);
+        //Start spinner
+        sortSpinner.setOnItemSelectedListener(profileInstance);
+
+        //This is a neat little trick to make it load once the recycler view has items.
+        //Now I don't got to implement another class
+
     }
 
     @Override
@@ -419,17 +270,175 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         //I feel filthy for doing this but it works
         intent.putExtra("USERNAME", usernameView.getText());
         intent.putExtra("QR ITEM", myCodeCont);
-        startActivity(intent);
+        intent.putExtra("USER ID", uniqueID);
+        startActivityForResult(intent, 0);
 
     }
 
-    /*
     @Override
-    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-        Intent intent = new Intent(this, QRVisualizerActivity.class);
-        GameCodeController myCurrentItem = documentSnapshot.toObject(GameCodeController.class);
-        intent.putExtra("QR ITEM", myCurrentItem);
-        startActivity(intent);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_RESTART){
+            recreate();
 
-    }*/
+
+        }
+
+    }
+
+    public void loadProfileInfo(){
+        this.getUserInfo();
+        this.getPlayerStats();
+        this.loadQRCodes();
+
+    }
+
+    private void getUserInfo(){
+        dbController.getUserInfo(uniqueID).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Document found in the offline cache
+                    DocumentSnapshot docRef = task.getResult();
+
+                    Map<String, Object> myData = docRef.getData();
+                    System.out.println(myData);
+                    email = (String) myData.get(EmailCode);
+                    System.out.println(email);
+
+                    //Not proud of this, but haven't found out do this outside the method
+
+                    //Maybe they really don't want us to retrieve info outside this for some reason
+                    userName = (String) myData.get(userNameCode);
+                    playerCode = (String) myData.get(uniqueID);
+
+                    //For now set the text view to this
+                    //Though I will have to change this later after submission
+                    //I really tried getting this part outside of the code but it did not let me.
+                    usernameView.setText(userName);
+                    emailView.setText(email);
+
+
+                } else {
+                    Log.d(TAG, "Cached get failed: ", task.getException());
+                }
+            }
+        });
+
+
+    }
+    private void loadQRCodes(){
+        dbController.getPlayers(uniqueID).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Document found in the offline cache
+                    DocumentSnapshot doc = task.getResult();
+                    Map<String, Object> myData = doc.getData();
+                    System.out.println(myData);
+                    //This has to change
+
+                    //Try to implement it using a recycler view
+                    //Obtain player data, specifically we want the gameCodeList
+                    if (myData != null) {
+                        ArrayList<String> myCodes = (ArrayList<String>) myData.get(gameCodeListCode);
+                        System.out.println(myCodes);
+
+
+                        //We have all the game codes here
+
+                        CollectionReference gameCodesRef = db.collection("GameCode");
+
+                        //For each game code owned by the user
+
+                        gameCodesRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                //Check every gameCode
+                                //https://stackoverflow.com/questions/66834816/how-to-get-arraylist-of-custom-objects-from-firestore-documents
+                                //Use some of the code there
+                                ArrayList<GameCodeController> myControllers = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    //If the document matches the id
+                                    String myID = document.getId();
+                                    if (myCodes.contains(myID)) {
+                                        //Create new gamecode and set up its controller
+                                        GameCode myCode = document.toObject(GameCode.class);
+                                        GameCodeController myController = new GameCodeController(myCode);
+
+                                        System.out.println("Document id "+ myID);
+                                        myController.setDataBasePointer(myID);
+                                        //Add controller
+                                        myControllers.add(myController);
+                                    }
+                                    //Initialize recycler view
+
+                                }
+                                setUpRecycler(myControllers);
+                                startSpinner();
+                            }
+                        });
+
+                    }
+
+
+                }
+            }
+        });
+
+
+    }
+    private void getPlayerStats(){
+        //https://firebase.google.com/docs/firestore/query-data/get-data
+        //Obtan user snapshot
+        //https://firebase.google.com/docs/firestore/query-data/listen#java
+        dbController.getPlayerDoc(uniqueID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error);
+                    return;
+                }
+                if (value != null && value.exists()) {
+
+                    Player player = value.toObject(Player.class);
+                    Integer points = player.getTotalPoints();
+                    Integer codeTotal = player.getTotalGameCode();
+                    PointAmount.setText("Total points: " + points.toString());
+                    totalCodes.setText(" Codes scanned: "+codeTotal );
+
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        if (i ==0){
+            QRRecycleAdapter.sortAscending();
+            QRRecycleAdapter.notifyDataSetChanged();
+        } else if (i == 1){
+            QRRecycleAdapter.sortDescending();
+            QRRecycleAdapter.notifyDataSetChanged();
+        }
+        System.out.println("-------------------------Option---------------------------");
+        System.out.println(i);
+        System.out.println("-------------------------Option End---------------------------");
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+    public void startSpinner(){
+        sortSpinner.setOnItemSelectedListener(this);
+        //This helps the list to sort automatically after the recycler is loaded
+        sortSpinner.setSelection(1);
+    }
 }
