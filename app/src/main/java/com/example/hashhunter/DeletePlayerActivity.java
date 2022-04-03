@@ -25,9 +25,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
 
+/**
+ * This is the activity for deleting a player from the database as the owner of the app (referred to as admin from here on).
+ * Can only be accessed by an admin. Enter the username of a player and click submit to delete that player from the database
+ */
 public class DeletePlayerActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.DeletePlayerActivity";
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +42,19 @@ public class DeletePlayerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 EditText usernameText = findViewById(R.id.del_username_edit_text);
-                String username = usernameText.getText().toString();
+                String username = usernameText.getText().toString(); // username of the player that is to be deleted
 
+                // getting the document from firebase
                 FirestoreController.getUsernames(username).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            // log them in and start another activity
+
                             if (document.exists()) {
                                 // https://firebase.google.com/docs/firestore/manage-data/delete-data#java
                                 Map<String, Object> data =  document.getData();
-                                String unique_id = data.get(RegisterActivity.KEY_UNIQUE_ID).toString();
+                                String unique_id = data.get(RegisterActivity.KEY_UNIQUE_ID).toString(); // unique id of the player
                                 Toast.makeText(DeletePlayerActivity.this, unique_id, Toast.LENGTH_SHORT).show();
 
                                 // delete from Usernames
