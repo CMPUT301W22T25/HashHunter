@@ -71,26 +71,26 @@ import java.util.UUID;
  * Then creates or updates current GameCode in database
  */
 public class ScanSubmitActivity extends AppCompatActivity {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1; // Request code for camera permissions
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Bitmap photoBitmap; // bitmap received from camera app
-    private Location qrcodeLocation;
+    private Location qrcodeLocation; // Current location that user provides
 
     private String photoId; // id of photo in firestore
-    private String gameCodeId;
+    private String gameCodeId; // id og gamecode in firestore
     private Integer points; // value of points
-    private String code; // string representation of qrcode
+    private String code; // hashed representation of qrcode
     // keep track of code location
     private Double latitude;
     private Double longitude;
 
-    private String uniqueID;
-    private String username;
+    private String uniqueID; // id of user accessing app
+    private String username; // username of user accessing app
 
-    private boolean gamecodeExists = false;
-    ConstraintLayout myLayout;
+
+    private boolean gamecodeExists = false; // flag to see if gamecode in firestore
+
     private LocationManager locationManager;
     /**
      * When add button is pressed, get location and show details
@@ -114,8 +114,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
             String countryName = addresses.get(0).getCountryName();
 
             TextView showLocation = findViewById(R.id.current_location);
-            showLocation.setText("Latitude: " + location.getLatitude() + "\nLongitude: " + location.getLongitude() +
-                    "\nCity: " + cityName + "\nState: " + stateName + "\nCountry: " + countryName);
+            showLocation.setText("City: " + cityName + "\nState: " + stateName + "\nCountry: " + countryName);
         }
     };
 
@@ -139,7 +138,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
         Button addPhoto = findViewById(R.id.add_photo_button);
         Button addLocation = findViewById(R.id.add_location_button);
         Button saveButton = findViewById(R.id.save_button);
-        myLayout = findViewById(R.id.scan_submit_activity);
+        ConstraintLayout myLayout = findViewById(R.id.scan_submit_activity);
         myLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,10 +167,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 /**
-                 * Upload photo to firebase storage ✅
-                 * Add photo object containing url to firestore ✅
+                 * Upload photo to firebase storage
+                 * Add photo object containing url to firestore
                  * Get database of GameCodes
-                 * Check if a code with the same string and location exists
+                 * Check if a code with the same hash and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
                  * If not, construct a new GameCode object and add to player GameCodeList, and to
                  * database if it has a location
@@ -187,40 +186,34 @@ public class ScanSubmitActivity extends AppCompatActivity {
                      * When getting a location from a GameCode in Firestore:
                      * Make a new location and set longitude/latitude, then get distance
                      */
-                    db.collection("GameCode")
-                            .whereEqualTo("code",code)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        for(QueryDocumentSnapshot document : task.getResult()) {
-                                            if(document.get("latitude") == null) continue;
-                                            Location checkLocation = new Location("");
-                                            checkLocation.setLatitude((Double) document.get("latitude"));
-                                            checkLocation.setLongitude((Double) document.get("longitude"));
-                                            if(checkLocation.distanceTo(qrcodeLocation) <= 10) {
-                                                // Game Codes are the same
-                                                document.getReference().update("owners", FieldValue.arrayUnion(uniqueID));
-                                                if (photoId != null){
-                                                    document.getReference().update("photos", FieldValue.arrayUnion(photoId));
-                                                }
-                                                gameCodeId = document.getId();
-                                                updatePlayer(gameCodeId);
-                                                Toast.makeText(ScanSubmitActivity.this, "GameCode Exists, adding existing GameCode to player", Toast.LENGTH_SHORT).show();
-                                                gamecodeExists = true;
-                                                break;
-                                            }
-                                        }
-                                        if(gamecodeExists == false){
-                                            storeGameCodeInDB();
-                                            Toast.makeText(ScanSubmitActivity.this, "Added new GameCode", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Log.d("Error occurred", String.valueOf(task.getException()));
+                    FirestoreController.getGameCodeListWithCode(code).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                if(document.get("latitude") == null) continue;
+                                Location checkLocation = new Location("");
+                                checkLocation.setLatitude((Double) document.get("latitude"));
+                                checkLocation.setLongitude((Double) document.get("longitude"));
+                                if(checkLocation.distanceTo(qrcodeLocation) <= 10) {
+                                    // Game Codes are the same
+                                    document.getReference().update("owners", FieldValue.arrayUnion(uniqueID));
+                                    if (photoId != null){
+                                        document.getReference().update("photos", FieldValue.arrayUnion(photoId));
                                     }
+                                    gameCodeId = document.getId();
+                                    updatePlayer(gameCodeId);
+                                    Toast.makeText(ScanSubmitActivity.this, "GameCode Exists, adding existing GameCode to player", Toast.LENGTH_SHORT).show();
+                                    gamecodeExists = true;
+                                    break;
                                 }
-                            });
+                            }
+                            if(gamecodeExists == false){
+                                storeGameCodeInDB();
+                                Toast.makeText(ScanSubmitActivity.this, "Added new GameCode", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.d("Error occurred", String.valueOf(task.getException()));
+                        }
+                    });
 
                 }
 
@@ -283,7 +276,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
             newGameCode = new GameCode(title, code, points, photoId, uniqueID, latitude, longitude);
         }
         gameCodeId = UUID.randomUUID().toString();
-        db.collection("GameCode").document(gameCodeId).set(newGameCode)
+        FirestoreController.postGameCode(gameCodeId, newGameCode)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -302,25 +295,24 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Updates the player points and # of gamecodes in the database
+     * @param
+     * gameCodeID unique id of gamecode created
+     */
     private void updatePlayer(String gameCodeID){
-        db.collection("Players").document(uniqueID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            Player player = document.toObject(Player.class);
-                            document.getReference().update("gameCodeList", FieldValue.arrayUnion(gameCodeID));
-                            document.getReference().update("totalPoints", points+player.getTotalPoints());
-                            document.getReference().update("totalGameCode", player.getTotalGameCode()+1);
-                            if (points > player.getMaxGameCodePoints()) document.getReference().update("maxGameCodePoints", points);
-                        } else {
-                            Log.d("Get player", "get failed with ", task.getException());
-                        }
-                    }
-                });
-
+        FirestoreController.getPlayers(uniqueID).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Player player = document.toObject(Player.class);
+                    document.getReference().update("gameCodeList", FieldValue.arrayUnion(gameCodeID));
+                    document.getReference().update("totalPoints", points+player.getTotalPoints());
+                    document.getReference().update("totalGameCode", player.getTotalGameCode()+1);
+                    if (points > player.getMaxGameCodePoints()) document.getReference().update("maxGameCodePoints", points);
+                } else {
+                    Log.d("Get player", "get failed with ", task.getException());
+                }
+        });
     }
 
     /**
@@ -369,11 +361,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private void storePhotoDataInDB(String photoUrl) {
         Photo newPhoto = new Photo(photoUrl, username); // replace value with logged in user
         photoId = UUID.randomUUID().toString();
-        db.collection("Photo").document(photoId).set(newPhoto);
+        FirestoreController.postPhoto(photoId, newPhoto);
         if (gameCodeId!=null) {
-            db.collection("GameCode").document(gameCodeId).update("photos", FieldValue.arrayUnion(photoId));
+            FirestoreController.updateGameCodePhoto(gameCodeId, photoId);
         }
-
     }
 
     /**
@@ -407,6 +398,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
             imageView.setImageBitmap(imageBitmap);
         }
     }
+
+    /**
+     * When a request for location permissions is sent and accepted, get the current location.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -430,6 +428,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
         }
     }
+
+    /**
+     * Closes keyboard when tap away from text views.
+     */
     private void closeKeyboard(){
         View myView = getCurrentFocus();
         if (myView != null) {

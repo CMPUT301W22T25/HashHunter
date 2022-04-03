@@ -114,6 +114,7 @@ public class MapActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    //Get gamecode at marker and then create gamecode controller from gamecode and send to visualizer activity
                                                     GameCode QRCode = document.toObject(GameCode.class);
                                                     GameCodeController gameCodeController = new GameCodeController(QRCode);
                                                     Intent intent = new Intent(MapActivity.this, QRVisualizerActivity.class);

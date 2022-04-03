@@ -30,6 +30,9 @@ import java.util.Arrays;
  * - other website may ignore \n
  */
 public class GameCodePointsControllerTest {
+    /**
+     * test if overall conversion from code string to points work
+     */
     @Test
     public void checkCodeToPoints() {
         assertEquals(111, GameCodePointsController.getCodePoints("BFG5DGW54\n"));
@@ -37,6 +40,9 @@ public class GameCodePointsControllerTest {
         assertEquals(14, GameCodePointsController.getCodePoints("7801141456"));
     }
 
+    /**
+     * test if conversion from hashed code string to points work
+     */
     @Test
     public void checkHashedCodeToPoints() {
         assertEquals(111, GameCodePointsController.calculatePoints("696ce4dbd7bb57cbfe58b64f530f428b74999cb37e2ee60980490cd9552de3a6"));
@@ -44,6 +50,9 @@ public class GameCodePointsControllerTest {
         assertEquals(14, GameCodePointsController.calculatePoints("c6438656c4aeec951c2a012964623054d3e2f45d5e3c5e7c01faf347c9a5f51a"));
     }
 
+    /**
+     * test methods that calculate what digits is being repeated from a string
+     */
     @Test
     public void checkCodeToRepeatedDigits() {
         ArrayList<String> repeatedDigits;
@@ -59,6 +68,9 @@ public class GameCodePointsControllerTest {
 
     }
 
+    /**
+     * test hashing result from scanned qr code
+     */
     @Test
     public void checkCodeToHash() {
         try {
