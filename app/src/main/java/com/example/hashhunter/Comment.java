@@ -71,7 +71,7 @@ public class Comment implements Parcelable {
 
     /**
      * Convert comment into parcel
-     * @param parcel
+     * @param parcel parcel to receive content of comment
      * @param i
      */
     @Override
