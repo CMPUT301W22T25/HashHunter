@@ -88,7 +88,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
     private String uniqueID; // id of user accessing app
     private String username; // username of user accessing app
 
-    ConstraintLayout myLayout;
+
     private boolean gamecodeExists = false; // flag to see if gamecode in firestore
 
     private LocationManager locationManager;
@@ -138,7 +138,7 @@ public class ScanSubmitActivity extends AppCompatActivity {
         Button addPhoto = findViewById(R.id.add_photo_button);
         Button addLocation = findViewById(R.id.add_location_button);
         Button saveButton = findViewById(R.id.save_button);
-        myLayout = findViewById(R.id.scan_submit_activity);
+        ConstraintLayout myLayout = findViewById(R.id.scan_submit_activity);
         myLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,10 +167,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 /**
-                 * Upload photo to firebase storage ✅
-                 * Add photo object containing url to firestore ✅
+                 * Upload photo to firebase storage
+                 * Add photo object containing url to firestore
                  * Get database of GameCodes
-                 * Check if a code with the same string and location exists
+                 * Check if a code with the same hash and location exists
                  * If yes, add that gamecode to the current player and increase numPlayers by 1
                  * If not, construct a new GameCode object and add to player GameCodeList, and to
                  * database if it has a location
@@ -295,6 +295,11 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Updates the player points and # of gamecodes in the database
+     * @param
+     * gameCodeID unique id of gamecode created
+     */
     private void updatePlayer(String gameCodeID){
         FirestoreController.getPlayers(uniqueID).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -393,6 +398,13 @@ public class ScanSubmitActivity extends AppCompatActivity {
             imageView.setImageBitmap(imageBitmap);
         }
     }
+
+    /**
+     * When a request for location permissions is sent and accepted, get the current location.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -416,6 +428,10 @@ public class ScanSubmitActivity extends AppCompatActivity {
 
         }
     }
+
+    /**
+     * Closes keyboard when tap away from text views.
+     */
     private void closeKeyboard(){
         View myView = getCurrentFocus();
         if (myView != null) {
