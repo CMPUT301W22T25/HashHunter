@@ -55,5 +55,18 @@ public class OwnerActivityTest {
         solo.assertCurrentActivity("Wrong Activity", DeleteGameCodeActivity.class);
     }
 
+    /**
+     * Checks if scanning gamecode takes you to DeleteGameCodeActivity. Need camera and code to scan to test.
+     */
+    @Test
+    public void checkDeleteQR(){
+        solo.assertCurrentActivity("Wrong Activity", OwnerActivity.class);
+        solo.clickOnView(solo.getView(R.id.delete_code_button)); //Select Delete Code Button
+        solo.waitForActivity(ScanActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
+        solo.waitForActivity(DeleteGameCodeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DeleteGameCodeActivity.class);
+    }
+
 
 }
