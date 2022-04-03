@@ -158,6 +158,7 @@ public class DeletePlayerActivity extends AppCompatActivity {
 
                             } else {
                                 Toast.makeText(DeletePlayerActivity.this, "no username found", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         } else {
                             Log.d(TAG, "get failed with", task.getException());
