@@ -33,6 +33,9 @@ public class MapActivityTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
 
+    /**
+     * Checks whether the fragment is visible on screen
+     */
     @Test
     public void checkForMapFragment() {
         Boolean initialID = solo.waitForFragmentById(R.id.google_map);

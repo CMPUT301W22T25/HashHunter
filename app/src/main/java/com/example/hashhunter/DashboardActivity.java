@@ -35,11 +35,17 @@ public class DashboardActivity extends AppCompatActivity {
         initializeActivity();
     }
 
+
     private void initializeActivity() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new MainFragment()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container,new MainFragment(),"HOMEPAGE")
+                .commit();
+
+
         }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override

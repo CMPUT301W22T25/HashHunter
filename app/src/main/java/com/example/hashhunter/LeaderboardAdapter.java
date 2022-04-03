@@ -73,8 +73,4 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
 
 
-
-
-
-
 }
