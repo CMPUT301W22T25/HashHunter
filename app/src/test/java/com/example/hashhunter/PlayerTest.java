@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+/**
+ * This is a testing class to test the methods of the player class using junit
+ */
 public class PlayerTest {
 
 
