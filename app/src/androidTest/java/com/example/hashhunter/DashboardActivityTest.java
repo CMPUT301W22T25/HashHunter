@@ -34,13 +34,7 @@ public class DashboardActivityTest {
     /**
      * Checks clicking of dashboard buttons and going to each separate activity
      */
-    @Test
-    public void checkSwitchToMain() {
-        solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
-        solo.clickOnView(solo.getView(R.id.home)); //Select Home Button
-        solo.waitForActivity(DashboardActivity.class);
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-    }
+
     @Test
     public void checkSwitchToExplore() {
         solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
