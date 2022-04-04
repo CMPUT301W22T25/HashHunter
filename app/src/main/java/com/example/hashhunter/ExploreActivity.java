@@ -46,7 +46,6 @@ import java.util.List;
  */
 public class ExploreActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private PlayerList playerList;
     private RecyclerView leaderboardRecycler;
     private LeaderboardAdapter adapter;
