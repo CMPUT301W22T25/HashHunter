@@ -11,10 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Class for displaying comments related to a qr code in a recycler view
+ */
 public class QRCommentAdapter extends RecyclerView.Adapter<QRCommentAdapter.CommentViewHolder>{
     private ArrayList<CommentController> CommentList;
     private Context myContext;
 
+    /**
+     * constructor for the qr comment adapter
+     * @param myItems a list of comment controllers
+     */
     public QRCommentAdapter(ArrayList<CommentController> myItems){
 
         CommentList = myItems;
@@ -36,15 +43,26 @@ public class QRCommentAdapter extends RecyclerView.Adapter<QRCommentAdapter.Comm
 
     }
 
+    /**
+     * gets the number of comments related to a qr code
+     * @return number of comments
+     */
     @Override
     public int getItemCount() {
         return CommentList.size();
     }
 
+    /**
+     * A class for displaying the comment in a view
+     */
     public class CommentViewHolder extends RecyclerView.ViewHolder{
         TextView QRUserName;
         TextView myQRComment;
 
+        /**
+         * constructor for the class
+         * @param visualizerItem a view for comment
+         */
         public CommentViewHolder(View visualizerItem){
             super(visualizerItem);
             QRUserName = visualizerItem.findViewById(R.id.CommentUserName);

@@ -75,6 +75,7 @@ public class DashboardActivityTest {
      */
     @Test
     public void checkHomeFragmentText() {
+        assert(solo.searchText("Player Score"));
         assert(solo.searchText("Your forest could use some work! \nKeep on hunting!"));
         assert(solo.searchText("Wow you are quite the hunter! \nGreat job!"));
         assert(solo.searchText("Nice forest! \nKeep it growing!"));
