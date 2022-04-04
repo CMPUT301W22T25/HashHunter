@@ -16,16 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+/**
+ * Main home fragment with visualization of player points, and adding compliments based on player progress
+ */
 public class MainFragment extends Fragment {
-    /**
-     * Main home fragment with visualization of player points, and adding compliments based on player progress
-     */
+
     private SharedPreferences sharedPreferences;
     private ImageView scoreImage;
     private TextView scoreDisplay;
@@ -34,7 +32,6 @@ public class MainFragment extends Fragment {
     private int imageName;
     private String unique_id;
     private String flairText;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Nullable
     @Override
     //Set layout file
@@ -59,14 +56,12 @@ public class MainFragment extends Fragment {
         flairView = getActivity().findViewById(R.id.flair_text);
 
 
-
-        DocumentReference docRef = db.collection("Players").document(unique_id);
         /**
          * Get player class from unique id,
          * and take total points from player and then change flair text and image corresponding to score
-         * @param Task
+         *
          */
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        FirestoreController.getPlayerDoc(unique_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -100,5 +95,8 @@ public class MainFragment extends Fragment {
         });
 
 
+
+
     }
+
 }

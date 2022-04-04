@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Player implements Parcelable {
 
     private String username;
-    private String playerCode;
     private String profileCode;
     private ArrayList<String> gameCodeList;
     private int totalPoints;
@@ -21,21 +20,28 @@ public class Player implements Parcelable {
     private int displayTotal;
 
     /**
-     * constructors
+     * empty constructor for firestore operations
      */
     public Player() {
         this.gameCodeList = new ArrayList<>();
     }
 
+    /**
+     * constructs a player with a given username
+     * @param username
+     *      the username of the player that is being constructed
+     */
     public Player(String username) {
         this.username = username;
         this.gameCodeList = new ArrayList<>();
     }
 
-
+    /**
+     * contructs a player from parcelable
+     * @param in data from parcel
+     */
     protected Player(Parcel in) {
         username = in.readString();
-        playerCode = in.readString();
         profileCode = in.readString();
         gameCodeList = in.createStringArrayList();
         totalPoints = in.readInt();
@@ -44,6 +50,10 @@ public class Player implements Parcelable {
         displayTotal = in.readInt();
     }
 
+
+    /**
+     * creates a player from parcelable
+     */
     public static final Creator<Player> CREATOR = new Creator<Player>() {
         @Override
         public Player createFromParcel(Parcel in) {
@@ -65,14 +75,6 @@ public class Player implements Parcelable {
         return this.username;
     }
 
-    /**
-     * Gets the players player code
-     * @return
-     *      Returns the string representing the players player code
-     */
-    public String getPlayerCode(){
-        return this.playerCode;
-    }
 
     /**
      * Gets the players profile code
@@ -188,10 +190,14 @@ public class Player implements Parcelable {
         return 0;
     }
 
+    /**
+     * to make player parcelable
+     * @param parcel the parcel that is to be written to
+     * @param i an integer, not used
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(username);
-        parcel.writeString(playerCode);
         parcel.writeString(profileCode);
         parcel.writeStringList(gameCodeList);
         parcel.writeInt(totalPoints);

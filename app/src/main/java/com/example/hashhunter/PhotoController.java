@@ -20,19 +20,40 @@ public class PhotoController {
     private Photo photo;
     private Bitmap imageBitmap;
 
+    /**
+     * empty constructor, to be used for firebase
+     */
     public PhotoController(){
-
     }
+
+    /**
+     * constructor that uses a Photo object
+     * @param myPhoto a Photo object
+     */
     public PhotoController(Photo myPhoto){
         this.photo = myPhoto;
     }
+
+    /**
+     * constructor that uses a string url of the photo
+     * @param urlString url of the photo
+     */
     public PhotoController(String urlString) {
         photo = new Photo(urlString);
     }
+
+    /**
+     * constructor that uses a string url of the photo and a string id of the owner
+     * @param urlString url of the photo
+     * @param owner id of the woner
+     */
     public PhotoController(String urlString, String owner) {
         photo = new Photo(urlString, owner);
     }
 
+    /**
+     * converts the url of the photo to a bitmap
+     */
     private void URLToBitmap() {
         // convert url to bitmap
         try {
@@ -46,6 +67,10 @@ public class PhotoController {
         }
     }
 
+    /**
+     * displays the image
+     * @param imageView the ImageView on which the image is to be displayed
+     */
     public void displayImage(ImageView imageView) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());

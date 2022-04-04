@@ -6,6 +6,20 @@ import static com.example.hashhunter.MainActivity.PREF_USERNAME;
 import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 import static com.example.hashhunter.ProfileActivity.RESULT_RESTART;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -16,34 +30,12 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -52,6 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Activity to show information of qr codes from the profile or on the map
+ */
 public class QRVisualizerActivity extends AppCompatActivity {
     RecyclerView CommentRecycler;
     RecyclerView LocPicRecycler;
@@ -124,7 +119,9 @@ public class QRVisualizerActivity extends AppCompatActivity {
                 closeKeyboard();
             }
         });
-
+        /**
+         * click button to add comment
+         */
         //This buttons function is to send a comment
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +207,11 @@ public class QRVisualizerActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * loads horizontal recycler view to display photos
+     * @param theControllers
+     *      a list of photocontrollers that display images from url
+     */
     private void LoadHorizontalRecycler(ArrayList<PhotoController> theControllers){
 
         LocPicRecycler = findViewById(R.id.LocationPicRecycler);
@@ -225,7 +226,11 @@ public class QRVisualizerActivity extends AppCompatActivity {
         snapHelper.attachToRecyclerView(LocPicRecycler);
 
     }
-
+    /**
+     * loads recycler view to display comments
+     * @param qrComments
+     *      a list of comments with owners
+     */
     private void LoadCommentRecycler(ArrayList<CommentController> qrComments){
         CommentRecycler = findViewById(R.id.commentRecycler);
         commentAdapter = new QRCommentAdapter(qrComments);
@@ -240,7 +245,11 @@ public class QRVisualizerActivity extends AppCompatActivity {
     }
 
     //https://www.youtube.com/watch?v=CW5Xekqfx3I
-
+    /**
+     * gets all comments that are related to the qr code
+     * @param myController
+     *          controller for qr code
+     */
     private void initializeComments(GameCodeController myController){
 
         dbController.getCommentList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -263,7 +272,11 @@ public class QRVisualizerActivity extends AppCompatActivity {
         });
 
     }
-
+    /**
+     * gets all photos that are related to the qr code
+     * @param myController
+     *          controller for qr code
+     */
     public void initializePhotos(GameCodeController myController){
         //Obtain collection reference
 
@@ -335,6 +348,13 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
 
     }
+    /**
+     * gets more specific data such as city and country based on latitude and longitude
+     * @param latitude
+     *        location data corresponding to latitude
+     * @param longitude
+     *        location data corresponding to latitude
+     */
     public void getLocation(double latitude, double longitude ) {
 
         Geocoder geocoder = new Geocoder(QRVisualizerActivity.this, Locale.getDefault());
