@@ -449,7 +449,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
                         PointAmount = findViewById(R.id.pointAmount);
                         totalCodes = findViewById(R.id.codeScannedAmount);
-                        totalCodes.setText(" Codes scanned: "+codeTotal.toString() );
+                        totalCodes.setText("Codes scanned: "+codeTotal.toString() );
                         PointAmount.setText("Total points: " + points.toString());
 
 

@@ -136,6 +136,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">QRAdapter</span>
 extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a>&gt;</pre>
+<div class="block">Adapter to display QR code as a list in the ProfileActivity</div>
 </li>
 </ul>
 </div>
@@ -159,12 +160,16 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.
 <tr class="altColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="QRAdapter.OnQRListener.html" title="interface in com.example.hashhunter">QRAdapter.OnQRListener</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">interface to create on click listener for the qr view container</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">nested class to create container for qr code</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -193,7 +198,9 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.ArrayList,com.example.hashhunter.QRAdapter.OnQRListener)">QRAdapter</a></span>&#8203;(java.util.ArrayList&lt;<a href="GameCodeController.html" title="class in com.example.hashhunter">GameCodeController</a>&gt;&nbsp;controllerList,
          <a href="QRAdapter.OnQRListener.html" title="interface in com.example.hashhunter">QRAdapter.OnQRListener</a>&nbsp;myListener)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">constructor for QRAdapter</div>
+</td>
 </tr>
 </table>
 </li>
@@ -216,18 +223,24 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="GameCodeController.html" title="class in com.example.hashhunter">GameCodeController</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getItem(int)">getItem</a></span>&#8203;(int&nbsp;position)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">getter for GameCodeController</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getItemCount()">getItemCount</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">return size of qrList array</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onBindViewHolder(com.example.hashhunter.QRAdapter.qrViewHolder,int)">onBindViewHolder</a></span>&#8203;(<a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a>&nbsp;holder,
                 int&nbsp;position)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">utility functions for recycler view to select item from qrList and display it</div>
+</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a></code></td>
@@ -238,12 +251,16 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortAscending()">sortAscending</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">customize ascending sorting of qrList</div>
+</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortDescending()">sortDescending</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">customize descending sorting of qrList</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -284,6 +301,12 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.
 <h4>QRAdapter</h4>
 <pre>public&nbsp;QRAdapter&#8203;(java.util.ArrayList&lt;<a href="GameCodeController.html" title="class in com.example.hashhunter">GameCodeController</a>&gt;&nbsp;controllerList,
                  <a href="QRAdapter.OnQRListener.html" title="interface in com.example.hashhunter">QRAdapter.OnQRListener</a>&nbsp;myListener)</pre>
+<div class="block">constructor for QRAdapter</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>controllerList</code> - </dd>
+<dd><code>myListener</code> - </dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -303,6 +326,13 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.
 <li class="blockList">
 <h4>getItem</h4>
 <pre class="methodSignature">public&nbsp;<a href="GameCodeController.html" title="class in com.example.hashhunter">GameCodeController</a>&nbsp;getItem&#8203;(int&nbsp;position)</pre>
+<div class="block">getter for GameCodeController</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>position</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>GameCodeController controller to interact with GameCode object</dd>
+</dl>
 </li>
 </ul>
 <a id="onCreateViewHolder(android.view.ViewGroup,int)">
@@ -330,9 +360,13 @@ public&nbsp;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.ha
 <pre class="methodSignature">public&nbsp;void&nbsp;onBindViewHolder&#8203;(@NonNull
                              <a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a>&nbsp;holder,
                              int&nbsp;position)</pre>
+<div class="block">utility functions for recycler view to select item from qrList and display it</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>onBindViewHolder</code>&nbsp;in class&nbsp;<code>androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>holder</code> - </dd>
+<dd><code>position</code> - </dd>
 </dl>
 </li>
 </ul>
@@ -343,9 +377,11 @@ public&nbsp;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.ha
 <li class="blockList">
 <h4>getItemCount</h4>
 <pre class="methodSignature">public&nbsp;int&nbsp;getItemCount()</pre>
+<div class="block">return size of qrList array</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getItemCount</code>&nbsp;in class&nbsp;<code>androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.hashhunter">QRAdapter.qrViewHolder</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
 </dl>
 </li>
 </ul>
@@ -356,6 +392,7 @@ public&nbsp;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.ha
 <li class="blockList">
 <h4>sortAscending</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;sortAscending()</pre>
+<div class="block">customize ascending sorting of qrList</div>
 </li>
 </ul>
 <a id="sortDescending()">
@@ -365,6 +402,7 @@ public&nbsp;<a href="QRAdapter.qrViewHolder.html" title="class in com.example.ha
 <li class="blockList">
 <h4>sortDescending</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;sortDescending()</pre>
+<div class="block">customize descending sorting of qrList</div>
 </li>
 </ul>
 </li>

@@ -2,6 +2,9 @@ package com.example.hashhunter;
 
 import java.util.ArrayList;
 
+/**
+ * Wrapper for information in Player model
+ */
 public class PlayerDataController {
     Player ThePlayer;
 

@@ -335,7 +335,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
             System.out.println(playerId);
             System.out.println("----------code end--------------");
 
-            dbController.deleteGameCodeUsernameReference(gameCodeId, username);
+            dbController.deleteGameCodeUsernameReference(gameCodeId, playerId);
             dbController.deletePlayerGameCodeReference(playerId, gameCodeId);
             //Just delete the qr code from the players reference.
 
