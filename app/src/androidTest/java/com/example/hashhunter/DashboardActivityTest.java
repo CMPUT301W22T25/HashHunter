@@ -34,13 +34,7 @@ public class DashboardActivityTest {
     /**
      * Checks clicking of dashboard buttons and going to each separate activity
      */
-    @Test
-    public void checkSwitchToMain() {
-        solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
-        solo.clickOnView(solo.getView(R.id.home)); //Select Home Button
-        solo.waitForActivity(DashboardActivity.class);
-        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-    }
+
     @Test
     public void checkSwitchToExplore() {
         solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
@@ -71,15 +65,11 @@ public class DashboardActivityTest {
         solo.assertCurrentActivity("Wrong Activity", ProfileActivity.class);
     }
     /**
-     * Checks clicking of dashboard buttons and going to each separate activity
+     * Checks text of home fragment
      */
     @Test
     public void checkHomeFragmentText() {
         assert(solo.searchText("Player Score"));
-        assert(solo.searchText("Your forest could use some work! \nKeep on hunting!"));
-        assert(solo.searchText("Wow you are quite the hunter! \nGreat job!"));
-        assert(solo.searchText("Nice forest! \nKeep it growing!"));
-        assert(solo.searchText("Amazing work! \nYou are truly a top hunter!"));
     }
 
 

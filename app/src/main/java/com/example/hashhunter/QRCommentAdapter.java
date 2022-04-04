@@ -42,6 +42,14 @@ public class QRCommentAdapter extends RecyclerView.Adapter<QRCommentAdapter.Comm
         holder.myQRComment.setText(myComment.getComment());
 
     }
+    /**
+     * gets a specific comment
+     * @param i desired index to fetch comment
+     * @return CommentController desired comment controller
+     */
+    public CommentController getItem(int i){
+        return CommentList.get(i);
+    }
 
     /**
      * gets the number of comments related to a qr code

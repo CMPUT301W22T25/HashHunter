@@ -75,15 +75,14 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     //Set QR list, adapter, and grid manager
     private RecyclerView QRRecycler;
     private ImageView profilePic;
-    private QRAdapter QRRecycleAdapter;
+    public QRAdapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
     private Button loginCodeButton;
     private AlertDialog.Builder codeDialogBuilder;
-    protected TextView usernameView;
-    private TextView TreeAmount;
-    protected TextView PointAmount;
-    protected TextView emailView;
+    public TextView usernameView;
+    public TextView PointAmount;
+    public TextView emailView;
     private ArrayList<GameCodeController> qrList;
     public static final Integer RESULT_RESTART = 3;
     private FirestoreController dbController = new FirestoreController();
@@ -92,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private String email;
     private String userName;
     private String playerCode;
-    private TextView totalCodes;
+    public TextView totalCodes;
     String ownerID;
     Map<String, Object> myData;
     String userNameCode = "com.example.hashhunter.username";
@@ -497,4 +496,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         //This helps the list to sort automatically after the recycler is loaded
         sortSpinner.setSelection(1);
     }
+    public Integer getPoints(){
+        String p = PointAmount.getText().toString();
+        p = p.replace("Total points: ", "");
+        Integer points = Integer.parseInt(p);
+
+        return points;
+    }
+
 }

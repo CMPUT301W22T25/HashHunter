@@ -13,9 +13,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
-import java.text.CollationElementIterator;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -429,14 +426,13 @@ public class FirestoreController {
      * @param gameCodeId
      * @param usernameId
      */
-    public void deleteGameCodeUsernameReference(String gameCodeId, String usernameId){
+    public void deleteGameCodeUsernameReference(String usernameId, String gameCodeId){
 
         Map<String, Object> elementToDelete = new HashMap<>();
 
-        elementToDelete.put("owners", FieldValue.arrayRemove(usernameId));
         db.collection("GameCode")
                 .document(gameCodeId)
-                .update(elementToDelete);
+                .update("owners", FieldValue.arrayRemove(usernameId));
     }
 
     /**

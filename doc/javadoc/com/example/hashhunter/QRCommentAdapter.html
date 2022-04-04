@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -213,19 +213,26 @@ extends androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRCommentA
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="CommentController.html" title="class in com.example.hashhunter">CommentController</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getItem(int)">getItem</a></span>&#8203;(int&nbsp;i)</code></th>
+<td class="colLast">
+<div class="block">gets a specific comment</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getItemCount()">getItemCount</a></span>()</code></th>
 <td class="colLast">
 <div class="block">gets the number of comments related to a qr code</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onBindViewHolder(com.example.hashhunter.QRCommentAdapter.CommentViewHolder,int)">onBindViewHolder</a></span>&#8203;(<a href="QRCommentAdapter.CommentViewHolder.html" title="class in com.example.hashhunter">QRCommentAdapter.CommentViewHolder</a>&nbsp;holder,
                 int&nbsp;position)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="QRCommentAdapter.CommentViewHolder.html" title="class in com.example.hashhunter">QRCommentAdapter.CommentViewHolder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onCreateViewHolder(android.view.ViewGroup,int)">onCreateViewHolder</a></span>&#8203;(android.view.ViewGroup&nbsp;parent,
                   int&nbsp;viewType)</code></th>
@@ -314,6 +321,22 @@ public&nbsp;<a href="QRCommentAdapter.CommentViewHolder.html" title="class in co
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>onBindViewHolder</code>&nbsp;in class&nbsp;<code>androidx.recyclerview.widget.RecyclerView.Adapter&lt;<a href="QRCommentAdapter.CommentViewHolder.html" title="class in com.example.hashhunter">QRCommentAdapter.CommentViewHolder</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a id="getItem(int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getItem</h4>
+<pre class="methodSignature">public&nbsp;<a href="CommentController.html" title="class in com.example.hashhunter">CommentController</a>&nbsp;getItem&#8203;(int&nbsp;i)</pre>
+<div class="block">gets a specific comment</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>i</code> - desired index to fetch comment</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>CommentController desired comment controller</dd>
 </dl>
 </li>
 </ul>

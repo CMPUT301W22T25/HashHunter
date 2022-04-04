@@ -74,7 +74,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
     String ownerID;
     String ownerUser;
-
+    public Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +110,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        myController.SyncController();
         if (myController.getLatitude() != null  && myController.getLongitude() != null) {
             getLocation(myController.getLatitude(), myController.getLongitude());
         }
@@ -175,12 +176,13 @@ public class QRVisualizerActivity extends AppCompatActivity {
         //Check if the user is the owner of the qr code
         CardView cardHolder = findViewById(R.id.codeCardHolder);
         if (playerId.equals(ownerID)) {
-            System.out.println("Owner went here");
+            System.out.println("Going onto delete the qr code");
             cardHolder.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    System.out.println("Going onto delete the qr code on long click");
 
-                    Dialog dialog = new Dialog(QRVisualizerActivity.this);
+                    dialog = new Dialog(QRVisualizerActivity.this);
                     dialog.setContentView(R.layout.deletedialog);
                     dialog.setCanceledOnTouchOutside(true);
                     dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -356,21 +358,26 @@ public class QRVisualizerActivity extends AppCompatActivity {
      *        location data corresponding to latitude
      */
     public void getLocation(double latitude, double longitude ) {
-
         Geocoder geocoder = new Geocoder(QRVisualizerActivity.this, Locale.getDefault());
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            System.out.println("Did I go here?");
+            System.out.println(addresses);
+
         } catch (
                 IOException e) {
+            System.out.println("Or Did I go here?");
             e.printStackTrace();
         }
-        String cityName = addresses.get(0).getLocality();
-        String countryName = addresses.get(0).getCountryName();
 
-        locationView = findViewById(R.id.gameCodeLocation);
-        locationView.setText(cityName +", " + countryName );
+        if (addresses.size() != 0) {
+            String cityName = addresses.get(0).getLocality();
+            String countryName = addresses.get(0).getCountryName();
 
+            locationView = findViewById(R.id.gameCodeLocation);
+            locationView.setText(cityName + ", " + countryName);
+        }
 
 
     }

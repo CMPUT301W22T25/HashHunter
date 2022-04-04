@@ -1,6 +1,8 @@
 package com.example.hashhunter;
 
+import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
 import static com.example.hashhunter.MainActivity.PREF_USERNAME;
+import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import android.Manifest;
 import android.content.Context;
@@ -38,8 +40,8 @@ public class MapActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private SupportMapFragment supportMapFragment;
-    private SharedPreferences sharedPreferences;
-    private String username;
+    private String username; // username of user accessing app
+    private String userID; // id of user accessing app
     // Main function that asks for permissions, initializes google map fragment, and adds markers on fragments and clicking on markers to go to qr visualizer activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +56,9 @@ public class MapActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,},1);
         }
 
-        //Get shared preferences info for username
-        SharedPreferences sharedPreferences = getSharedPreferences(PREF_USERNAME, Context.MODE_PRIVATE);
-        username = sharedPreferences.getString(PREF_USERNAME, null);
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        userID = preferences.getString(PREF_UNIQUE_ID, null);
+        username = preferences.getString(PREF_USERNAME, null);
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
             @Override
@@ -88,10 +90,14 @@ public class MapActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()){
                                             for(QueryDocumentSnapshot document : task.getResult()) {
-                                                GameCode QRCode = document.toObject(GameCode.class);
-                                                LatLng codeLatLng = new LatLng(QRCode.getLatitude(),QRCode.getLongitude());
-                                                MarkerOptions options = new MarkerOptions().position(codeLatLng).title(document.get("title").toString());
-                                                googleMap.addMarker(options);
+                                                if(document.get("owners").toString() != "[]"){
+                                                    System.out.println(document.get("owners").toString());
+                                                    GameCode QRCode = document.toObject(GameCode.class);
+                                                    LatLng codeLatLng = new LatLng(QRCode.getLatitude(),QRCode.getLongitude());
+                                                    MarkerOptions options = new MarkerOptions().position(codeLatLng).title(document.get("title").toString());
+                                                    googleMap.addMarker(options);
+                                                }
+
                                             }
                                         } else {
                                             Log.d("Error occurred", String.valueOf(task.getException()));
@@ -122,6 +128,7 @@ public class MapActivity extends AppCompatActivity {
                                                     gameCodeController.setDataBasePointer(document.getId());
                                                     intent.putExtra("QR ITEM", gameCodeController);
                                                     intent.putExtra("USERNAME", username);
+                                                    intent.putExtra("USER ID", userID);
                                                     startActivity(intent);
                                                 }
                                             } else {
