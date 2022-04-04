@@ -64,6 +64,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Shows the profile information of a player, including all GameCodes scanned.
+ */
 public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQRListener, AdapterView.OnItemSelectedListener {
 
     //implements QRAdapter.OnItemClickListener
@@ -193,7 +196,11 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     }
 
 
-
+    /**
+     * Show login/profile code
+     * @param code
+     * @param buttonCode
+     */
     public void openCodeDialog(String code, String buttonCode) {
         LayoutInflater inflater = getLayoutInflater();
         View codeDialogLayout = inflater.inflate(R.layout.profilecodedialog, null);
@@ -211,6 +218,11 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         codeDialogBuilder.show();
     }
 
+    /**
+     * Show QR image for profile/login code
+     * @param code
+     * @return
+     */
     public Bitmap convertToQr(String code) {
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Bitmap bitmap = null;
@@ -293,6 +305,9 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
     }
 
+    /**
+     * Get information about player to display on profile
+     */
     private void getUserInfo(){
         dbController.getUserInfo(uniqueID).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -327,6 +342,10 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
     }
+
+    /**
+     * Load QR codes to be viewed on the profile
+     */
     private void loadQRCodes(){
         dbController.getPlayers(uniqueID).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -388,6 +407,10 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
     }
+
+    /**
+     * Get total points and # of codes scanned for the player to display
+     */
     private void getPlayerStats(){
         //https://firebase.google.com/docs/firestore/query-data/get-data
         //Obtan user snapshot
