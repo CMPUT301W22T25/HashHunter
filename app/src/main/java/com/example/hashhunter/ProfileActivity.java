@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -80,11 +79,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private Button profileCodeButton;
     private Button loginCodeButton;
     private AlertDialog.Builder codeDialogBuilder;
-    protected TextView usernameView;
+    private TextView usernameView;
     private TextView TreeAmount;
-    protected TextView PointAmount;
-    protected TextView emailView;
+    private TextView PointAmount;
+    private TextView emailView;
     private ArrayList<GameCodeController> qrList;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     public static final Integer RESULT_RESTART = 3;
     private FirestoreController dbController = new FirestoreController();
     private DocumentReference refDoc;
@@ -93,7 +93,6 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private String userName;
     private String playerCode;
     private TextView totalCodes;
-    String ownerID;
     Map<String, Object> myData;
     String userNameCode = "com.example.hashhunter.username";
     String EmailCode ="com.example.hashhunter.email";
@@ -103,12 +102,9 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private PlayerDataController playerController;
     final static ArrayList<String> myArray = new ArrayList<>();
     Spinner sortSpinner;
-    TextView OtherProfilePointAmount;
-    TextView OtherProfileTotalScanned;
     public static ProfileActivity profileInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
@@ -120,10 +116,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         usernameView = findViewById(R.id.username);
         emailView = findViewById(R.id.email);
         profilePic.setImageResource(R.drawable.ic_android);
-        qrList = new ArrayList<>();
+        qrList =  new ArrayList<>();
         profileCodeButton = findViewById(R.id.profileCodeButton);
         loginCodeButton = findViewById(R.id.loginCodeButton);
 
+        PointAmount = findViewById(R.id.pointAmount);
+        totalCodes = findViewById(R.id.codeScannedAmount);
 
 
         sortSpinner = findViewById(R.id.sortSpinner);
@@ -135,31 +133,44 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
         //Retrieve unique id, from intent if available
         uniqueID = preferences.getString(PREF_UNIQUE_ID, null);
-        ownerID = preferences.getString(PREF_UNIQUE_ID, null);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             uniqueID = extras.getString("userId");
             Log.d("PROFILE_DEBUG", "userId: " + uniqueID);
         }
-        System.out.println(PREF_UNIQUE_ID);
-        if (!uniqueID.equals(ownerID)) {
-            loginCodeButton.setVisibility(View.GONE);
-        }
+
         //Obtain all the other information from username
+
+
+
 
 
         ArrayList<Comment> testComments = new ArrayList<>();
         ArrayList<Integer> LocPicResources = new ArrayList<>();
 
+        LocPicResources.add(R.drawable.ic_android);
+        LocPicResources.add(R.drawable.ic_baseline_4g_plus_mobiledata_24);
+        LocPicResources.add(R.drawable.ic_baseline_child_care_24);
+        LocPicResources.add(R.drawable.ic_launcher_background);
+
+        //Show both buttons
+        testComments.add(new Comment("Potato123", "I hate potatoes"));
+        testComments.add(new Comment("lil Tay", "Strongest Flexer In da game"));
+        testComments.add(new Comment("MasterCoder", "Crappy QR code bro step up ur game I am a master coder and I'll let u know that i graduated from master coder academy"));
+        testComments.add(new Comment("MasterChief", "This ain't halo"));
+        testComments.add(new Comment("Lil Peep", "What a sad qr code"));
 
 
+
+
+
+
+
+       // docRef = db.collection("UserInfo").document(uniqueID);
 
         loadProfileInfo();
-
-
-
         //Create the profile stuff click listener
-        // https://www.youtube.com/watch?v=69C1ljfDvl0
+       // https://www.youtube.com/watch?v=69C1ljfDvl0
         //https://www.geeksforgeeks.org/how-to-generate-qr-code-in-android/
         profileCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,27 +322,23 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
                 if (task.isSuccessful()) {
                     // Document found in the offline cache
                     DocumentSnapshot docRef = task.getResult();
+
                     Map<String, Object> myData = docRef.getData();
                     System.out.println(myData);
-                    if (myData != null) {
-                        email = (String) myData.get(EmailCode);
-                        System.out.println(email);
-                        userName = (String) myData.get(userNameCode);
-                        playerCode = (String) myData.get(uniqueID);
+                    email = (String) myData.get(EmailCode);
+                    System.out.println(email);
 
-
-                        usernameView.setText(userName);
-                        if (ownerID == uniqueID);
-                            emailView.setText(email);
-
-                    }
                     //Not proud of this, but haven't found out do this outside the method
 
                     //Maybe they really don't want us to retrieve info outside this for some reason
+                    userName = (String) myData.get(userNameCode);
+                    playerCode = (String) myData.get(uniqueID);
 
                     //For now set the text view to this
                     //Though I will have to change this later after submission
                     //I really tried getting this part outside of the code but it did not let me.
+                    usernameView.setText(userName);
+                    emailView.setText(email);
 
 
                 } else {
@@ -365,9 +372,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
 
                         //We have all the game codes here
+
+                        CollectionReference gameCodesRef = db.collection("GameCode");
+
                         //For each game code owned by the user
 
-                        dbController.getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        gameCodesRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 //Check every gameCode
@@ -412,49 +422,20 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         //https://firebase.google.com/docs/firestore/query-data/get-data
         //Obtan user snapshot
         //https://firebase.google.com/docs/firestore/query-data/listen#java
-        System.out.println("Before obtaining player stats");
-        System.out.println(uniqueID);
         dbController.getPlayerDoc(uniqueID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
-                    System.out.println("FAILED!");
                     Log.w(TAG, "Listen failed.", error);
                     return;
                 }
                 if (value != null && value.exists()) {
-                    System.out.println("Success!");
 
                     Player player = value.toObject(Player.class);
                     Integer points = player.getTotalPoints();
-                    System.out.println(points);
                     Integer codeTotal = player.getTotalGameCode();
-                    System.out.println("Here?");
-                    if (!uniqueID.equals(ownerID)){
-                        System.out.println("HERE!");
-                        /*OtherProfilePointAmount = findViewById(R.id.OtherAcountPointAmount);
-                        OtherProfileTotalScanned = findViewById(R.id.OtherAcountQRScanned);
-                        OtherProfileTotalScanned.invalidate();
-
-
-                        OtherProfilePointAmount.setText("Total points: " + points.toString());
-                        OtherProfileTotalScanned.setText(" Codes scanned: "+codeTotal.toString() );*/
-                        PointAmount = findViewById(R.id.pointAmount);
-                        totalCodes = findViewById(R.id.codeScannedAmount);
-                        totalCodes.setText(" Codes scanned: "+codeTotal.toString() );
-                        PointAmount.setText("Total points: " + points.toString());
-
-
-                    }
-                    else{
-
-                        PointAmount = findViewById(R.id.pointAmount);
-                        totalCodes = findViewById(R.id.codeScannedAmount);
-                        totalCodes.setText(" Codes scanned: "+codeTotal.toString() );
-                        PointAmount.setText("Total points: " + points.toString());
-
-
-                    }
+                    PointAmount.setText("Total points: " + points.toString());
+                    totalCodes.setText("| Codes scanned: "+codeTotal );
 
                 } else {
                     Log.d(TAG, "Current data: null");
