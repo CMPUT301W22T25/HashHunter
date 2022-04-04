@@ -27,6 +27,26 @@ public class DashboardActivity extends AppCompatActivity {
                     Toast.makeText(DashboardActivity.this, "Permission denied to access your camera", Toast.LENGTH_SHORT).show();
                 }
             });
+    private ActivityResultLauncher<String> requestCoarseLocationLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(DashboardActivity.this,MapActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(DashboardActivity.this, "Permission denied to access your location", Toast.LENGTH_SHORT).show();
+                }
+            });
+    private ActivityResultLauncher<String> requestFineLocationLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Intent intent = new Intent(DashboardActivity.this,MapActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(DashboardActivity.this, "Permission denied to access your Precise location", Toast.LENGTH_SHORT).show();
+                    requestCoarseLocationLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+                }
+            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                             break;
                         case R.id.map:
-                            intent = new Intent(DashboardActivity.this, MapActivity.class);
-                            startActivity(intent);
+                            requestFineLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
                             break;
                         case R.id.explore:
                             intent = new Intent(DashboardActivity.this, ExploreActivity.class);
