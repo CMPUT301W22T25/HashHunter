@@ -298,6 +298,9 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
     }
 
+    /**
+     * Get all info for the profile to display
+     */
     public void loadProfileInfo(){
         this.getUserInfo();
         this.getPlayerStats();
@@ -439,6 +442,13 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
     }
 
+    /**
+     * Sort the QR list by ascending or descending and update
+     * @param adapterView
+     * @param view
+     * @param i
+     * @param l
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
