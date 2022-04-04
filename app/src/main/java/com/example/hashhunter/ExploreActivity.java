@@ -46,7 +46,6 @@ import java.util.List;
  */
 public class ExploreActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private PlayerList playerList;
     private RecyclerView leaderboardRecycler;
     private LeaderboardAdapter adapter;
@@ -78,9 +77,7 @@ public class ExploreActivity extends AppCompatActivity {
                         }
                         if (usernameFound) {
                             // get the user id, refactor to use Usernames collection to get userId from username
-                            db.collection("Players")
-                                    .whereEqualTo("username", scannedUsername)
-                                    .get()
+                            FirestoreController.getPlayersName(scannedUsername)
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
