@@ -55,10 +55,10 @@ public class MapActivity extends AppCompatActivity {
         ContextCompat.checkSelfPermission(MapActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MapActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,},1);
         }
+
         //Get shared preferences info for username
         SharedPreferences sharedPreferences = getSharedPreferences(PREF_USERNAME, Context.MODE_PRIVATE);
         username = sharedPreferences.getString(PREF_USERNAME, null);
-
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
             @Override
