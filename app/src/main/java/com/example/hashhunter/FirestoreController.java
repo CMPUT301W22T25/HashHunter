@@ -429,14 +429,13 @@ public class FirestoreController {
      * @param gameCodeId
      * @param usernameId
      */
-    public void deleteGameCodeUsernameReference(String gameCodeId, String usernameId){
+    public void deleteGameCodeUsernameReference(String usernameId, String gameCodeId){
 
         Map<String, Object> elementToDelete = new HashMap<>();
 
-        elementToDelete.put("owners", FieldValue.arrayRemove(usernameId));
         db.collection("GameCode")
                 .document(gameCodeId)
-                .update(elementToDelete);
+                .update("owners", FieldValue.arrayRemove(usernameId));
     }
 
     /**

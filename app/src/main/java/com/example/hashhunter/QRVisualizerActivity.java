@@ -110,6 +110,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        myController.SyncController();
         if (myController.getLatitude() != null  && myController.getLongitude() != null) {
             getLocation(myController.getLatitude(), myController.getLongitude());
         }
@@ -356,21 +357,26 @@ public class QRVisualizerActivity extends AppCompatActivity {
      *        location data corresponding to latitude
      */
     public void getLocation(double latitude, double longitude ) {
-
         Geocoder geocoder = new Geocoder(QRVisualizerActivity.this, Locale.getDefault());
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            System.out.println("Did I go here?");
+            System.out.println(addresses);
+
         } catch (
                 IOException e) {
+            System.out.println("Or Did I go here?");
             e.printStackTrace();
         }
-        String cityName = addresses.get(0).getLocality();
-        String countryName = addresses.get(0).getCountryName();
 
-        locationView = findViewById(R.id.gameCodeLocation);
-        locationView.setText(cityName +", " + countryName );
+        if (addresses.size() != 0) {
+            String cityName = addresses.get(0).getLocality();
+            String countryName = addresses.get(0).getCountryName();
 
+            locationView = findViewById(R.id.gameCodeLocation);
+            locationView.setText(cityName + ", " + countryName);
+        }
 
 
     }
