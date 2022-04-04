@@ -70,9 +70,11 @@
         android:layout_marginBottom="15dp"
         android:text="PointAmount"
         app:layout_constraintBottom_toTopOf="@+id/codeScannedAmount"
+        app:layout_constraintEnd_toStartOf="@+id/codeScannedAmount"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintEnd_toStartOf="@+id/codeScannedAmount"/>
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/email"

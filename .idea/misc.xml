@@ -29,26 +29,23 @@
         <entry key="..\:/Users/Aaron/AndroidStudioProjects/HashHunter/app/src/main/res/layout/scanner_layout.xml" value="0.26902173913043476" />
         <entry key="..\:/Users/Aaron/AndroidStudioProjects/HashHunter/app/src/main/res/layout/tree_list_item.xml" value="0.26902173913043476" />
         <entry key="..\:/Users/Aaron/AndroidStudioProjects/HashHunter/app/src/main/res/menu/bottom_navigation_bar.xml" value="0.3026041666666667" />
+        <entry key="..\:/Users/Stuart/AndroidStudioProjects/HashHunter/app/src/main/res/layout/activity_profile.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/Stuart/AndroidStudioProjects/HashHunter/app/src/main/res/layout/activity_qrvisualizer.xml" value="0.28125" />
         <entry key="..\:/Users/Stuart/AndroidStudioProjects/HashHunter/app/src/main/res/layout/activity_scan_submit.xml" value="0.24088145896656535" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/drawable/ic_android.xml" value="0.14" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/drawable/ic_baseline_qr_code_scanner_24.xml" value="0.14" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/drawable/profilebutton.xml" value="0.14" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/layout/activity_login.xml" value="0.2536231884057971" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/layout/activity_owner.xml" value="0.2536231884057971" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/layout/activity_profile.xml" value="0.25" />
-        <entry key="..\:/Users/Stuart/StudioProjects/HashHunter/app/src/main/res/layout/activity_scan_submit.xml" value="0.264" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.12604166666666666" />
+        <entry key="app/src/main/res/layout/activity_explore.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.12604166666666666" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.12604166666666666" />
+        <entry key="app/src/main/res/layout/activity_qrvisualizer.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/activity_scan.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_scan_submit.xml" value="0.2" />
       </map>
     </option>
   </component>
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/.." />
-  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
   </component>
 </project>

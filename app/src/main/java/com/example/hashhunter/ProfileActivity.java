@@ -80,10 +80,9 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private Button profileCodeButton;
     private Button loginCodeButton;
     private AlertDialog.Builder codeDialogBuilder;
-    protected TextView usernameView;
-    private TextView TreeAmount;
-    protected TextView PointAmount;
-    protected TextView emailView;
+    public TextView usernameView;
+    public TextView PointAmount;
+    public TextView emailView;
     private ArrayList<GameCodeController> qrList;
     public static final Integer RESULT_RESTART = 3;
     private FirestoreController dbController = new FirestoreController();
@@ -92,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     private String email;
     private String userName;
     private String playerCode;
-    private TextView totalCodes;
+    public TextView totalCodes;
     String ownerID;
     Map<String, Object> myData;
     String userNameCode = "com.example.hashhunter.username";
@@ -450,7 +449,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
                         PointAmount = findViewById(R.id.pointAmount);
                         totalCodes = findViewById(R.id.codeScannedAmount);
-                        totalCodes.setText(" Codes scanned: "+codeTotal.toString() );
+                        totalCodes.setText("Codes scanned: "+codeTotal.toString() );
                         PointAmount.setText("Total points: " + points.toString());
 
 

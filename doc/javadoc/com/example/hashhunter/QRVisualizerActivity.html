@@ -175,6 +175,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">QRVisualizerActivity</span>
 extends androidx.appcompat.app.AppCompatActivity</pre>
+<div class="block">Activity to show information of qr codes from the profile or on the map</div>
 </li>
 </ul>
 </div>
@@ -268,12 +269,16 @@ extends androidx.appcompat.app.AppCompatActivity</pre>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocation(double,double)">getLocation</a></span>&#8203;(double&nbsp;latitude,
            double&nbsp;longitude)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">gets more specific data such as city and country based on latitude and longitude</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initializePhotos(com.example.hashhunter.GameCodeController)">initializePhotos</a></span>&#8203;(<a href="GameCodeController.html" title="class in com.example.hashhunter">GameCodeController</a>&nbsp;myController)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">gets all photos that are related to the qr code</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
@@ -411,6 +416,11 @@ extends androidx.appcompat.app.AppCompatActivity</pre>
 <li class="blockList">
 <h4>initializePhotos</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;initializePhotos&#8203;(<a href="GameCodeController.html" title="class in com.example.hashhunter">GameCodeController</a>&nbsp;myController)</pre>
+<div class="block">gets all photos that are related to the qr code</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>myController</code> - controller for qr code</dd>
+</dl>
 </li>
 </ul>
 <a id="onOptionsItemSelected(android.view.MenuItem)">
@@ -434,6 +444,12 @@ extends androidx.appcompat.app.AppCompatActivity</pre>
 <h4>getLocation</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;getLocation&#8203;(double&nbsp;latitude,
                         double&nbsp;longitude)</pre>
+<div class="block">gets more specific data such as city and country based on latitude and longitude</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>latitude</code> - location data corresponding to latitude</dd>
+<dd><code>longitude</code> - location data corresponding to latitude</dd>
+</dl>
 </li>
 </ul>
 </li>
