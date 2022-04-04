@@ -35,6 +35,9 @@ import java.util.regex.Pattern;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
+/**
+ * Activity for registering a player
+ */
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.RegisterActivity";
     public static final String KEY_UNAME = "com.example.hashhunter.username";
