@@ -28,20 +28,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.UUID;
 import java.util.function.LongFunction;
 
+
 /**
  * This is the activity for user login for the first time
  * If they scan a QR code, it logs them in if they are an existing user in the database
  * If they register, it generates a unique ID for them and adds their information to the database
- * reference:
- * https://developer.android.com/training/basics/firstapp/starting-activity#java
- * https://www.youtube.com/watch?v=AD5qt7xoUU8
- * https://www.youtube.com/watch?v=7Fc79qTq7yc
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "com.example.hashhunter.LoginActivity";
     private static SharedPreferences sharedPreferences;
 
     private boolean isPlayer = false;
+
+//      reference:
+//      https://developer.android.com/training/basics/firstapp/starting-activity#java
+//      https://www.youtube.com/watch?v=AD5qt7xoUU8
+//      https://www.youtube.com/watch?v=7Fc79qTq7yc
 
 
     // this handles the result from the scan activity
