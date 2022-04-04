@@ -234,13 +234,12 @@ public class ProfileActivityTest {
      */
     @Test
     public void TestGoingOnQr(){
+        //Add a fake gamecode in case there isn't any
         String gameId = FakeAddGameCode("TestProfile", "wqe2eqw12", TestUserId, 10);
+        //Get recycler and click on qr and check if it;s on a different activity
         RecyclerView recycler = (RecyclerView) solo.getView(R.id.treeList);
-        QRAdapter adapter = (QRAdapter) recycler.getAdapter();
-        System.out.println(adapter);
         solo.clickOnView(recycler.getChildAt(0));
         solo.assertCurrentActivity("QR Visualizer", QRVisualizerActivity.class);
-        GameCodeController controller = adapter.getItem(0);
 
     }
 
@@ -307,11 +306,13 @@ public class ProfileActivityTest {
         String textToEnter = "HAHAHAHAHA THIS QR SUCKS!";
         solo.enterText(textBox, textToEnter);
         solo.sleep(5000);
+        //Send the comment and obtain the old count
         QRVisualizerActivity OldQRVis = (QRVisualizerActivity) solo.getCurrentActivity();
         int oldSize = OldQRVis.commentAdapter.getItemCount();
         solo.sleep(5000);
         solo.clickOnView(solo.getView(R.id.sendButton));
         solo.sleep(5000);
+        //Check if the comment list has been updated and check the owner and username
         QRVisualizerActivity QRVis = (QRVisualizerActivity) solo.getCurrentActivity();
         int newSize = QRVis.commentAdapter.getItemCount();
         solo.sleep(5000);
@@ -359,6 +360,8 @@ public class ProfileActivityTest {
         });
 
     }
+
+
 
 
 }
