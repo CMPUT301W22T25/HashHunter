@@ -1,6 +1,10 @@
 package com.example.hashhunter;
 
+import static org.junit.Assert.assertEquals;
+
 import android.app.Activity;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -14,8 +18,8 @@ import org.junit.Test;
 public class DeleteGameCodeActivityTest {
     private Solo solo;
     @Rule
-    public ActivityTestRule<DeleteGameCodeActivity> rule =
-            new ActivityTestRule<>(DeleteGameCodeActivity.class, true, true);
+    public ActivityTestRule<OwnerActivity> rule =
+            new ActivityTestRule<>(OwnerActivity.class, true, true);
 
     /**
      * Runs before all tests and creates solo instance.
@@ -37,11 +41,13 @@ public class DeleteGameCodeActivityTest {
 
     @Test
     public void checkDelete() {
-//        solo.waitForActivity(DeletePlayerActivity.class);
-//        solo.assertCurrentActivity("Wrong Activity", DeleteGameCodeActivity.class);
-        solo.assertCurrentActivity("Wrong Activity 2", DeleteGameCodeActivity.class);
-//        solo.assertCurrentActivity("Wrong Activity 1", ScanActivity.class);
-//        solo.finishOpenedActivities();
-//        solo.assertCurrentActivity("Wrong Activity 2", DeleteGameCodeActivity.class);
+        // assumes the user will scan a code
+        solo.assertCurrentActivity("Wrong Activity", OwnerActivity.class);
+        solo.clickOnView(solo.getView(R.id.delete_code_button)); //Select Delete Code Button
+        solo.waitForActivity(ScanActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
+        solo.waitForActivity(DeleteGameCodeActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DeleteGameCodeActivity.class);
+        solo.waitForText("Latitude: ");
     }
 }
