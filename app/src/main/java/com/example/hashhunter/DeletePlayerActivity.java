@@ -116,6 +116,17 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                                 try {
                                                     if (document.getString("owner").equals(username)) {
                                                         document.getReference().delete();
+                                                        String commentID = document.getId();
+                                                        FirestoreController.getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    for (QueryDocumentSnapshot doc: task.getResult()) {
+                                                                        doc.getReference().update("comments", FieldValue.arrayRemove(commentID));
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 } catch (NullPointerException e) {
                                                     Log.d(TAG, "nullpointer: " + e.toString());
@@ -134,6 +145,17 @@ public class DeletePlayerActivity extends AppCompatActivity {
                                                 try {
                                                     if (document.getString("owner").equals(username)) {
                                                         document.getReference().delete();
+                                                        String photoID  = document.getId();
+                                                        FirestoreController.getGameCodeList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    for (QueryDocumentSnapshot doc: task.getResult()) {
+                                                                        doc.getReference().update("photos", FieldValue.arrayRemove(photoID));
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 } catch (NullPointerException e) {
                                                     Log.d(TAG, "nullpointer: " + e.toString());
