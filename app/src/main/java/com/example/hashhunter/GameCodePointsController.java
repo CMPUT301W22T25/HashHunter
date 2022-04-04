@@ -10,8 +10,9 @@ import java.util.Vector;
 import java.lang.Math;
 
 /**
- * @References SHA-256 hashing from GeeksforGeeks; Aug 7th, 2019; https://www.geeksforgeeks.org/sha-256-hash-in-java/
- * @References hex to decimal from javatpoint; accessed Feb 22th, 2022; https://www.javatpoint.com/java-hex-to-decimal
+ * Controller to hash strings and obtain points
+ * References: SHA-256 hashing from GeeksforGeeks; Aug 7th, 2019; https://www.geeksforgeeks.org/sha-256-hash-in-java/
+ * References: hex to decimal from javatpoint; accessed Feb 22th, 2022; https://www.javatpoint.com/java-hex-to-decimal
  */
 public class GameCodePointsController {
     /**
