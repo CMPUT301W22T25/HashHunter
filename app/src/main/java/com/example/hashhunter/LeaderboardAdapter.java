@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for leaderboard
+ * puts a list of players into a recyclerView to be displayed in the explore activity
+ */
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.leaderboardViewHolder> {
 
 
@@ -20,7 +24,10 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         this.playerList = playerList;
     }
 
-
+    /**
+     * displays each item in the RecyclerView
+     * displays a rank, username, and points
+     */
     public class leaderboardViewHolder extends RecyclerView.ViewHolder {
 
 
