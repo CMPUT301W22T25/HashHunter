@@ -27,7 +27,6 @@ import com.google.android.libraries.maps.SupportMapFragment;
 import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.Marker;
 import com.google.android.libraries.maps.model.MarkerOptions;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 /**
@@ -39,7 +38,6 @@ public class MapActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private SupportMapFragment supportMapFragment;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private SharedPreferences sharedPreferences;
     private String username;
     // Main function that asks for permissions, initializes google map fragment, and adds markers on fragments and clicking on markers to go to qr visualizer activity
@@ -63,14 +61,16 @@ public class MapActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
             @Override
             /** When location values are received from phone, show map and plot points on map
-             * @Param Location
+             * @Param location
+             *          location values from phone
              */
             public void onLocationChanged(@NonNull Location location) {
                 supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     /**
                      * Once map is ready get the latitude and longitude of location values and place player marker
-                     * @param GoogleMap
+                     * @param googleMap
+                     *          google map fragment
                      */
                     public void onMapReady(GoogleMap googleMap) {
                         // Get Location of player and put them on the map as a marker
@@ -81,6 +81,7 @@ public class MapActivity extends AppCompatActivity {
                         // Add all QR codes with location data to the map
                         /**
                          * Once firebase data of all QR code objects that contain latitude and longitudes is received, place them as markers on the map
+                         *
                          */
                         FirestoreController.getGameCodeListWithLocation().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -101,7 +102,8 @@ public class MapActivity extends AppCompatActivity {
                             @Override
                             /**
                              * On clicking marker on map, move activities to QR visualizer activity
-                             * @param Marker
+                             * @param marker
+                             *        google map marker
                              * @return boolean
                              */
                             //Adds on click method for all markers that are not the player marker
