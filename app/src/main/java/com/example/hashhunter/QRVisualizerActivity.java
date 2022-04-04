@@ -109,7 +109,9 @@ public class QRVisualizerActivity extends AppCompatActivity {
                 closeKeyboard();
             }
         });
-
+        /**
+         * click button to add comment
+         */
         //This buttons function is to send a comment
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +161,9 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
         //Check if the user is the owner of the qr code
         CardView cardHolder = findViewById(R.id.codeCardHolder);
-
+        /**
+         * adds long click action to cards to enable deleting of cards if user is owner
+         */
         cardHolder.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
