@@ -34,6 +34,7 @@ public class DashboardActivityTest {
     /**
      * Checks clicking of dashboard buttons and going to each separate activity
      */
+
     @Test
     public void checkSwitchToExplore() {
         solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
@@ -64,15 +65,11 @@ public class DashboardActivityTest {
         solo.assertCurrentActivity("Wrong Activity", ProfileActivity.class);
     }
     /**
-     * Checks home fragment text. Use different asserts depending on score.
+     * Checks text of home fragment
      */
     @Test
     public void checkHomeFragmentText() {
         assert(solo.searchText("Player Score"));
-        //assert(solo.searchText("Your forest could use some work! \nKeep on hunting!"));
-        //assert(solo.searchText("Wow you are quite the hunter! \nGreat job!"));
-        //assert(solo.searchText("Nice forest! \nKeep it growing!"));
-        //assert(solo.searchText("Amazing work! \nYou are truly a top hunter!"));
     }
 
 
