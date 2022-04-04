@@ -19,11 +19,11 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
+/**
+ * Main home fragment with visualization of player points, and adding compliments based on player progress
+ */
 public class MainFragment extends Fragment {
-    /**
-     * Main home fragment with visualization of player points, and adding compliments based on player progress
-     */
+
     private SharedPreferences sharedPreferences;
     private ImageView scoreImage;
     private TextView scoreDisplay;
