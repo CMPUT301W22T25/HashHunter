@@ -40,7 +40,7 @@ import java.util.Map;
 
 
 
-public class ProfileActivityTest extends ProfileActivity{
+public class ProfileActivityTest {
     private Solo solo;
     SharedPreferences preferences;
     String OldId;
@@ -185,10 +185,12 @@ public class ProfileActivityTest extends ProfileActivity{
 
         p.loadProfileInfo();
 
-        String strPoints = p.PointAmount.getText().toString();
-        String newPointsStr = strPoints.replace("Total points: ", "");
-        newPoints = Integer.parseInt(newPoints)
-        assertEquals(points + pointsToAdd, );
+        String newPointsStr = p.PointAmount.getText().toString();
+        newPointsStr = strPoints.replace("Total points: ", "");
+        int newPoints = Integer.parseInt(newPointsStr);
+        assertEquals(points + pointsToAdd, newPoints);
+
+        solo.waitForActivity("wqe", 60);
     }
 
     private void updatePlayer(String gameCodeID, int points){
