@@ -83,7 +83,7 @@ public class ProfileActivityTest {
         return uniqueId;
 
     }
-    public void FakeAddGameCode(String title, String code, String uniqueId, Integer points) {
+    public String FakeAddGameCode(String title, String code, String uniqueId, Integer points) {
         //We add a set of game codes to the player into the database in order to test
         DocumentReference gameCodeDoc = db.collection("GameCode").document();
         String  gameCodeId = gameCodeDoc.getId();
@@ -106,6 +106,7 @@ public class ProfileActivityTest {
         gameCodeDoc.set(codeData);
 
         updatePlayer(gameCodeId, points);
+        return gameCodeId;
     }
 
 
@@ -176,21 +177,26 @@ public class ProfileActivityTest {
 
     @Test
     public void TestPointUpdate(){
+        FirestoreController dbController = new FirestoreController();
         ProfileActivity p= rule.getActivity();
         String strPoints = p.PointAmount.getText().toString();
         strPoints = strPoints.replace("Total points: ", "");
         Integer points = Integer.parseInt(strPoints);
         Integer pointsToAdd = 10;
-        FakeAddGameCode("TestCode", "21ewqddqdw", TestUserId, pointsToAdd);
-
+        System.out.println("Points?");
+        System.out.println(points);
         p.loadProfileInfo();
-
+        String gameId = FakeAddGameCode("TestProfile", "wqe2eqw12", TestUserId, 10);
         String newPointsStr = p.PointAmount.getText().toString();
         newPointsStr = strPoints.replace("Total points: ", "");
         int newPoints = Integer.parseInt(newPointsStr);
-        assertEquals(points + pointsToAdd, newPoints);
-
+        System.out.println("New points!");
+        System.out.println(newPoints);
         solo.waitForActivity("wqe", 60);
+        dbController.deletePlayerGameCodeReference(TestUserId, gameId);
+        dbController.deleteGameCodeUsernameReference(TestUserId, gameId);
+
+
     }
 
     private void updatePlayer(String gameCodeID, int points){
