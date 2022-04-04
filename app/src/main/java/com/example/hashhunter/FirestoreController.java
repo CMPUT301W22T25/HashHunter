@@ -13,9 +13,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
-import java.text.CollationElementIterator;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -375,7 +372,7 @@ public class FirestoreController {
      */
     @NonNull
     public static Task<QuerySnapshot> getGameCodeListWithLocation() {
-        Query collRef = db.collection("GameCode").whereNotEqualTo("latitude",null);
+        Query collRef = db.collection("GameCode").whereNotEqualTo("latitude",null).whereNotEqualTo("owners",null);
         return collRef.get();
     }
 
