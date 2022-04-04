@@ -74,7 +74,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
     String ownerID;
     String ownerUser;
-
+    public Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,12 +176,13 @@ public class QRVisualizerActivity extends AppCompatActivity {
         //Check if the user is the owner of the qr code
         CardView cardHolder = findViewById(R.id.codeCardHolder);
         if (playerId.equals(ownerID)) {
-            System.out.println("Owner went here");
+            System.out.println("Going onto delete the qr code");
             cardHolder.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    System.out.println("Going onto delete the qr code on long click");
 
-                    Dialog dialog = new Dialog(QRVisualizerActivity.this);
+                    dialog = new Dialog(QRVisualizerActivity.this);
                     dialog.setContentView(R.layout.deletedialog);
                     dialog.setCanceledOnTouchOutside(true);
                     dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);

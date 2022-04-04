@@ -75,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
     //Set QR list, adapter, and grid manager
     private RecyclerView QRRecycler;
     private ImageView profilePic;
-    private QRAdapter QRRecycleAdapter;
+    public QRAdapter QRRecycleAdapter;
     private GridLayoutManager QRGridManager = new GridLayoutManager(this, columns);
     private Button profileCodeButton;
     private Button loginCodeButton;
@@ -496,4 +496,12 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
         //This helps the list to sort automatically after the recycler is loaded
         sortSpinner.setSelection(1);
     }
+    public Integer getPoints(){
+        String p = PointAmount.getText().toString();
+        p = p.replace("Total points: ", "");
+        Integer points = Integer.parseInt(p);
+
+        return points;
+    }
+
 }
