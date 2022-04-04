@@ -372,7 +372,7 @@ public class FirestoreController {
      */
     @NonNull
     public static Task<QuerySnapshot> getGameCodeListWithLocation() {
-        Query collRef = db.collection("GameCode").whereNotEqualTo("latitude",null).whereNotEqualTo("owners",null);
+        Query collRef = db.collection("GameCode").whereNotEqualTo("latitude",null);
         return collRef.get();
     }
 
