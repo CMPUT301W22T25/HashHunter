@@ -16,9 +16,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 
+/**
+ * A class for displaying qr codes in a recycler view
+ */
 public class QRVisualizerAdapter extends RecyclerView.Adapter<QRVisualizerAdapter.QRVisualizerViewHolder>{
     private ArrayList<PhotoController> QRLocPicList;
 
+    /**
+     * constructor for the class
+     * @param somePhotos an array of photo controllers
+     */
     public QRVisualizerAdapter(ArrayList<PhotoController> somePhotos){
         this.QRLocPicList = somePhotos;
     }
@@ -42,15 +49,25 @@ public class QRVisualizerAdapter extends RecyclerView.Adapter<QRVisualizerAdapte
 
     }
 
+    /**
+     * returns the number of photos
+     * @return number of photos
+     */
     @Override
     public int getItemCount() {
         return QRLocPicList.size();
     }
 
-
+    /**
+     * a class for displaying the qr code in an image view
+     */
     public class QRVisualizerViewHolder extends RecyclerView.ViewHolder{
         ImageView LocPicView;
 
+        /**
+         * constructor for the class
+         * @param visualizerItem a view for the photo
+         */
         public QRVisualizerViewHolder(View visualizerItem){
             super(visualizerItem);
             LocPicView = visualizerItem.findViewById(R.id.LocationImage);
