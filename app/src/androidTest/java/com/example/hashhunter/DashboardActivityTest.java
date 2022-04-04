@@ -65,7 +65,7 @@ public class DashboardActivityTest {
         solo.assertCurrentActivity("Wrong Activity", ProfileActivity.class);
     }
     /**
-     * Checks clicking of dashboard buttons and going to each separate activity
+     * Checks text of home fragment
      */
     @Test
     public void checkHomeFragmentText() {
