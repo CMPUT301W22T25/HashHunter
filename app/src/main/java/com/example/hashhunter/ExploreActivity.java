@@ -78,7 +78,7 @@ public class ExploreActivity extends AppCompatActivity {
                         }
                         if (usernameFound) {
                             // get the user id, refactor to use Usernames collection to get userId from username
-                            FirestoreController.getPlayersName(name)
+                            FirestoreController.getPlayersName(scannedUsername)
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
