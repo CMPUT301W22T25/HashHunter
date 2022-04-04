@@ -183,7 +183,11 @@ public class ProfileActivityTest extends ProfileActivity{
         Integer pointsToAdd = 10;
         FakeAddGameCode("TestCode", "21ewqddqdw", TestUserId, pointsToAdd);
 
-        strPoints = strPoints.replace("Total points: ", "");
+        p.loadProfileInfo();
+
+        String strPoints = p.PointAmount.getText().toString();
+        String newPointsStr = strPoints.replace("Total points: ", "");
+        newPoints = Integer.parseInt(newPoints)
         assertEquals(points + pointsToAdd, );
     }
 
