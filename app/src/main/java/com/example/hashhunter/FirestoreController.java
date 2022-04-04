@@ -86,7 +86,7 @@ public class FirestoreController {
     Players collection
      */
     @NonNull
-    public static DocumentReference getPlayerDoc(String userId){
+    public DocumentReference getPlayerDoc(String userId){
         return db.collection("Players").document(userId);
     }
 
