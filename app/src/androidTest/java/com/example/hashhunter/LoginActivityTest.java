@@ -60,4 +60,17 @@ public class LoginActivityTest {
         solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
     }
 
+    /**
+     * Checks if scanning login code takes you to DashboardActivity. Need camera and code to scan to test.
+     */
+    @Test
+    public void checkLoginQR(){
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
+        solo.clickOnView(solo.getView(R.id.login_button)); //Select Login Button
+        solo.waitForActivity(ScanActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", ScanActivity.class);
+        solo.waitForActivity(DashboardActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
+    }
+
 }

@@ -5,7 +5,6 @@ import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
+/**
+ * Main home fragment with visualization of player points, and adding compliments based on player progress
+ */
 public class MainFragment extends Fragment {
-    /**
-     * Main home fragment with visualization of player points, and adding compliments based on player progress
-     */
+
     private SharedPreferences sharedPreferences;
     private ImageView scoreImage;
     private TextView scoreDisplay;
@@ -61,7 +60,7 @@ public class MainFragment extends Fragment {
         /**
          * Get player class from unique id,
          * and take total points from player and then change flair text and image corresponding to score
-         * @param Task
+         *
          */
         FirestoreController.getPlayerDoc(unique_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -100,12 +99,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        // Reload current fragment
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false);
-        }
-        ft.detach(this).attach(this).commit();
 
 
 

@@ -9,15 +9,15 @@
     tools:context=".ProfileActivity">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="71dp"
         android:layout_height="71dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
         android:innerRadius="0dp"
         android:shape="ring"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="500dp"
-        app:layout_constraintEnd_toStartOf="@+id/username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -62,16 +62,19 @@
 
 
     <TextView
-
         android:id="@+id/pointAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
         android:text="PointAmount"
+        app:layout_constraintBottom_toTopOf="@+id/codeScannedAmount"
+        app:layout_constraintEnd_toStartOf="@+id/codeScannedAmount"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintEnd_toStartOf="@+id/codeScannedAmount"/>
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/email"
@@ -86,13 +89,16 @@
 
     <TextView
         android:id="@+id/username"
-        android:layout_width="169dp"
+        android:layout_width="wrap_content"
         android:layout_height="29dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="120dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="184dp"
         android:text="Username"
         android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -122,16 +128,44 @@
     </Spinner>
 
     <TextView
+        android:id="@+id/OtherAcountPointAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/OtherAcountQRScanned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="304dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/email"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </TextView>
+
+    <TextView
         android:id="@+id/codeScannedAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="73dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="53dp"
+        android:gravity="center"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.988"
-        app:layout_constraintStart_toEndOf="@+id/pointAmount"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left"
+        app:constraint_referenced_ids="username" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

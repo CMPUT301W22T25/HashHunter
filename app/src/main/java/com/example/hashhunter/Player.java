@@ -20,18 +20,26 @@ public class Player implements Parcelable {
     private int displayTotal;
 
     /**
-     * constructors
+     * empty constructor for firestore operations
      */
     public Player() {
         this.gameCodeList = new ArrayList<>();
     }
 
+    /**
+     * constructs a player with a given username
+     * @param username
+     *      the username of the player that is being constructed
+     */
     public Player(String username) {
         this.username = username;
         this.gameCodeList = new ArrayList<>();
     }
 
-
+    /**
+     * contructs a player from parcelable
+     * @param in data from parcel
+     */
     protected Player(Parcel in) {
         username = in.readString();
         profileCode = in.readString();
@@ -42,6 +50,10 @@ public class Player implements Parcelable {
         displayTotal = in.readInt();
     }
 
+
+    /**
+     * creates a player from parcelable
+     */
     public static final Creator<Player> CREATOR = new Creator<Player>() {
         @Override
         public Player createFromParcel(Parcel in) {
@@ -178,6 +190,11 @@ public class Player implements Parcelable {
         return 0;
     }
 
+    /**
+     * to make player parcelable
+     * @param parcel the parcel that is to be written to
+     * @param i an integer, not used
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(username);

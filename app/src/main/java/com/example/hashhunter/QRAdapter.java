@@ -17,17 +17,28 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Adapter to display QR code as a list in the ProfileActivity
+ */
 public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     private ArrayList<GameCodeController> qrList;
     private OnQRListener myAdapterListener;
 
-
-
+    /**
+     * constructor for QRAdapter
+     * @param controllerList
+     * @param myListener
+     */
     public QRAdapter(ArrayList<GameCodeController> controllerList,OnQRListener myListener){
       this.myAdapterListener = myListener;
       this.qrList = controllerList;
     }
 
+    /**
+     * getter for GameCodeController
+     * @param position
+     * @return GameCodeController controller to interact with GameCode object
+     */
     public GameCodeController getItem(int position){
         if (position < this.qrList.size()) {
             return this.qrList.get(position);
@@ -39,7 +50,9 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
     @NonNull
     @Override
 
-
+    /**
+     * create a view for recycler view
+     */
     public qrViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View myView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tree_list_item, parent, false);
 
@@ -48,11 +61,16 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
         return qrHolder;
     }
 
+    /**
+     * utility functions for recycler view to select item from qrList and display it
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull qrViewHolder holder, int position) {
         GameCodeController myController = qrList.get(position);
         myController.SyncController();
-        holder.treeView.setImageResource(R.drawable.ic_android);
+        holder.treeView.setImageResource(R.drawable.ic_baseline_qr_code_scanner_24);
         System.out.println(myController.getTitle());
         holder.titleView.setText(myController.getTitle());
         holder.pointsView.setText("Points: "+ myController.getPoints().toString());
@@ -60,17 +78,29 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
 
     }
 
+    /**
+     * return size of qrList array
+     * @return
+     */
     @Override
     public int getItemCount() {
         return qrList.size();
     }
 
-
+    /**
+     * nested class to create container for qr code
+     */
     public class qrViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView treeView;
         public TextView pointsView;
         public TextView titleView;
         public OnQRListener qrListener;
+
+        /**
+         * constructor for qrViewHolder
+         * @param itemView
+         * @param listener
+         */
         public qrViewHolder(@NonNull View itemView, OnQRListener listener) {
             super(itemView);
             treeView = itemView.findViewById(R.id.treeImage);
@@ -80,17 +110,12 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
 
             this.qrListener = listener;
             itemView.setOnClickListener(this);
-            /*{
-                @Override
-                public void onClick(View view) {
-                    int position = getBindingAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && listener != null){
-                        System.out.println("Click!");
-                    }
-                }
-            })*/
         }
 
+        /**
+         * specify what to do when qr view holder is clicked
+         * @param view
+         */
         @Override
         public void onClick(View view) {
             int position = getBindingAdapterPosition();
@@ -100,15 +125,23 @@ public class QRAdapter extends RecyclerView.Adapter<QRAdapter.qrViewHolder> {
         }
     }
 
+    /**
+     * interface to create on click listener for the qr view container
+     */
     public interface OnQRListener{
         void onQRClick(int position);
     }
+
+    /**
+     * customize ascending sorting of qrList
+     */
     public void sortAscending(){
-
         Collections.sort(qrList, new CustomComparator());
-
-
     }
+
+    /**
+     * customize descending sorting of qrList
+     */
     public void sortDescending(){
         Collections.sort(qrList, new CustomComparator());
         Collections.reverse(qrList);

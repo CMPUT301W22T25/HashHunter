@@ -2,6 +2,10 @@ package com.example.hashhunter;
 
 import java.util.Comparator;
 //https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
+
+/**
+ * Custom comparator to compare points between gamecodecontroller objects
+ */
 public class CustomComparator implements Comparator<GameCodeController> {
 
     @Override
