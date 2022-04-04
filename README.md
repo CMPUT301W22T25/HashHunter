@@ -1,2 +1,2 @@
 # HashHunter
-A game where player scan QR code and barcode to collect points
+A game where players scan QR codes and barcodes to collect points
