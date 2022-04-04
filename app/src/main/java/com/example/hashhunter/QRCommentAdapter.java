@@ -44,8 +44,8 @@ public class QRCommentAdapter extends RecyclerView.Adapter<QRCommentAdapter.Comm
     }
     /**
      * gets a specific comment
-     * @Param desired index to fetch comment
-     * @return desired comment controller
+     * @param i desired index to fetch comment
+     * @return CommentController desired comment controller
      */
     public CommentController getItem(int i){
         return CommentList.get(i);
