@@ -273,6 +273,10 @@ public class ProfileActivity extends AppCompatActivity implements QRAdapter.OnQR
 
     }
 
+    /**
+     * Open QR visualiser activity for selected QR code
+     * @param position
+     */
     @Override
     public void onQRClick(int position) {
 

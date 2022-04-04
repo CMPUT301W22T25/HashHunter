@@ -31,7 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 /**
  * Map activity showcasing geolocation of player and QR codes
- * @References GPS location app: https://www.youtube.com/watch?v=l-J6gDYtgFU Google Maps fragment: https://www.youtube.com/watch?v=p0PoKEPI65o
+ * References: GPS location app: https://www.youtube.com/watch?v=l-J6gDYtgFU Google Maps fragment: https://www.youtube.com/watch?v=p0PoKEPI65o
  *
  */
 public class MapActivity extends AppCompatActivity {
