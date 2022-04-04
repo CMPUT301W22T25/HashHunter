@@ -17,7 +17,7 @@ import com.google.zxing.Result;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @References QR code scanner/decoder from Yuriy Budiyev https://github.com/yuriy-budiyev/code-scanner
+ * References: QR code scanner/decoder from Yuriy Budiyev https://github.com/yuriy-budiyev/code-scanner
  * License: MIT License
  * Copyright (c) 2017 Yuriy Budiyev [yuriy.budiyev@yandex.ru]
  *
