@@ -1,6 +1,9 @@
 package com.example.hashhunter;
 
 
+import static com.example.hashhunter.MainActivity.PREF_UNIQUE_ID;
+import static com.example.hashhunter.MainActivity.PREF_USERNAME;
+import static com.example.hashhunter.MainActivity.SHARED_PREF_NAME;
 import static com.example.hashhunter.ProfileActivity.RESULT_RESTART;
 
 import android.app.Dialog;
@@ -60,7 +63,6 @@ public class QRVisualizerActivity extends AppCompatActivity {
     EditText textBoxView;
     AppCompatButton sendButton;
     String username;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirestoreController dbController = new FirestoreController();
     private DocumentReference refDoc;
     private DocumentSnapshot userDoc;
@@ -69,6 +71,10 @@ public class QRVisualizerActivity extends AppCompatActivity {
     String playerId;
     Button deleteVisButton;
     TextView locationView;
+
+    String ownerID;
+    String ownerUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +88,9 @@ public class QRVisualizerActivity extends AppCompatActivity {
         myConstLayout = findViewById(R.id.visLayout);
         textBoxView = findViewById(R.id.textBox);
         sendButton = findViewById(R.id.sendButton);
-
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        ownerID = preferences.getString(PREF_UNIQUE_ID, null);
+        ownerUser = preferences.getString(PREF_USERNAME, null);
         //Initial set up of gamecode controller
         System.out.println("Attributes succesfully passed!");
         //Synchronize the controller with the items on gamecode;
@@ -91,6 +99,8 @@ public class QRVisualizerActivity extends AppCompatActivity {
         titleView = findViewById(R.id.gamecodeTitle);
         pointView = findViewById(R.id.gamecodePoints);
         amountScanView = findViewById(R.id.gameCodeScanAmount);
+
+        //Retrieve unique id, from intent if available
 
         System.out.println(myController.getPoints());
         titleView.setText(myController.getTitle());
@@ -121,7 +131,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
                 String myComment = textBoxView.getText().toString();
                 //If the length of the comment in edit text view is more than 0 then send the comment into the database
                 if ( myComment.length() > 0){
-                    Comment comment = new Comment(username, myComment);
+                    Comment comment = new Comment(ownerUser, myComment);
                     CommentController theComController = new CommentController(comment);
                     //Update recycler view
                     commentControllers.add(theComController);
@@ -158,34 +168,37 @@ public class QRVisualizerActivity extends AppCompatActivity {
 
 
         //If yes then...
-
+        System.out.println("Owner");
+        System.out.println(ownerID);
+        System.out.println("Maybe owner");
+        System.out.println(playerId);
         //Check if the user is the owner of the qr code
         CardView cardHolder = findViewById(R.id.codeCardHolder);
-        /**
-         * adds long click action to cards to enable deleting of cards if user is owner
-         */
-        cardHolder.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+        if (playerId.equals(ownerID)) {
+            System.out.println("Owner went here");
+            cardHolder.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
 
-                Dialog dialog = new Dialog(QRVisualizerActivity.this);
-                dialog.setContentView(R.layout.deletedialog);
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                dialog.show();
-                deleteVisButton = dialog.findViewById(R.id.delete_visualizer_button);
-                deleteVisButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                        deleteCode();
-                        setResult(RESULT_RESTART);
-                        finish();
-                    }
-                });
-                return false;
-            }
-        });
+                    Dialog dialog = new Dialog(QRVisualizerActivity.this);
+                    dialog.setContentView(R.layout.deletedialog);
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog.show();
+                    deleteVisButton = dialog.findViewById(R.id.delete_visualizer_button);
+                    deleteVisButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                            deleteCode();
+                            setResult(RESULT_RESTART);
+                            finish();
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
             //If the user is the owner of the qr code then delete the entire qr code
 
 
@@ -238,7 +251,6 @@ public class QRVisualizerActivity extends AppCompatActivity {
      *          controller for qr code
      */
     private void initializeComments(GameCodeController myController){
-        CollectionReference myCommentsRef = db.collection("Comment");
 
         dbController.getCommentList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -267,7 +279,6 @@ public class QRVisualizerActivity extends AppCompatActivity {
      */
     public void initializePhotos(GameCodeController myController){
         //Obtain collection reference
-        CollectionReference myPhotosRef = db.collection("Photo");
 
         dbController.getPhotoList().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -358,7 +369,7 @@ public class QRVisualizerActivity extends AppCompatActivity {
         String countryName = addresses.get(0).getCountryName();
 
         locationView = findViewById(R.id.gameCodeLocation);
-        locationView.setText(countryName +", " + cityName );
+        locationView.setText(cityName +", " + countryName );
 
 
 
