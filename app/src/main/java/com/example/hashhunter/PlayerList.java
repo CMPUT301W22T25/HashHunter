@@ -3,6 +3,7 @@ package com.example.hashhunter;
 import static android.content.ContentValues.TAG;
 
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -22,12 +23,10 @@ import java.util.Collections;
 public class PlayerList {
 
     private ArrayList<Player> playerList;
-    private FirebaseFirestore db;
 
 
     public PlayerList() {
         this.playerList = new ArrayList<>();
-        this.db = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -150,44 +149,6 @@ public class PlayerList {
      */
     public int indexOfPlayer(Player player) {
         return this.playerList.indexOf(player);
-    }
-
-
-    /**
-     * populates a list with all the players in the databse and updates an adapter so that the results can be displayed
-     * after getting the players
-     * @param listAdapter
-     *      the adapter that needs to be updated
-     */
-    public void populate(LeaderboardAdapter listAdapter) {
-
-        // retrieves all the players from database
-        //https://stackoverflow.com/questions/51361951/retrieve-all-documents-from-firestore-as-custom-objects
-
-
-        db.collection("Players")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            for (DocumentSnapshot document : task.getResult()) {
-                                Player player = document.toObject(Player.class);
-                                player.setDisplayTotal(player.getMaxGameCodePoints());
-                                playerList.add(player);
-                            }
-                            //update adapter
-                            sortByQRScore();
-                            listAdapter.notifyDataSetChanged();
-
-
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
     }
 
 

@@ -33,18 +33,13 @@ public class ScanSubmitActivityTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
 
-    @Test
-    public void checkSwitchToDashboard() {
-        solo.assertCurrentActivity("Wrong Activity", ScanSubmitActivity.class);
-        solo.clickOnView(solo.getView(R.id.save_button)); //Select Save Button
-        solo.waitForActivity(DashboardActivity.class);
-        solo.assertCurrentActivity("Wrong Activity", DashboardActivity.class);
-    }
-
+    /**
+     * Checks if current location is given. Needs location permissions.
+     */
     @Test
     public void checkAddLocation(){
         solo.assertCurrentActivity("Wrong Activity", ScanSubmitActivity.class);
         solo.clickOnView(solo.getView(R.id.add_location_button)); //Select Add Location Button
-        assertTrue(solo.waitForText("Latitude", 1, 10000));
+        assertTrue(solo.waitForText("City", 1, 10000));
     }
 }
